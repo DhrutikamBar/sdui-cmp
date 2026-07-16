@@ -1,0 +1,19 @@
+<lint-module
+    format="1"
+    dir="D:\chikul\sdui-demo\sdui-demo\shared"
+    name=":shared"
+    type="LIBRARY"
+    maven="sdui-demo:shared:unspecified"
+    agpVersion="8.7.0"
+    buildFolder="build"
+    bootClassPath="C:\Users\asus\AppData\Local\Android\Sdk\platforms\android-35\android.jar;C:\Users\asus\AppData\Local\Android\Sdk\build-tools\34.0.0\core-lambda-stubs.jar"
+    javaSourceLevel="21"
+    compileTarget="android-35"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

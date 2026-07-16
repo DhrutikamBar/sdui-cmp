@@ -1,0 +1,4 @@
+- [x] Downgrade Gradle to 8.11.1
+- [x] Align JVM targets to Java 21
+- [x] Verify build
+- [x] Create walkthrough
