@@ -61,12 +61,34 @@ private fun buildHomeScreen(): UiNode {
     // ever reaches the client, exactly as discussed a few messages back.
     val productCards = fakeProductApi.map { product ->
         UiNode(
-            type = "card",
+            type = "box",
             props = buildJsonObject {
-                put("title", JsonPrimitive(product.name))
-                put("subtitle", JsonPrimitive("$${product.price}"))
+                put("style", buildJsonObject {
+                    put("padding", JsonPrimitive(12))
+                    put("background", JsonPrimitive("#FFFFFF"))
+                    put("cornerRadius", JsonPrimitive(12))
+                    put("width", JsonPrimitive("fill"))
+                })
             },
-            action = UiAction(type = "navigate", target = "/product/${product.id}")
+            action = UiAction(type = "navigate", target = "/product/${product.id}"),
+            children = listOf(
+                UiNode(
+                    type = "column",
+                    children = listOf(
+                        UiNode(
+                            type = "text",
+                            props = buildJsonObject {
+                                put("value", JsonPrimitive(product.name))
+                                put("style", buildJsonObject { put("fontWeight", JsonPrimitive("bold")) })
+                            }
+                        ),
+                        UiNode(
+                            type = "text",
+                            props = buildJsonObject { put("value", JsonPrimitive("$${product.price}")) }
+                        )
+                    )
+                )
+            )
         )
     }
 

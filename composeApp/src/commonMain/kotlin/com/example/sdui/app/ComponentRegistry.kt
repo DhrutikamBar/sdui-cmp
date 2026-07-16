@@ -1,5 +1,6 @@
 package com.example.sdui.app
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import com.example.sdui.shared.Rule
@@ -27,6 +28,8 @@ fun Rule.isSatisfied(state: FormState): Boolean {
     val (field, check) = parts
     return when (check) {
         "notEmpty" -> !state[field].isNullOrEmpty()
+        "isTrue" -> state[field] == "true"
+        "isNumber" -> state[field].isNullOrEmpty() || state[field]?.toDoubleOrNull() != null
         else -> false
     }
 }
@@ -46,12 +49,21 @@ class ComponentRegistry {
 
     @Composable
     fun Render(node: UiNode, actions: ActionHandler, formState: FormState) {
-        val renderer = renderers[node.type]
-        if (renderer != null) {
+        val renderer = renderers[node.type] ?: return
+
+        if (node.visibleWhen.isEmpty()) {
             renderer(node, actions, formState)
-        } else {
-            // Never crash on a type this build doesn't recognize — render nothing instead.
-            // A production version might log this or show a neutral placeholder box.
+            return
+        }
+
+        val style = node.style()
+        val visible = node.visibleWhen.all { it.isSatisfied(formState) }
+        AnimatedVisibility(
+            visible = visible,
+            enter = enterAnimation(style.animation),
+            exit = exitAnimation(style.animation)
+        ) {
+            renderer(node, actions, formState)
         }
     }
 }

@@ -20,7 +20,10 @@ data class UiNode(
     val props: JsonObject = JsonObject(emptyMap()),
     val children: List<UiNode> = emptyList(),
     val action: UiAction? = null,
-    val rules: List<Rule> = emptyList()
+    val rules: List<Rule> = emptyList(),
+    val visibleWhen: List<Rule> = emptyList(),
+    val errorWhen: List<Rule> = emptyList()
+
 )
 
 @Serializable
