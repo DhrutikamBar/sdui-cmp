@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-40:/values-bs/values-bs.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-41:/values-bs/values-bs.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-bs\\values-bs.xml",
-                    "from": {
-                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "196,297,385,479,578,664,741,833,925,1010,1091,1177,1250,1341,1418,1497,1574,1654,1724",
-                        "endColumns": "100,87,93,98,85,76,91,91,84,80,85,72,90,76,78,76,79,69,117",
-                        "endOffsets": "292,380,474,573,659,736,828,920,1005,1086,1172,1245,1336,1413,1492,1569,1649,1719,1837"
-                    },
-                    "to": {
-                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "920,1021,1109,1203,1302,1388,1465,7899,7991,8076,8157,8243,8316,8407,8484,8563,8741,8821,8891",
-                        "endColumns": "100,87,93,98,85,76,91,91,84,80,85,72,90,76,78,76,79,69,117",
-                        "endOffsets": "1016,1104,1198,1297,1383,1460,1552,7986,8071,8152,8238,8311,8402,8479,8558,8635,8816,8886,9004"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-bs\\values-bs.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-bs\\values-bs.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -38,7 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-bs\\values-bs.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-bs\\values-bs.xml",
+                    "from": {
+                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "196,297,385,479,578,664,741,833,925,1010,1091,1177,1250,1341,1418,1497,1574,1654,1724",
+                        "endColumns": "100,87,93,98,85,76,91,91,84,80,85,72,90,76,78,76,79,69,117",
+                        "endOffsets": "292,380,474,573,659,736,828,920,1005,1086,1172,1245,1336,1413,1492,1569,1649,1719,1837"
+                    },
+                    "to": {
+                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "920,1021,1109,1203,1302,1388,1465,7899,7991,8076,8157,8243,8316,8407,8484,8563,8741,8821,8891",
+                        "endColumns": "100,87,93,98,85,76,91,91,84,80,85,72,90,76,78,76,79,69,117",
+                        "endOffsets": "1016,1104,1198,1297,1383,1460,1552,7986,8071,8152,8238,8311,8402,8479,8558,8635,8816,8886,9004"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-bs\\values-bs.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",

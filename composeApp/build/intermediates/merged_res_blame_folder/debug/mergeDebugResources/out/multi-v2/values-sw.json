@@ -1,27 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-40:/values-sw/values-sw.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-41:/values-sw/values-sw.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-sw\\values-sw.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-sw\\values-sw.xml",
                     "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,149,251,348,449,556,663,778",
-                        "endColumns": "93,101,96,100,106,106,114,100",
-                        "endOffsets": "144,246,343,444,551,658,773,874"
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,138,239",
+                        "endColumns": "82,100,102",
+                        "endOffsets": "133,234,337"
                     },
                     "to": {
-                        "startLines": "3,4,5,6,7,8,9,83",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "188,282,384,481,582,689,796,8548",
-                        "endColumns": "93,101,96,100,106,106,114,100",
-                        "endOffsets": "277,379,476,577,684,791,906,8644"
+                        "startLines": "2,87,88",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "105,8917,9018",
+                        "endColumns": "82,100,102",
+                        "endOffsets": "183,9013,9116"
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-sw\\values-sw.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-sw\\values-sw.xml",
                     "from": {
                         "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,20 +38,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-sw\\values-sw.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-sw\\values-sw.xml",
                     "from": {
-                        "startLines": "2,3,4",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "55,138,239",
-                        "endColumns": "82,100,102",
-                        "endOffsets": "133,234,337"
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,149,251,348,449,556,663,778",
+                        "endColumns": "93,101,96,100,106,106,114,100",
+                        "endOffsets": "144,246,343,444,551,658,773,874"
                     },
                     "to": {
-                        "startLines": "2,87,88",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "105,8917,9018",
-                        "endColumns": "82,100,102",
-                        "endOffsets": "183,9013,9116"
+                        "startLines": "3,4,5,6,7,8,9,83",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "188,282,384,481,582,689,796,8548",
+                        "endColumns": "93,101,96,100,106,106,114,100",
+                        "endOffsets": "277,379,476,577,684,791,906,8644"
                     }
                 },
                 {

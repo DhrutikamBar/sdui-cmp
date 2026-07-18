@@ -1,8 +1,25 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-40:/values-zu/values-zu.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-41:/values-zu/values-zu.xml",
             "map": [
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-zu\\values-zu.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,257,356,459,565,672,785",
+                        "endColumns": "97,103,98,102,105,106,112,100",
+                        "endOffsets": "148,252,351,454,560,667,780,881"
+                    },
+                    "to": {
+                        "startLines": "3,4,5,6,7,8,9,83",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "200,298,402,501,604,710,817,8655",
+                        "endColumns": "97,103,98,102,105,106,112,100",
+                        "endOffsets": "293,397,496,599,705,812,925,8751"
+                    }
+                },
                 {
                     "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\01845c259ad92b18d712d9150b18d630\\transformed\\material3-release\\res\\values-zu\\values-zu.xml",
                     "from": {
@@ -21,41 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-zu\\values-zu.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,257,356,459,565,672,785",
-                        "endColumns": "97,103,98,102,105,106,112,100",
-                        "endOffsets": "148,252,351,454,560,667,780,881"
-                    },
-                    "to": {
-                        "startLines": "3,4,5,6,7,8,9,83",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "200,298,402,501,604,710,817,8655",
-                        "endColumns": "97,103,98,102,105,106,112,100",
-                        "endOffsets": "293,397,496,599,705,812,925,8751"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-zu\\values-zu.xml",
-                    "from": {
-                        "startLines": "2,3,4",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "55,150,241",
-                        "endColumns": "94,90,91",
-                        "endOffsets": "145,236,328"
-                    },
-                    "to": {
-                        "startLines": "2,87,88",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "105,9029,9120",
-                        "endColumns": "94,90,91",
-                        "endOffsets": "195,9115,9207"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-zu\\values-zu.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-zu\\values-zu.xml",
                     "from": {
                         "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -69,6 +52,23 @@
                         "startOffsets": "930,1025,1107,1212,1317,1407,1489,7906,7999,8082,8170,8258,8334,8423,8504,8580,8756,8835,8905",
                         "endColumns": "94,81,104,104,89,81,88,92,82,87,87,75,88,80,75,74,78,69,123",
                         "endOffsets": "1020,1102,1207,1312,1402,1484,1573,7994,8077,8165,8253,8329,8418,8499,8575,8650,8830,8900,9024"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-zu\\values-zu.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,150,241",
+                        "endColumns": "94,90,91",
+                        "endOffsets": "145,236,328"
+                    },
+                    "to": {
+                        "startLines": "2,87,88",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "105,9029,9120",
+                        "endColumns": "94,90,91",
+                        "endOffsets": "195,9115,9207"
                     }
                 }
             ]

@@ -1,10 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-40:/values-ko/values-ko.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-41:/values-ko/values-ko.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-ko\\values-ko.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-ko\\values-ko.xml",
+                    "from": {
+                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "178,257,333,421,511,591,666,745,824,903,976,1052,1120,1201,1277,1351,1421,1495,1559",
+                        "endColumns": "78,75,87,89,79,74,78,78,78,72,75,67,80,75,73,69,73,63,113",
+                        "endOffsets": "252,328,416,506,586,661,740,819,898,971,1047,1115,1196,1272,1346,1416,1490,1554,1668"
+                    },
+                    "to": {
+                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "854,933,1009,1097,1187,1267,1342,7068,7147,7226,7299,7375,7443,7524,7600,7674,7845,7919,7983",
+                        "endColumns": "78,75,87,89,79,74,78,78,78,72,75,67,80,75,73,69,73,63,113",
+                        "endOffsets": "928,1004,1092,1182,1262,1337,1416,7142,7221,7294,7370,7438,7519,7595,7669,7739,7914,7978,8092"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-ko\\values-ko.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",
@@ -18,23 +35,6 @@
                         "startOffsets": "105,8097,8179",
                         "endColumns": "71,81,78",
                         "endOffsets": "172,8174,8253"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-ko\\values-ko.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,147,247,341,438,534,632,732",
-                        "endColumns": "91,99,93,96,95,97,99,100",
-                        "endOffsets": "142,242,336,433,529,627,727,828"
-                    },
-                    "to": {
-                        "startLines": "3,4,5,6,7,8,9,83",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "177,269,369,463,560,656,754,7744",
-                        "endColumns": "91,99,93,96,95,97,99,100",
-                        "endOffsets": "264,364,458,555,651,749,849,7840"
                     }
                 },
                 {
@@ -55,20 +55,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-ko\\values-ko.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-ko\\values-ko.xml",
                     "from": {
-                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "178,257,333,421,511,591,666,745,824,903,976,1052,1120,1201,1277,1351,1421,1495,1559",
-                        "endColumns": "78,75,87,89,79,74,78,78,78,72,75,67,80,75,73,69,73,63,113",
-                        "endOffsets": "252,328,416,506,586,661,740,819,898,971,1047,1115,1196,1272,1346,1416,1490,1554,1668"
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,147,247,341,438,534,632,732",
+                        "endColumns": "91,99,93,96,95,97,99,100",
+                        "endOffsets": "142,242,336,433,529,627,727,828"
                     },
                     "to": {
-                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "854,933,1009,1097,1187,1267,1342,7068,7147,7226,7299,7375,7443,7524,7600,7674,7845,7919,7983",
-                        "endColumns": "78,75,87,89,79,74,78,78,78,72,75,67,80,75,73,69,73,63,113",
-                        "endOffsets": "928,1004,1092,1182,1262,1337,1416,7142,7221,7294,7370,7438,7519,7595,7669,7739,7914,7978,8092"
+                        "startLines": "3,4,5,6,7,8,9,83",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "177,269,369,463,560,656,754,7744",
+                        "endColumns": "91,99,93,96,95,97,99,100",
+                        "endOffsets": "264,364,458,555,651,749,849,7840"
                     }
                 }
             ]

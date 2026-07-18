@@ -23,13 +23,29 @@ data class UiNode(
     val rules: List<Rule> = emptyList(),
     val visibleWhen: List<Rule> = emptyList(),
     val errorWhen: List<Rule> = emptyList()
-
 )
 
+/**
+ * [type] is the only fixed part — a small, closed set of action *verbs* the client knows how
+ * to execute ("navigate", "apiCall", "toggleState", "openUrl"). Everything else is data, so a
+ * specific business action ("add to cart", "submit review", "toggle favorite") is just an
+ * `apiCall` configured differently — never a new action type, never new client code.
+ *
+ * [target] means different things per type: a route path for "navigate", a FormState key for
+ * "toggleState", a URL for "openUrl"/"apiCall".
+ * [method] / [body] are for "apiCall" — body values starting with "{{" and ending with "}}"
+ * are resolved against FormState by field id before the request is sent.
+ * [onSuccess] / [onError] let the backend chain a follow-up action to an "apiCall" outcome —
+ * show a snackbar, navigate, toggle a dialog — entirely from JSON.
+ */
 @Serializable
 data class UiAction(
     val type: String,
-    val target: String? = null
+    val target: String? = null,
+    val method: String? = null,
+    val body: JsonObject? = null,
+    val onSuccess: UiAction? = null,
+    val onError: UiAction? = null
 )
 
 /**

@@ -5,18 +5,18 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
- * Four screens, all built from the same 19-primitive registry in Widgets.kt — nothing here
- * needed a new registration, only different JSON. Switch which one renders in App.kt.
+ * Four screens, all built from the same registry in Widgets.kt — nothing here needed a new
+ * registration, only different JSON. Switch which one renders in App.kt.
  */
 object LocalScreens {
 
+    // Rules-engine centerpiece: submit button gated on ageField, plus inline validation.
     val home = """
         {
           "type": "column",
           "props": { "style": { "padding": 16 } },
           "children": [
             { "type": "text", "props": { "value": "Sign up", "style": { "fontSize": 22, "fontWeight": "bold" } } },
-            { "id": "ageField", "type": "textInput", "props": { "label": "Your age" } },
             {
               "id": "ageField", "type": "textInput",
               "props": { "label": "Your age", "keyboardType": "number", "errorText": "Please enter a valid number" },
@@ -31,7 +31,7 @@ object LocalScreens {
             },
             {
               "type": "box",
-              "props": { "style": { "padding": 12, "background": "#FFFFFF", "cornerRadius": 12, "width": "fill" } },
+              "props": { "style": { "padding": 12, "background": "surface", "cornerRadius": 12, "width": "fill" } },
               "action": { "type": "navigate", "target": "/product/p1" },
               "children": [
                 { "type": "column", "children": [
@@ -42,7 +42,7 @@ object LocalScreens {
             },
             {
               "type": "box",
-              "props": { "style": { "padding": 12, "background": "#FFFFFF", "cornerRadius": 12, "width": "fill" } },
+              "props": { "style": { "padding": 12, "background": "surface", "cornerRadius": 12, "width": "fill" } },
               "action": { "type": "navigate", "target": "/product/p2" },
               "children": [
                 { "type": "column", "children": [
@@ -55,6 +55,7 @@ object LocalScreens {
         }
     """.trimIndent()
 
+    // Bank-app home screen: real icons, badge, native balance toggle, transactions card.
     val wallet = """
         {
           "type": "column",
@@ -69,7 +70,7 @@ object LocalScreens {
                   { "type": "text", "props": { "value": "Tanjiro Kamado", "style": { "fontSize": 17, "fontWeight": "bold", "color": "#FFFFFF" } } }
                 ]},
                 { "type": "row", "children": [
-                  { "type": "icon", "props": { "name": "notifications", "style": { "color": "#FFFFFF" } } },
+                  { "type": "icon", "props": { "name": "notifications", "contentDescription": "Notifications", "style": { "color": "#FFFFFF" } } },
                   { "type": "badge", "props": { "count": "3" } },
                   { "type": "spacer", "props": { "style": { "size": 12 } } },
                   { "type": "box", "props": { "style": { "size": 36, "shape": "circle", "background": "#3949AB" } }, "children": [
@@ -115,7 +116,7 @@ object LocalScreens {
             { "type": "spacer", "props": { "style": { "size": 20 } } },
             {
               "type": "box",
-              "props": { "style": { "padding": 16, "background": "#FFFFFF", "cornerRadius": 16, "width": "fill" } },
+              "props": { "style": { "padding": 16, "background": "surface", "cornerRadius": 16, "width": "fill" } },
               "children": [
                 { "type": "column", "props": { "style": { "width": "fill" } }, "children": [
                   {
@@ -123,7 +124,7 @@ object LocalScreens {
                     "props": { "style": { "arrangement": "spaceBetween", "width": "fill" } },
                     "children": [
                       { "type": "text", "props": { "value": "Transactions", "style": { "fontWeight": "bold" } } },
-                      { "type": "text", "action": { "type": "navigate", "target": "/transactions" }, "props": { "value": "See all", "style": { "color": "#3949AB" } } }
+                      { "type": "text", "action": { "type": "navigate", "target": "/transactions" }, "props": { "value": "See all", "style": { "color": "primary" } } }
                     ]
                   },
                   { "type": "divider" },
@@ -133,7 +134,7 @@ object LocalScreens {
                     "children": [
                       { "type": "column", "children": [
                         { "type": "text", "props": { "value": "Subscription payments" } },
-                        { "type": "text", "props": { "value": "20 May, 13:28", "style": { "fontSize": 12, "color": "#90A4AE" } } }
+                        { "type": "text", "props": { "value": "20 May, 13:28", "style": { "fontSize": 12, "color": "onSurfaceVariant" } } }
                       ]},
                       { "type": "text", "props": { "value": "-$20.00", "style": { "color": "#C62828" } } }
                     ]
@@ -144,7 +145,7 @@ object LocalScreens {
                     "children": [
                       { "type": "column", "children": [
                         { "type": "text", "props": { "value": "Creator payments" } },
-                        { "type": "text", "props": { "value": "20 May, 10:32", "style": { "fontSize": 12, "color": "#90A4AE" } } }
+                        { "type": "text", "props": { "value": "20 May, 10:32", "style": { "fontSize": 12, "color": "onSurfaceVariant" } } }
                       ]},
                       { "type": "text", "props": { "value": "+$12.99", "style": { "color": "#2E7D32" } } }
                     ]
@@ -155,7 +156,7 @@ object LocalScreens {
                     "children": [
                       { "type": "column", "children": [
                         { "type": "text", "props": { "value": "Purchase payments" } },
-                        { "type": "text", "props": { "value": "20 May, 09:24", "style": { "fontSize": 12, "color": "#90A4AE" } } }
+                        { "type": "text", "props": { "value": "20 May, 09:24", "style": { "fontSize": 12, "color": "onSurfaceVariant" } } }
                       ]},
                       { "type": "text", "props": { "value": "-$32.00", "style": { "color": "#C62828" } } }
                     ]
@@ -166,7 +167,7 @@ object LocalScreens {
             { "type": "spacer", "props": { "style": { "size": 12 } } },
             {
               "type": "box",
-              "props": { "style": { "padding": 16, "background": "#FFFFFF", "cornerRadius": 16, "width": "fill" } },
+              "props": { "style": { "padding": 16, "background": "surface", "cornerRadius": 16, "width": "fill" } },
               "children": [
                 {
                   "type": "row",
@@ -174,7 +175,7 @@ object LocalScreens {
                   "children": [
                     { "type": "column", "children": [
                       { "type": "text", "props": { "value": "Weekly spending: $320", "style": { "fontWeight": "bold" } } },
-                      { "type": "text", "props": { "value": "You're staying right on track with your weekly budget", "style": { "fontSize": 12, "color": "#90A4AE" } } }
+                      { "type": "text", "props": { "value": "You're staying right on track with your weekly budget", "style": { "fontSize": 12, "color": "onSurfaceVariant" } } }
                     ]},
                     { "type": "icon", "props": { "name": "money" } }
                   ]
@@ -185,7 +186,8 @@ object LocalScreens {
         }
     """.trimIndent()
 
-    // New: showcases switch, radioGroup, dropdown, chip, progressBar, icon.
+    // Preferences centerpiece: switch, slider, radioGroup, dropdown, flowRow of chips,
+    // progressBar, plus a dialog and a snackbar triggered from two different buttons.
     val settings = """
         {
           "type": "column",
@@ -203,6 +205,8 @@ object LocalScreens {
             { "type": "text", "props": { "value": "Notifications", "style": { "fontWeight": "bold" } } },
             { "id": "pushNotif", "type": "switch", "props": { "label": "Push notifications" } },
             { "id": "emailNotif", "type": "switch", "props": { "label": "Email notifications" } },
+            { "type": "text", "props": { "value": "Notification volume", "style": { "fontSize": 13, "color": "onSurfaceVariant" } } },
+            { "id": "notifVolume", "type": "slider", "props": { "min": 0, "max": 100, "default": 70 } },
             { "type": "divider" },
             { "type": "spacer", "props": { "style": { "size": 12 } } },
             { "type": "text", "props": { "value": "Subscription plan", "style": { "fontWeight": "bold" } } },
@@ -213,8 +217,7 @@ object LocalScreens {
             { "type": "spacer", "props": { "style": { "size": 12 } } },
             { "type": "text", "props": { "value": "Interests", "style": { "fontWeight": "bold" } } },
             {
-              "type": "row",
-              "props": { "style": { "arrangement": "spaceEvenly" } },
+              "type": "flowRow",
               "children": [
                 { "type": "chip", "props": { "label": "Trading" } },
                 { "type": "chip", "props": { "label": "Fitness" } },
@@ -226,80 +229,67 @@ object LocalScreens {
             { "type": "progressBar", "props": { "progress": 0.62 } },
             { "type": "spacer", "props": { "style": { "size": 20 } } },
             {
-  "id": "saveButton", "type": "button", "props": { "label": "Save changes" },
-  "action": { "type": "toggleState", "target": "savedSnackbar" }
-},
-{ "id": "savedSnackbar", "type": "snackbar", "props": { "message": "Settings saved" } },
-{
-  "id": "logoutButton", "type": "button", "props": { "label": "Log out" },
-  "action": { "type": "toggleState", "target": "logoutDialog" }
-},
-{
-  "id": "logoutDialog", "type": "dialog",
-  "props": { "title": "Log out?", "confirmLabel": "Log out" },
-  "children": [ { "type": "text", "props": { "value": "You'll need to sign in again next time." } } ]
-}
+              "id": "saveButton", "type": "button", "props": { "label": "Save changes" },
+              "action": { "type": "toggleState", "target": "savedSnackbar" }
+            },
+            { "id": "savedSnackbar", "type": "snackbar", "props": { "message": "Settings saved" } },
+            { "type": "spacer", "props": { "style": { "size": 12 } } },
+            {
+              "id": "logoutButton", "type": "button", "props": { "label": "Log out" },
+              "action": { "type": "toggleState", "target": "logoutDialog" }
+            },
+            {
+              "id": "logoutDialog", "type": "dialog",
+              "props": { "title": "Log out?", "confirmLabel": "Log out" },
+              "children": [ { "type": "text", "props": { "value": "You'll need to sign in again next time." } } ]
+            }
           ]
         }
     """.trimIndent()
 
-    // New: showcases a real network image (Coil), chip, radioGroup, checkbox, and a rule
-    // that gates on "isTrue" instead of "notEmpty" — the terms checkbox, not a text field.
+    // E-commerce flow: network image, rating, tabs, expandable, bottomSheet, checkbox-gated
+    // rule with "isTrue", an openUrl link, and the apiCall generalization on Place order —
+    // one action that defines endpoint + body + success + failure, entirely from JSON.
     val checkout = """
         {
           "type": "column",
           "props": { "style": { "padding": 16, "width": "fill", "scrollable": true, "animateSize": true } },
           "children": [
-          {
-            "id": "summaryButton", "type": "button", "props": { "label": "View order summary" },
-            "action": { "type": "toggleState", "target": "orderSheet" }
-          },
-          { "type": "flowRow", "children": [ { "type": "chip", "props": { "label": "Trading" } }, { "type": "chip", "props": { "label": "Fitness" } }, { "type": "chip", "props": { "label": "Music" } },{ "type": "chip", "props": { "label": "Trading" } },{ "type": "chip", "props": { "label": "Trading" } },{ "type": "chip", "props": { "label": "Trading" } },{ "type": "chip", "props": { "label": "Trading" } },{ "type": "chip", "props": { "label": "Trading" } } ] },
-          { "type": "rating", "props": { "value": 4, "max": 5 } },
-          {
-            "id": "detailTabs", "type": "tabs",
-            "props": { "labels": [ "Overview", "Shipping", "Reviews" ] },
-            "children": [
-              { "type": "text", "props": { "value": "Over-ear wireless headphones with active noise cancellation and 30-hour battery life." } },
-              { "type": "text", "props": { "value": "Free shipping, arrives in 3-5 business days." } },
-              { "type": "text", "props": { "value": "4.2 average from 1,204 reviews." } }
-            ]
-          },
-          {
-            "type": "expandable", "props": { "title": "Return policy" },
-            "children": [ { "type": "text", "props": { "value": "Returns accepted within 30 days in original packaging. Refunds process within 5-7 business days." } } ]
-          },
-          { "type": "text", "props": { "value": "Notification volume", "style": { "fontSize": 13, "color": "#90A4AE" } } },
-          { "id": "notifVolume", "type": "slider", "props": { "min": 0, "max": 100, "default": 70 } },
-          { "id": "agreeTerms", "type": "checkbox", "props": { "label": "I agree to the terms and refund policy" } },
-          {
-            "type": "text",
-            "props": { "value": "Thanks for confirming — you're ready to check out.", "style": { "color": "#2E7D32", "fontSize": 13 } },
-            "visibleWhen": [ { "whenExpr": "agreeTerms.isTrue" } ]
-          },
-          {
-            "id": "orderSheet", "type": "bottomSheet",
-            "children": [
-              { "type": "text", "props": { "value": "Order summary", "style": { "fontWeight": "bold", "fontSize": 18 } } },
-              { "type": "divider" },
-              { "type": "text", "props": { "value": "Wireless Headphones — $59.99" } },
-              { "type": "text", "props": { "value": "Shipping — Free" } },
-              { "type": "text", "props": { "value": "Total — $59.99", "style": { "fontWeight": "bold" } } }
-            ]
-          },
             { "type": "text", "props": { "value": "Checkout", "style": { "fontSize": 22, "fontWeight": "bold" } } },
             { "type": "spacer", "props": { "style": { "size": 12 } } },
-            { "type": "image", "props": { "url": "https://picsum.photos/seed/headphones/400/400", "style": { "cornerRadius": 12, "size": 180 } } },
+            { "type": "image", "props": { "url": "https://picsum.photos/seed/headphones/400/400", "contentDescription": "Photo of the wireless headphones", "style": { "cornerRadius": 12, "size": 180 } } },
             { "type": "spacer", "props": { "style": { "size": 8 } } },
             { "type": "text", "props": { "value": "Wireless Headphones", "style": { "fontWeight": "bold" } } },
             { "type": "text", "props": { "value": "$59.99" } },
+            { "type": "rating", "props": { "value": 4, "max": 5 } },
             { "type": "spacer", "props": { "style": { "size": 12 } } },
             {
-              "type": "row",
-              "props": { "style": { "arrangement": "spaceEvenly" } },
+              "type": "flowRow",
               "children": [
                 { "type": "chip", "props": { "label": "Free shipping" } },
                 { "type": "chip", "props": { "label": "20% off" } }
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": 12 } } },
+            {
+              "id": "summaryButton", "type": "button", "props": { "label": "View order summary" },
+              "action": { "type": "toggleState", "target": "orderSheet" }
+            },
+            { "type": "spacer", "props": { "style": { "size": 16 } } },
+            {
+              "id": "detailTabs", "type": "tabs",
+              "props": { "labels": [ "Overview", "Shipping", "Reviews" ] },
+              "children": [
+                { "type": "text", "props": { "value": "Over-ear wireless headphones with active noise cancellation and 30-hour battery life." } },
+                { "type": "text", "props": { "value": "Free shipping, arrives in 3-5 business days." } },
+                { "type": "text", "props": { "value": "4.2 average from 1,204 reviews." } }
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": 12 } } },
+            {
+              "type": "expandable", "props": { "title": "Return policy" },
+              "children": [
+                { "type": "text", "props": { "value": "Returns accepted within 30 days in original packaging. Refunds process within 5-7 business days." } }
               ]
             },
             { "type": "spacer", "props": { "style": { "size": 16 } } },
@@ -307,13 +297,41 @@ object LocalScreens {
             { "id": "paymentMethod", "type": "radioGroup", "props": { "options": [ "Card", "UPI", "Cash on delivery" ] } },
             { "type": "spacer", "props": { "style": { "size": 12 } } },
             { "id": "agreeTerms", "type": "checkbox", "props": { "label": "I agree to the terms and refund policy" } },
+            {
+              "type": "text",
+              "props": { "value": "Thanks for confirming — you're ready to check out.", "style": { "color": "#2E7D32", "fontSize": 13 } },
+              "visibleWhen": [ { "whenExpr": "agreeTerms.isTrue" } ]
+            },
+            {
+              "type": "text",
+              "action": { "type": "openUrl", "target": "https://example.com/terms" },
+              "props": { "value": "Read the full terms", "style": { "color": "primary", "fontSize": 13 } }
+            },
             { "type": "spacer", "props": { "style": { "size": 16 } } },
             {
               "id": "placeOrderButton",
               "type": "button",
               "props": { "label": "Place order" },
-              "action": { "type": "navigate", "target": "/order-confirmed" },
+              "action": {
+                "type": "apiCall",
+                "method": "POST",
+                "target": "/api/orders",
+                "body": { "productId": "p1", "paymentMethod": "{{paymentMethod}}" },
+                "onSuccess": { "type": "navigate", "target": "/order-confirmed" },
+                "onError": { "type": "toggleState", "target": "orderErrorSnackbar" }
+              },
               "rules": [ { "whenExpr": "agreeTerms.isTrue" } ]
+            },
+            { "id": "orderErrorSnackbar", "type": "snackbar", "props": { "message": "Couldn't place your order — please try again" } },
+            {
+              "id": "orderSheet", "type": "bottomSheet",
+              "children": [
+                { "type": "text", "props": { "value": "Order summary", "style": { "fontWeight": "bold", "fontSize": 18 } } },
+                { "type": "divider" },
+                { "type": "text", "props": { "value": "Wireless Headphones — $59.99" } },
+                { "type": "text", "props": { "value": "Shipping — Free" } },
+                { "type": "text", "props": { "value": "Total — $59.99", "style": { "fontWeight": "bold" } } }
+              ]
             }
           ]
         }

@@ -125,12 +125,14 @@ fun ComponentRegistry.registerCoreWidgets() {
         }
     }
 
-    register("text") { node, _, _ ->
+    register("text") { node, actions, _ ->
         val style = node.style()
+        var modifier = Modifier.applyStyle(style)
+        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
         StyledText(
             value = node.props["value"]?.jsonPrimitive?.contentOrNull ?: "",
             style = style,
-            modifier = Modifier.applyStyle(style)
+            modifier = modifier
         )
     }
 
