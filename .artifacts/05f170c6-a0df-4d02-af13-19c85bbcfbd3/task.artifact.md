@@ -1,4 +1,5 @@
-- [x] Downgrade Gradle to 8.11.1
-- [x] Align JVM targets to Java 21
-- [x] Verify build
-- [x] Create walkthrough
+- [ ] **Step 1: Fix Nested Scrolling Crash**
+    - [ ] Add `LocalIsInsideScrollable` to `ComponentRegistry.kt`
+    - [ ] Update `RenderRoot` to apply root style to `LazyColumn`
+    - [ ] Update layout widgets in `Widgets.kt` to be scroll-aware
+- [ ] **Step 2: Verify & Final Walkthrough**

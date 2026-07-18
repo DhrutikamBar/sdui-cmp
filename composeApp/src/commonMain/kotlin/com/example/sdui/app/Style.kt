@@ -1,6 +1,7 @@
 package com.example.sdui.app
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,17 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Arrangement
+import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.booleanOrNull
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.intOrNull
-import kotlinx.serialization.json.jsonPrimitive
 
 data class Style(
-    val padding: JsonPrimitive? = null,
+    val padding: SduiValue? = null,
     val background: String? = null,
     val cornerRadius: Int? = null,
     val shape: String? = null,
@@ -37,36 +32,56 @@ data class Style(
     val arrangement: String? = null,
     val alignment: String? = null,
     val width: String? = null,
-    val size: JsonPrimitive? = null,
+    val size: SduiValue? = null,
     val scrollable: Boolean? = null,
     val animation: String? = null,
     val animateSize: Boolean? = null
 )
 
-fun UiNode.style(): Style {
-    val obj = props["style"] as? JsonObject ?: return Style()
-    return Style(
-        padding = obj["padding"]?.jsonPrimitive,
-        background = obj["background"]?.jsonPrimitive?.contentOrNull,
-        cornerRadius = obj["cornerRadius"]?.jsonPrimitive?.intOrNull,
-        shape = obj["shape"]?.jsonPrimitive?.contentOrNull,
-        color = obj["color"]?.jsonPrimitive?.contentOrNull,
-        fontSize = obj["fontSize"]?.jsonPrimitive?.intOrNull,
-        fontWeight = obj["fontWeight"]?.jsonPrimitive?.contentOrNull,
-        arrangement = obj["arrangement"]?.jsonPrimitive?.contentOrNull,
-        alignment = obj["alignment"]?.jsonPrimitive?.contentOrNull,
-        width = obj["width"]?.jsonPrimitive?.contentOrNull,
-        size = obj["size"]?.jsonPrimitive,
-        scrollable = obj["scrollable"]?.jsonPrimitive?.booleanOrNull,
-        animation = obj["animation"]?.jsonPrimitive?.contentOrNull,
-        animateSize = obj["animateSize"]?.jsonPrimitive?.booleanOrNull
+object TokenResolver {
+    val colors = mapOf(
+        "brand-primary" to "#0D1B4C",
+        "brand-secondary" to "#3949AB"
+    )
+    val spacing = mapOf(
+        "spacing-xs" to 4,
+        "spacing-sm" to 8,
+        "spacing-md" to 16,
+        "spacing-lg" to 24,
+        "spacing-xl" to 32
     )
 }
 
-fun resolveSpacing(value: JsonPrimitive?): Dp {
+fun UiNode.style(): Style {
+    val obj = (props["style"] as? SduiValue.ObjectValue)?.value ?: return Style()
+    fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value
+    fun SduiValue?.asInt() = (this as? SduiValue.NumberValue)?.value?.toInt()
+    fun SduiValue?.asBoolean() = (this as? SduiValue.BooleanValue)?.value
+
+    return Style(
+        padding = obj["padding"],
+        background = obj["background"].asString(),
+        cornerRadius = obj["cornerRadius"].asInt(),
+        shape = obj["shape"].asString(),
+        color = obj["color"].asString(),
+        fontSize = obj["fontSize"].asInt(),
+        fontWeight = obj["fontWeight"].asString(),
+        arrangement = obj["arrangement"].asString(),
+        alignment = obj["alignment"].asString(),
+        width = obj["width"].asString(),
+        size = obj["size"],
+        scrollable = obj["scrollable"].asBoolean(),
+        animation = obj["animation"].asString(),
+        animateSize = obj["animateSize"].asBoolean()
+    )
+}
+
+fun resolveSpacing(value: SduiValue?): Dp {
     value ?: return 0.dp
-    value.intOrNull?.let { return it.dp }
-    return when (value.contentOrNull) {
+    if (value is SduiValue.NumberValue) return value.value.toInt().dp
+    val str = (value as? SduiValue.StringValue)?.value ?: return 0.dp
+    TokenResolver.spacing[str]?.let { return it.dp }
+    return when (str) {
         "xs" -> 4.dp
         "sm" -> 8.dp
         "md" -> 16.dp
@@ -87,8 +102,11 @@ fun parseColor(hex: String): Color = try {
 @Composable
 fun resolveColor(value: String?): Color? {
     value ?: return null
+    val tokenValue = TokenResolver.colors[value]
+    val hex = tokenValue ?: value
+    
     val scheme = MaterialTheme.colorScheme
-    return when (value) {
+    return when (hex) {
         "primary" -> scheme.primary
         "onPrimary" -> scheme.onPrimary
         "secondary" -> scheme.secondary
@@ -102,7 +120,7 @@ fun resolveColor(value: String?): Color? {
         "error" -> scheme.error
         "onError" -> scheme.onError
         "outline" -> scheme.outline
-        else -> if (value.startsWith("#")) parseColor(value) else null
+        else -> if (hex.startsWith("#")) parseColor(hex) else null
     }
 }
 

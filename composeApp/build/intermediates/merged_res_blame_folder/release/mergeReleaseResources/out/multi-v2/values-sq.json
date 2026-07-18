@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-37:/values-sq/values-sq.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-41:/values-sq/values-sq.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-sq\\values-sq.xml",
-                    "from": {
-                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "192,287,370,469,571,667,748,841,933,1023,1110,1201,1274,1363,1438,1514,1587,1664,1730",
-                        "endColumns": "94,82,98,101,95,80,92,91,89,86,90,72,88,74,75,72,76,65,120",
-                        "endOffsets": "282,365,464,566,662,743,836,928,1018,1105,1196,1269,1358,1433,1509,1582,1659,1725,1846"
-                    },
-                    "to": {
-                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "928,1023,1106,1205,1307,1403,1484,7913,8005,8095,8182,8273,8346,8435,8510,8586,8760,8837,8903",
-                        "endColumns": "94,82,98,101,95,80,92,91,89,86,90,72,88,74,75,72,76,65,120",
-                        "endOffsets": "1018,1101,1200,1302,1398,1479,1572,8000,8090,8177,8268,8341,8430,8505,8581,8654,8832,8898,9019"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-sq\\values-sq.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-sq\\values-sq.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -55,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-sq\\values-sq.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-sq\\values-sq.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",
@@ -69,6 +52,23 @@
                         "startOffsets": "105,9024,9122",
                         "endColumns": "85,97,98",
                         "endOffsets": "186,9117,9216"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-sq\\values-sq.xml",
+                    "from": {
+                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "192,287,370,469,571,667,748,841,933,1023,1110,1201,1274,1363,1438,1514,1587,1664,1730",
+                        "endColumns": "94,82,98,101,95,80,92,91,89,86,90,72,88,74,75,72,76,65,120",
+                        "endOffsets": "282,365,464,566,662,743,836,928,1018,1105,1196,1269,1358,1433,1509,1582,1659,1725,1846"
+                    },
+                    "to": {
+                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "928,1023,1106,1205,1307,1403,1484,7913,8005,8095,8182,8273,8346,8435,8510,8586,8760,8837,8903",
+                        "endColumns": "94,82,98,101,95,80,92,91,89,86,90,72,88,74,75,72,76,65,120",
+                        "endOffsets": "1018,1101,1200,1302,1398,1479,1572,8000,8090,8177,8268,8341,8430,8505,8581,8654,8832,8898,9019"
                     }
                 }
             ]

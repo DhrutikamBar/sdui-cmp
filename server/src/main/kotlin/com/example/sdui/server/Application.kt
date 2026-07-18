@@ -1,6 +1,7 @@
 package com.example.sdui.server
 
-import com.example.sdui.shared.Rule
+import com.example.sdui.shared.Condition
+import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiAction
 import com.example.sdui.shared.UiNode
 import io.ktor.serialization.kotlinx.json.json
@@ -11,12 +12,7 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 
-// Stand-in for "your API integration" — swap this for a real database/service call.
-// The `.map` below, turning domain objects into UiNode.Card, is the entire data-binding pattern.
 private data class Product(val id: String, val name: String, val price: Double)
 
 private val fakeProductApi = listOf(
@@ -38,38 +34,42 @@ fun main() {
 private fun buildHomeScreen(): UiNode {
     val header = UiNode(
         type = "text",
-        props = buildJsonObject { put("value", JsonPrimitive("Sign up")) }
+        props = mapOf(
+            "value" to SduiValue.StringValue("Sign up"),
+            "style" to SduiValue.ObjectValue(mapOf(
+                "fontSize" to SduiValue.NumberValue(22.0),
+                "fontWeight" to SduiValue.StringValue("bold")
+            ))
+        )
     )
 
     val ageField = UiNode(
         id = "ageField",
         type = "textInput",
-        props = buildJsonObject { put("label", JsonPrimitive("Your age")) }
+        props = mapOf(
+            "label" to SduiValue.StringValue("Your age")
+        )
     )
 
-    // Rules-engine demo: this button only enables once ageField is non-empty —
-    // the exact example PhonePe describes for LiquidUI's Rule mechanism.
     val submitButton = UiNode(
         id = "submitButton",
         type = "button",
-        props = buildJsonObject { put("label", JsonPrimitive("Submit")) },
+        props = mapOf("label" to SduiValue.StringValue("Submit")),
         action = UiAction(type = "navigate", target = "/welcome"),
-        rules = listOf(Rule(whenExpr = "ageField.notEmpty"))
+        rules = listOf(Condition.NotEmpty("ageField"))
     )
 
-    // Data-binding demo: real ("your API") data resolved into UiNode.Card before it
-    // ever reaches the client, exactly as discussed a few messages back.
     val productCards = fakeProductApi.map { product ->
         UiNode(
             type = "box",
-            props = buildJsonObject {
-                put("style", buildJsonObject {
-                    put("padding", JsonPrimitive(12))
-                    put("background", JsonPrimitive("#FFFFFF"))
-                    put("cornerRadius", JsonPrimitive(12))
-                    put("width", JsonPrimitive("fill"))
-                })
-            },
+            props = mapOf(
+                "style" to SduiValue.ObjectValue(mapOf(
+                    "padding" to SduiValue.NumberValue(12.0),
+                    "background" to SduiValue.StringValue("surface"),
+                    "cornerRadius" to SduiValue.NumberValue(12.0),
+                    "width" to SduiValue.StringValue("fill")
+                ))
+            ),
             action = UiAction(type = "navigate", target = "/product/${product.id}"),
             children = listOf(
                 UiNode(
@@ -77,14 +77,14 @@ private fun buildHomeScreen(): UiNode {
                     children = listOf(
                         UiNode(
                             type = "text",
-                            props = buildJsonObject {
-                                put("value", JsonPrimitive(product.name))
-                                put("style", buildJsonObject { put("fontWeight", JsonPrimitive("bold")) })
-                            }
+                            props = mapOf(
+                                "value" to SduiValue.StringValue(product.name),
+                                "style" to SduiValue.ObjectValue(mapOf("fontWeight" to SduiValue.StringValue("bold")))
+                            )
                         ),
                         UiNode(
                             type = "text",
-                            props = buildJsonObject { put("value", JsonPrimitive("$${product.price}")) }
+                            props = mapOf("value" to SduiValue.StringValue("$${product.price}"))
                         )
                     )
                 )
@@ -94,6 +94,7 @@ private fun buildHomeScreen(): UiNode {
 
     return UiNode(
         type = "column",
+        props = mapOf("style" to SduiValue.ObjectValue(mapOf("padding" to SduiValue.StringValue("md")))),
         children = listOf(header, ageField, submitButton) + productCards
     )
 }

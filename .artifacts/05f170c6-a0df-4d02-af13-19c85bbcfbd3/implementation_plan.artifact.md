@@ -1,33 +1,50 @@
-# Implementation Plan - Fix Build Error
+# Implementation Plan - Observability & Reliability
 
-The project currently fails to build with the error:
-`Unable to load class 'org.gradle.api.internal.plugins.DefaultArtifactPublicationSet'`
+This plan introduces a structured way to handle rendering crashes and report analytics in our SDUI system. Since the server controls the UI, the client must be highly resilient and provide clear feedback when things go wrong.
 
-This is caused by a version mismatch between Gradle (9.6.1) and the Android Gradle Plugin (8.7.0). Gradle 9.x removed internal APIs that AGP 8.7.0 still relies on.
+## User Review Required
+
+> [!IMPORTANT]
+> **Reporting Service**: I will introduce a `ReportingService` interface. You can later swap the `ConsoleReporter` for a real tool like Firebase Crashlytics or Sentry.
+>
+> **Rendering Guard**: If a specific widget crashes (e.g., bad logic in a custom renderer), only that widget will show an "Error Widget" instead of crashing the whole app.
 
 ## Proposed Changes
 
-I have two options to fix this:
+### 1. Structured Reporting (`composeApp`)
 
-### Option 1: Downgrade Gradle (Recommended for quick fix)
-Downgrade Gradle to 8.11.1 to match AGP 8.7.0. This is a simple change that maintains the current project structure.
+#### [NEW] [ReportingService.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/ReportingService.kt)
+- Define an `Observable` reporting interface.
+- Implement `reportCrash(throwable: Throwable, context: Map<String, Any>)`.
+- Implement `reportEvent(name: String, metadata: Map<String, Any>)`.
 
-### Option 2: Upgrade to AGP 9.x (Modern approach for 2026)
-Upgrade to AGP 9.3.0 and Kotlin 2.4.10. This requires:
-- Splitting `composeApp` into a dedicated `androidApp` module and a `shared-ui` KMP library.
-- Migrating to the new `com.android.kotlin.multiplatform.library` plugin.
-- Updating DSLs to the AGP 9 standards.
+### 2. Resilience: Component Guards (`composeApp`)
 
-I will proceed with **Option 1** first as it's the most direct fix for the current error, unless you prefer the full AGP 9 migration.
+#### [MODIFY] [ComponentRegistry.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/ComponentRegistry.kt)
+- Wrap the `renderer(...)` call in a `try-catch` block.
+- If a crash occurs:
+    1. Report the crash via `ReportingService` (including component `type` and `id`).
+    2. Render a "Debug Error Box" in development mode or the `fallback` node in production.
 
-#### [MODIFY] [gradle-wrapper.properties](file:///D:/chikul/sdui-demo/sdui-demo/gradle/wrapper/gradle-wrapper.properties)
-- Downgrade `distributionUrl` to Gradle 8.11.1.
+### 3. Advanced Analytics Interceptor (`composeApp`)
+
+#### [MODIFY] [App.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/App.kt)
+- Enhance `AnalyticsInterceptor` to use the `metadata` field from `UiAction` and send it to `ReportingService`.
+- Add a `LaunchedEffect` in `SduiScreenContent` to report a "Screen View" event whenever a new path is loaded.
+
+### 4. Fetching Diagnostics (`composeApp`)
+
+#### [MODIFY] [UiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/UiRepository.kt)
+- Report network failures (4xx/5xx/Exceptions) to the `ReportingService` with the URL and response code.
+
+---
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `./gradlew :composeApp:assembleDebug` to verify the build completes successfully.
-- Run `./gradlew :server:run` to ensure the backend still builds and starts.
+- **Simulated Crash**: Create a widget that throws an exception and verify that the app remains stable and only that widget shows an error.
+- **Event Verification**: Verify that navigating to a screen triggers the "screen_view" event in logs.
 
 ### Manual Verification
-- Verify that the IDE syncs successfully after the change.
+- Trigger a malformed JSON error from the server and verify the error is reported.
+- Click a button with metadata and verify the metadata is captured in the analytics logs.

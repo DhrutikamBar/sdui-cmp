@@ -1,34 +1,28 @@
-# Walkthrough - Build Fix
+# Walkthrough - Nested Scrolling Fix
 
-I have fixed the build error by downgrading the Gradle version to match the Android Gradle Plugin and aligning the JVM targets across all modules.
+I have fixed the `IllegalStateException` caused by nested scrollable containers. This was occurring because the root container (like in the Wallet screen) was being rendered as a scrollable `Column` inside a `LazyColumn`.
 
 ## Changes Made
 
-### Build Configuration
-
-#### [gradle-wrapper.properties](file:///D:/chikul/sdui-demo/sdui-demo/gradle/wrapper/gradle-wrapper.properties)
-- Downgraded `distributionUrl` from `9.6.1` to `8.11.1`. Gradle 9 had removed internal APIs (specifically `DefaultArtifactPublicationSet`) that were still required by the version of the Android Gradle Plugin (8.7.0) used in this project.
-
-### JVM Target Alignment
-
-I aligned all modules to use **Java 21**, which was detected as the default in the current environment. This prevents "Inconsistent JVM-target compatibility" errors between Kotlin and Java compilation tasks.
-
-#### [shared/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/shared/build.gradle.kts)
-- Set `android.compileOptions` to Java 21.
-- Set `kotlin.androidTarget.compilerOptions.jvmTarget` to 21.
-
-#### [composeApp/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/build.gradle.kts)
-- Set `android.compileOptions` to Java 21.
-- Set `kotlin.androidTarget.compilerOptions.jvmTarget` to 21.
-
-#### [server/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/server/build.gradle.kts)
-- Configured `java.toolchain` to use Java 21.
-- Set `kotlin.compilerOptions.jvmTarget` to 21.
+### 1. Scroll-Aware Rendering
+- **[MODIFY] [ComponentRegistry.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/ComponentRegistry.kt)**:
+    - Introduced `LocalIsInsideScrollable` CompositionLocal.
+    - Updated `RenderRoot` to promote the root node's style (background, padding) to the main `LazyColumn`.
+    - Flattened only the **children** of the root container to ensure they are the top-level items in the list.
+- **[MODIFY] [Widgets.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/Widgets.kt)**:
+    - Updated `column` and `row` renderers to check `LocalIsInsideScrollable`.
+    - They now skip applying `Modifier.verticalScroll` or `Modifier.horizontalScroll` if they are already inside a scrollable container.
 
 ## Verification Results
 
-### Automated Tests
-- Ran `gradle assemble`, which now finishes successfully.
+### Build Status
+- **Success**: `composeApp` compiles successfully.
 
-> [!NOTE]
-> Some download warnings occurred during sync due to the offline nature of the environment, but the core compilation issues have been resolved.
+### Logic Verification
+- **Infinite Constraints**: By disabling nested scrolling when `LocalIsInsideScrollable` is true, the infinite height measurement error is impossible to trigger.
+- **Visual Integrity**: Promoting styles to the `LazyColumn` ensures the screen background (like the dark blue wallet) still covers the entire area.
+
+---
+
+> [!TIP]
+> This architecture is now robust against bad server configurations. Even if a backend dev marks a nested component as `scrollable: true`, the SDK will intelligently ignore it to maintain performance and stability.

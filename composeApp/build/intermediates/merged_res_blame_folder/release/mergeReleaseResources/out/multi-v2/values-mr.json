@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-37:/values-mr/values-mr.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-41:/values-mr/values-mr.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-mr\\values-mr.xml",
-                    "from": {
-                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "179,273,355,452,550,637,723,808,897,980,1060,1145,1216,1300,1376,1452,1528,1604,1670",
-                        "endColumns": "93,81,96,97,86,85,84,88,82,79,84,70,83,75,75,75,75,65,117",
-                        "endOffsets": "268,350,447,545,632,718,803,892,975,1055,1140,1211,1295,1371,1447,1523,1599,1665,1783"
-                    },
-                    "to": {
-                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "910,1004,1086,1183,1281,1368,1454,7790,7879,7962,8042,8127,8198,8282,8358,8434,8611,8687,8753",
-                        "endColumns": "93,81,96,97,86,85,84,88,82,79,84,70,83,75,75,75,75,65,117",
-                        "endOffsets": "999,1081,1178,1276,1363,1449,1534,7874,7957,8037,8122,8193,8277,8353,8429,8505,8682,8748,8866"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-mr\\values-mr.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-mr\\values-mr.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",
@@ -35,6 +18,23 @@
                         "startOffsets": "105,8871,8956",
                         "endColumns": "72,84,84",
                         "endOffsets": "173,8951,9036"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-mr\\values-mr.xml",
+                    "from": {
+                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "179,273,355,452,550,637,723,808,897,980,1060,1145,1216,1300,1376,1452,1528,1604,1670",
+                        "endColumns": "93,81,96,97,86,85,84,88,82,79,84,70,83,75,75,75,75,65,117",
+                        "endOffsets": "268,350,447,545,632,718,803,892,975,1055,1140,1211,1295,1371,1447,1523,1599,1665,1783"
+                    },
+                    "to": {
+                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "910,1004,1086,1183,1281,1368,1454,7790,7879,7962,8042,8127,8198,8282,8358,8434,8611,8687,8753",
+                        "endColumns": "93,81,96,97,86,85,84,88,82,79,84,70,83,75,75,75,75,65,117",
+                        "endOffsets": "999,1081,1178,1276,1363,1449,1534,7874,7957,8037,8122,8193,8277,8353,8429,8505,8682,8748,8866"
                     }
                 },
                 {
@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-mr\\values-mr.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-mr\\values-mr.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

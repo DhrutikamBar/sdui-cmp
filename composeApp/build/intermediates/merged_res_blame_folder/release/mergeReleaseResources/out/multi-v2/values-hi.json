@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-37:/values-hi/values-hi.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-41:/values-hi/values-hi.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-hi\\values-hi.xml",
-                    "from": {
-                        "startLines": "2,3,4",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "55,144,229",
-                        "endColumns": "88,84,85",
-                        "endOffsets": "139,224,310"
-                    },
-                    "to": {
-                        "startLines": "2,87,88",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "105,8987,9072",
-                        "endColumns": "88,84,85",
-                        "endOffsets": "189,9067,9153"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-hi\\values-hi.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-hi\\values-hi.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -55,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-hi\\values-hi.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-hi\\values-hi.xml",
                     "from": {
                         "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -69,6 +52,23 @@
                         "startOffsets": "947,1042,1125,1218,1316,1405,1483,7877,7966,8051,8132,8217,8290,8376,8469,8544,8720,8801,8867",
                         "endColumns": "94,82,92,97,88,77,96,88,84,80,84,72,85,92,74,74,80,65,119",
                         "endOffsets": "1037,1120,1213,1311,1400,1478,1575,7961,8046,8127,8212,8285,8371,8464,8539,8614,8796,8862,8982"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-hi\\values-hi.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,144,229",
+                        "endColumns": "88,84,85",
+                        "endOffsets": "139,224,310"
+                    },
+                    "to": {
+                        "startLines": "2,87,88",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "105,8987,9072",
+                        "endColumns": "88,84,85",
+                        "endOffsets": "189,9067,9153"
                     }
                 }
             ]
