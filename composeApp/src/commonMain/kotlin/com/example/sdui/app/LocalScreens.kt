@@ -5,7 +5,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
- * Updated to use the new type-safe schema.
+ * Updated with "Ultimate Elite" features.
  */
 object LocalScreens {
 
@@ -19,6 +19,7 @@ object LocalScreens {
             { 
               "type": "text", 
               "sticky": true,
+              "onAppear": { "type": "analytics", "target": "sign_up_header_impression" },
               "props": { 
                 "value": { "type": "string", "value": "Sign up" },
                 "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" }, "background": { "type": "string", "value": "surface" }, "width": { "type": "string", "value": "fill" } } }
@@ -27,6 +28,15 @@ object LocalScreens {
             {
               "id": "ageField", "type": "textInput",
               "props": { "label": { "type": "string", "value": "Your age" }, "keyboardType": { "type": "string", "value": "number" } }
+            },
+            {
+              "id": "bulkDiscount",
+              "type": "text",
+              "visibleWhen": [ { "type": "script", "expression": "ageField > 18" } ],
+              "props": { 
+                "value": { "type": "string", "value": "Adult Content Unlocked" },
+                "style": { "type": "object", "value": { "color": { "type": "string", "value": "brand-primary" } } }
+              }
             },
             {
               "id": "submitButton",
@@ -46,7 +56,7 @@ object LocalScreens {
     val wallet = """
         {
           "type": "column",
-          "props": { "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "background": { "type": "string", "value": "#0D1B4C" }, "width": { "type": "string", "value": "fill" }, "scrollable": { "type": "boolean", "value": true } } } },
+          "props": { "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "background": { "type": "string", "value": "brand-primary" }, "width": { "type": "string", "value": "fill" } } } },
           "children": [
             {
               "type": "row",
@@ -58,7 +68,7 @@ object LocalScreens {
                 ]}
               ]
             },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "lg" } } } } },
+            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-xl" } } } } },
             { "type": "nativeSlot", "props": { "id": { "type": "string", "value": "balanceToggle" }, "amount": { "type": "string", "value": "${'$'}32,149.00" } } }
           ]
         }
@@ -70,9 +80,9 @@ object LocalScreens {
           "props": { "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "width": { "type": "string", "value": "fill" }, "animateSize": { "type": "boolean", "value": true } } } },
           "children": [
             { "type": "text", "props": { "value": { "type": "string", "value": "Checkout" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" } } } } },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "md" } } } } },
+            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-md" } } } } },
             { "type": "image", "props": { "url": { "type": "string", "value": "https://picsum.photos/seed/headphones/400/400" }, "style": { "type": "object", "value": { "cornerRadius": { "type": "number", "value": 12 }, "size": { "type": "number", "value": 180 } } } } },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
+            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-sm" } } } } },
             { "type": "text", "props": { "value": { "type": "string", "value": "Wireless Headphones" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
             { "type": "text", "props": { "value": { "type": "string", "value": "${'$'}59.99" } } },
             { "type": "rating", "props": { "value": { "type": "number", "value": 4 }, "max": { "type": "number", "value": 5 } } },

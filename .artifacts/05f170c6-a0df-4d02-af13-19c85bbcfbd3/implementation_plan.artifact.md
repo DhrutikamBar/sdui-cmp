@@ -1,50 +1,51 @@
-# Implementation Plan - Observability & Reliability
+# Implementation Plan - SDUI Testing Strategy
 
-This plan introduces a structured way to handle rendering crashes and report analytics in our SDUI system. Since the server controls the UI, the client must be highly resilient and provide clear feedback when things go wrong.
+This plan establishes a comprehensive testing suite to verify all the "Elite" and production-grade features developed so far.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> **Reporting Service**: I will introduce a `ReportingService` interface. You can later swap the `ConsoleReporter` for a real tool like Firebase Crashlytics or Sentry.
->
-> **Rendering Guard**: If a specific widget crashes (e.g., bad logic in a custom renderer), only that widget will show an "Error Widget" instead of crashing the whole app.
+> **Test Dependencies**: I will add `kotlin-test` and Compose testing libraries to the project. This will slightly increase the build configuration complexity but is required for verification.
 
 ## Proposed Changes
 
-### 1. Structured Reporting (`composeApp`)
+### 1. Test Infrastructure
 
-#### [NEW] [ReportingService.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/ReportingService.kt)
-- Define an `Observable` reporting interface.
-- Implement `reportCrash(throwable: Throwable, context: Map<String, Any>)`.
-- Implement `reportEvent(name: String, metadata: Map<String, Any>)`.
+#### [MODIFY] [shared/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/shared/build.gradle.kts)
+- Add `kotlin.test` dependency to `commonTest`.
 
-### 2. Resilience: Component Guards (`composeApp`)
+#### [MODIFY] [composeApp/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/build.gradle.kts)
+- Add `compose.uiTestJUnit4` and `kotlin.test` dependencies.
 
-#### [MODIFY] [ComponentRegistry.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/ComponentRegistry.kt)
-- Wrap the `renderer(...)` call in a `try-catch` block.
-- If a crash occurs:
-    1. Report the crash via `ReportingService` (including component `type` and `id`).
-    2. Render a "Debug Error Box" in development mode or the `fallback` node in production.
+### 2. Logic Verification (Unit Tests)
 
-### 3. Advanced Analytics Interceptor (`composeApp`)
+#### [NEW] [ConditionTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/shared/src/commonTest/kotlin/com/example/sdui/shared/ConditionTest.kt)
+- Test all condition types: `Equals`, `NotEmpty`, `IsTrue`, `Matches`, `And`, `Or`, `Not`.
+- Test the new `Script` evaluator with arithmetic operations.
 
-#### [MODIFY] [App.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/App.kt)
-- Enhance `AnalyticsInterceptor` to use the `metadata` field from `UiAction` and send it to `ReportingService`.
-- Add a `LaunchedEffect` in `SduiScreenContent` to report a "Screen View" event whenever a new path is loaded.
+#### [NEW] [InterpolationTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonTest/kotlin/com/example/sdui/app/InterpolationTest.kt)
+- Verify `{{fieldId}}` interpolation works correctly with `FormState`.
 
-### 4. Fetching Diagnostics (`composeApp`)
+### 3. Rendering & Interaction (UI Tests)
 
-#### [MODIFY] [UiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/UiRepository.kt)
-- Report network failures (4xx/5xx/Exceptions) to the `ReportingService` with the URL and response code.
+#### [NEW] [SduiUiTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/androidMain/kotlin/com/example/sdui/app/SduiUiTest.kt)
+- Verify that components with `visibleWhen` appear/disappear based on `FormState`.
+- Verify `onAppear` lifecycle hooks are triggered.
+- Verify `AnalyticsInterceptor` captures events.
+
+### 4. Integration Verification
+
+#### [NEW] [PrefetchTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonTest/kotlin/com/example/sdui/app/PrefetchTest.kt)
+- Verify `UiScanner` correctly identifies all navigation paths in a tree.
+- Verify `UiRepository` populates the cache during `prefetch`.
 
 ---
 
 ## Verification Plan
 
 ### Automated Tests
-- **Simulated Crash**: Create a widget that throws an exception and verify that the app remains stable and only that widget shows an error.
-- **Event Verification**: Verify that navigating to a screen triggers the "screen_view" event in logs.
+- Run `./gradlew :shared:allTests`
+- Run `./gradlew :composeApp:connectedAndroidTest` (requires emulator) or use JVM host tests.
 
 ### Manual Verification
-- Trigger a malformed JSON error from the server and verify the error is reported.
-- Click a button with metadata and verify the metadata is captured in the analytics logs.
+- A set of "Testing Instructions" will be provided in a new artifact to guide you through manual verification of Haptics and Accessibility.

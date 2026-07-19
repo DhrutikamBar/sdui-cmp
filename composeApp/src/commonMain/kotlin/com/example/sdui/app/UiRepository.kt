@@ -10,6 +10,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.serialization.kotlinx.protobuf.protobuf
+import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -20,10 +21,18 @@ import kotlinx.serialization.protobuf.ProtoBuf
 @OptIn(ExperimentalSerializationApi::class)
 class UiRepository(val baseUrl: String) {
     private val cache = mutableMapOf<String, UiNode>()
-    
+    private val prefetchJobs = mutableMapOf<String, Job>()
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    /**
+     * Optional hook for verifying payload signatures.
+     * Arguments: (rawBody, signatureHeader) -> Boolean
+     */
+    var signatureVerifier: ((String, String) -> Boolean)? = null
+
     private val client = HttpClient {
         install(ContentNegotiation) {
-            json(Json { 
+            json(Json {
                 ignoreUnknownKeys = true
                 prettyPrint = true
             })
@@ -35,22 +44,47 @@ class UiRepository(val baseUrl: String) {
         if (!forceRefresh && cache.containsKey(path)) {
             return cache[path]!!
         }
-        
+
+        // Check if there's an active prefetch job for this path
+        prefetchJobs[path]?.join()
+
+        if (!forceRefresh && cache.containsKey(path)) {
+            return cache[path]!!
+        }
+
         try {
             // Request Protobuf preferred, fallback to JSON
-            val screen: UiNode = client.get(baseUrl + path) {
+            val response: HttpResponse = client.get(baseUrl + path) {
                 contentType(ContentType.Application.ProtoBuf)
-            }.body()
-            
+            }
+
+            val screen: UiNode = response.body()
             cache[path] = screen
             return screen
         } catch (e: Exception) {
-            // Failure is handled in App.kt (LaunchedEffect), but we could log it here too
             throw e
         }
     }
-    
+
+    fun prefetch(path: String) {
+        if (cache.containsKey(path) || prefetchJobs.containsKey(path)) return
+
+        val job = scope.launch {
+            try {
+                val screen = fetchScreen(path)
+                cache[path] = screen
+            } catch (e: Exception) {
+                // Prefetch failed, ignore silently as fetchScreen will retry on demand
+            } finally {
+                prefetchJobs.remove(path)
+            }
+        }
+        prefetchJobs[path] = job
+    }
+
     fun clearCache() {
         cache.clear()
+        prefetchJobs.values.forEach { it.cancel() }
+        prefetchJobs.clear()
     }
 }

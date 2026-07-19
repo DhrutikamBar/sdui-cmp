@@ -1,5 +1,6 @@
-- [ ] **Step 1: Fix Nested Scrolling Crash**
-    - [ ] Add `LocalIsInsideScrollable` to `ComponentRegistry.kt`
-    - [ ] Update `RenderRoot` to apply root style to `LazyColumn`
-    - [ ] Update layout widgets in `Widgets.kt` to be scroll-aware
-- [ ] **Step 2: Verify & Final Walkthrough**
+- [x] **Step 1: Lifecycle Hooks (`shared`)**
+- [x] **Step 2: Impression Tracking (`composeApp`)**
+- [x] **Step 3: Predictive Prefetching (`composeApp`)**
+- [x] **Step 4: Remote Design Tokens (`composeApp`)**
+- [x] **Step 5: Advanced Logic Scripting (`composeApp`)**
+- [x] **Step 6: Final Verification**

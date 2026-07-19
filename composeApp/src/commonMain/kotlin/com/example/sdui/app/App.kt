@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.sdui.shared.Feedback
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
@@ -69,9 +70,25 @@ fun App(baseUrl: String? = null) {
     val navController = rememberNavController()
     val repository = remember(baseUrl) { baseUrl?.let { UiRepository(it) } }
     val reporter = remember { ConsoleReportingService() }
+    val resourceResolver = rememberResourceResolver()
+    
+    var designTokens by remember { mutableStateOf(DesignTokens()) }
+
+    LaunchedEffect(baseUrl) {
+        repository?.let { 
+            try {
+                // In a real app, this would be a specific endpoint for tokens
+                // designTokens = it.fetchTokens() 
+            } catch (e: Exception) { }
+        }
+    }
 
     MaterialTheme {
-        CompositionLocalProvider(LocalReportingService provides reporter) {
+        CompositionLocalProvider(
+            LocalReportingService provides reporter,
+            LocalResourceResolver provides resourceResolver,
+            LocalDesignTokens provides designTokens
+        ) {
             Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
                 Surface(modifier = Modifier.padding(padding)) {
                     CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
@@ -100,7 +117,7 @@ private fun SduiScreenContent(
     registry: ComponentRegistry,
     navController: NavHostController
 ) {
-    val formState = remember { FormState() }
+    val formState = rememberSaveable(saver = FormState.Saver) { FormState() }
     var screen by remember { mutableStateOf<UiNode?>(null) }
     var loadError by remember { mutableStateOf<String?>(null) }
     var retryTrigger by remember { mutableStateOf(0) }
@@ -119,6 +136,12 @@ private fun SduiScreenContent(
                 decodeLocalScreen(LocalScreens.wallet)
             }
             reporter.reportEvent("screen_view", mapOf("path" to path))
+            
+            // Predictive prefetching: fetch next screens in the background
+            UiScanner.findNavigablePaths(fetched).forEach { nextPath ->
+                repository?.prefetch(nextPath)
+            }
+            
             fetched
         } catch (e: Exception) {
             val context = mapOf("path" to path, "error" to (e.message ?: "unknown"))

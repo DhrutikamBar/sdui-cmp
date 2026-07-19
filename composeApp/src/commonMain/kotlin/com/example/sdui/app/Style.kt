@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +21,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
+
+data class DesignTokens(
+    val colors: Map<String, String> = mapOf(
+        "brand-primary" to "#0D1B4C",
+        "brand-secondary" to "#3949AB"
+    ),
+    val spacing: Map<String, Int> = mapOf(
+        "spacing-xs" to 4,
+        "spacing-sm" to 8,
+        "spacing-md" to 16,
+        "spacing-lg" to 24,
+        "spacing-xl" to 32
+    )
+)
+
+val LocalDesignTokens = compositionLocalOf { DesignTokens() }
 
 data class Style(
     val padding: SduiValue? = null,
@@ -37,20 +54,6 @@ data class Style(
     val animation: String? = null,
     val animateSize: Boolean? = null
 )
-
-object TokenResolver {
-    val colors = mapOf(
-        "brand-primary" to "#0D1B4C",
-        "brand-secondary" to "#3949AB"
-    )
-    val spacing = mapOf(
-        "spacing-xs" to 4,
-        "spacing-sm" to 8,
-        "spacing-md" to 16,
-        "spacing-lg" to 24,
-        "spacing-xl" to 32
-    )
-}
 
 fun UiNode.style(): Style {
     val obj = (props["style"] as? SduiValue.ObjectValue)?.value ?: return Style()
@@ -76,11 +79,13 @@ fun UiNode.style(): Style {
     )
 }
 
+@Composable
 fun resolveSpacing(value: SduiValue?): Dp {
     value ?: return 0.dp
     if (value is SduiValue.NumberValue) return value.value.toInt().dp
     val str = (value as? SduiValue.StringValue)?.value ?: return 0.dp
-    TokenResolver.spacing[str]?.let { return it.dp }
+    val tokens = LocalDesignTokens.current
+    tokens.spacing[str]?.let { return it.dp }
     return when (str) {
         "xs" -> 4.dp
         "sm" -> 8.dp
@@ -102,8 +107,8 @@ fun parseColor(hex: String): Color = try {
 @Composable
 fun resolveColor(value: String?): Color? {
     value ?: return null
-    val tokenValue = TokenResolver.colors[value]
-    val hex = tokenValue ?: value
+    val tokens = LocalDesignTokens.current
+    val hex = tokens.colors[value] ?: value
     
     val scheme = MaterialTheme.colorScheme
     return when (hex) {
@@ -167,8 +172,10 @@ fun Modifier.applyStyle(style: Style): Modifier {
 
 @Composable
 fun StyledText(value: String, style: Style, modifier: Modifier = Modifier) {
+    val resolver = LocalResourceResolver.current
+    val finalValue = if (value.isResource()) resolver?.resolveString(value) ?: value else value
     Text(
-        text = value,
+        text = finalValue,
         modifier = modifier,
         color = resolveColor(style.color) ?: Color.Unspecified,
         fontSize = if (style.fontSize != null) style.fontSize.sp else androidx.compose.ui.unit.TextUnit.Unspecified,

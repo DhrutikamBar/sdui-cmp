@@ -27,6 +27,7 @@ sealed class Condition {
     @Serializable @SerialName("not") data class Not(val condition: Condition) : Condition()
     @Serializable @SerialName("and") data class And(val conditions: List<Condition>) : Condition()
     @Serializable @SerialName("or") data class Or(val conditions: List<Condition>) : Condition()
+    @Serializable @SerialName("script") data class Script(val expression: String) : Condition()
 }
 
 /**
@@ -37,6 +38,16 @@ sealed class Feedback {
     @Serializable @SerialName("haptic") data class Haptic(val type: String) : Feedback()
     @Serializable @SerialName("sound") data class Sound(val name: String) : Feedback()
 }
+
+/**
+ * Accessibility metadata for screen readers.
+ */
+@Serializable
+data class Semantics(
+    val contentDescription: String? = null,
+    val role: String? = null, // "button", "image", "header"
+    val liveRegion: String? = null // "none", "polite", "assertive"
+)
 
 /**
  * A single node in the server-driven UI tree.
@@ -52,7 +63,11 @@ data class UiNode(
     val visibleWhen: List<Condition> = emptyList(),
     val errorWhen: List<Condition> = emptyList(),
     val fallback: UiNode? = null,
-    val sticky: Boolean = false
+    val sticky: Boolean = false,
+    val semantics: Semantics? = null,
+    val minSdkVersion: Int? = null,
+    val onAppear: UiAction? = null,
+    val onDisappear: UiAction? = null
 )
 
 /**

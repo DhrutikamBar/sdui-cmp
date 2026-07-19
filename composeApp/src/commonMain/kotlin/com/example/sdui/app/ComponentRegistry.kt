@@ -13,8 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,8 @@ import com.example.sdui.shared.Condition
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiAction
 import com.example.sdui.shared.UiNode
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /** Anything a widget's onClick/navigation should trigger. Each host app supplies its own. */
 fun interface ActionHandler {
@@ -30,8 +34,9 @@ fun interface ActionHandler {
 }
 
 /** Shared, observable state used for rule evaluation. */
-class FormState {
-    val values = mutableStateMapOf<String, SduiValue>()
+class FormState(initialValues: Map<String, SduiValue> = emptyMap()) {
+    val values = mutableStateMapOf<String, SduiValue>().apply { putAll(initialValues) }
+    
     operator fun set(key: String, value: SduiValue) {
         values[key] = value
     }
@@ -41,6 +46,18 @@ class FormState {
     fun getString(key: String): String = (values[key] as? SduiValue.StringValue)?.value ?: ""
     fun setString(key: String, value: String) {
         values[key] = SduiValue.StringValue(value)
+    }
+
+    companion object {
+        val Saver: Saver<FormState, Map<String, String>> = Saver(
+            save = { state -> 
+                state.values.mapValues { Json.encodeToString(it.value) } 
+            },
+            restore = { savedMap -> 
+                val restored = savedMap.mapValues { Json.decodeFromString<SduiValue>(it.value) }
+                FormState(restored)
+            }
+        )
     }
 }
 
@@ -66,6 +83,29 @@ fun Condition.evaluate(state: FormState): Boolean {
         is Condition.Not -> !condition.evaluate(state)
         is Condition.And -> conditions.all { it.evaluate(state) }
         is Condition.Or -> conditions.any { it.evaluate(state) }
+        is Condition.Script -> evaluateScript(expression, state)
+    }
+}
+
+/** 
+ * A tiny "elite" expression evaluator. 
+ * Supports: "field > value", "field < value", "field == value"
+ */
+private fun evaluateScript(expression: String, state: FormState): Boolean {
+    val regex = Regex("""(\w+)\s*([><=]+)\s*(.+)""")
+    val match = regex.find(expression) ?: return false
+    val (field, op, rawValue) = match.destructured
+    
+    val fieldVal = (state[field] as? SduiValue.NumberValue)?.value ?: 0.0
+    val targetVal = rawValue.trim().toDoubleOrNull() ?: 0.0
+    
+    return when (op) {
+        ">" -> fieldVal > targetVal
+        "<" -> fieldVal < targetVal
+        "==" -> fieldVal == targetVal
+        ">=" -> fieldVal >= targetVal
+        "<=" -> fieldVal <= targetVal
+        else -> false
     }
 }
 
@@ -129,6 +169,12 @@ class ComponentRegistry {
         }
 
         val content: @Composable () -> Unit = {
+            DisposableEffect(node.id) {
+                node.onAppear?.let { actions.handle(it) }
+                onDispose {
+                    node.onDisappear?.let { actions.handle(it) }
+                }
+            }
             renderer(node, actions, formState)
         }
 

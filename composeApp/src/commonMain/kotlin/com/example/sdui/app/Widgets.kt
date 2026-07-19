@@ -24,6 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +39,32 @@ import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
 
 val LocalSnackBarHostState = compositionLocalOf<SnackbarHostState?> { null }
+val LocalResourceResolver = compositionLocalOf<ResourceResolver?> { null }
+
+fun String.resolve(): String {
+    if (!isResource()) return this
+    // We can't use LocalResourceResolver here since it's not Composable.
+    // So we'll need to pass the resolver to the widgets or use it in StyledText.
+    return this 
+}
+
+fun Modifier.applySemantics(node: UiNode): Modifier {
+    val s = node.semantics ?: return this
+    return this.semantics {
+        s.contentDescription?.let { contentDescription = it }
+        s.role?.let {
+            when (it) {
+                "button" -> role = Role.Button
+                "image" -> role = Role.Image
+                "checkbox" -> role = Role.Checkbox
+                "switch" -> role = Role.Switch
+                "radioButton" -> role = Role.RadioButton
+                "tab" -> role = Role.Tab
+                "header" -> heading()
+            }
+        }
+    }
+}
 
 private fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value ?: ""
 private fun SduiValue?.asFloat() = (this as? SduiValue.NumberValue)?.value?.toFloat()
@@ -47,7 +78,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("column") { node, actions, formState ->
         val style = node.style()
         val isInsideScrollable = LocalIsInsideScrollable.current
-        var modifier = Modifier.applyStyle(style)
+        var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
         if (style.scrollable == true && !isInsideScrollable) modifier = modifier.verticalScroll(rememberScrollState())
         if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
@@ -59,7 +90,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("row") { node, actions, formState ->
         val style = node.style()
         val isInsideScrollable = LocalIsInsideScrollable.current
-        var modifier = Modifier.applyStyle(style)
+        var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
         if (style.scrollable == true && !isInsideScrollable) modifier = modifier.horizontalScroll(rememberScrollState())
         if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
@@ -74,7 +105,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("box") { node, actions, formState ->
         val style = node.style()
-        var base = Modifier.applyStyle(style)
+        var base = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) base = base.animateContentSize()
         val clickableModifier = if (node.action != null) {
             base.clickable { node.action?.let(actions::handle) }
@@ -86,7 +117,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("text") { node, actions, _ ->
         val style = node.style()
-        var modifier = Modifier.applyStyle(style)
+        var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
         StyledText(
             value = node.props["value"].asString(),
@@ -97,19 +128,23 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("image") { node, actions, _ ->
         val style = node.style()
+        val resolver = LocalResourceResolver.current
         val url = node.props["url"].asString().takeIf { it.isNotEmpty() }
         val emoji = node.props["icon"].asString().takeIf { it.isNotEmpty() }
-        val base = Modifier.applyStyle(style)
+        val base = Modifier.applyStyle(style).applySemantics(node)
         val clickableModifier = if (node.action != null) {
             base.clickable { node.action?.let(actions::handle) }
         } else base
         when {
-            url != null -> AsyncImage(
-                model = url,
-                contentDescription = null,
-                modifier = clickableModifier,
-                contentScale = ContentScale.Crop
-            )
+            url != null -> {
+                val finalModel = if (url.isResource()) resolver?.resolveImage(url) ?: url else url
+                AsyncImage(
+                    model = finalModel,
+                    contentDescription = null,
+                    modifier = clickableModifier,
+                    contentScale = ContentScale.Crop
+                )
+            }
             emoji != null -> Box(modifier = clickableModifier, contentAlignment = Alignment.Center) {
                 Text(emoji, fontSize = (style.fontSize ?: 20).sp, textAlign = TextAlign.Center)
             }
@@ -121,7 +156,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val style = node.style()
         val vector = materialIcon(node.props["name"].asString())
         val description = node.props["contentDescription"].asString()
-        var base = Modifier.applyStyle(style)
+        var base = Modifier.applyStyle(style).applySemantics(node)
         if (node.action != null) base = base.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
         val clickableModifier = if (node.action != null) base.clickable { node.action?.let(actions::handle) } else base
         if (vector != null) {
@@ -146,7 +181,7 @@ fun ComponentRegistry.registerCoreWidgets() {
             value = formState.getString(fieldId),
             onValueChange = { formState.setString(fieldId, it) },
             label = { Text(node.props["label"].asString()) },
-            modifier = Modifier.applyStyle(style),
+            modifier = Modifier.applyStyle(style).applySemantics(node),
             isError = hasError,
             supportingText = if (hasError && errorText.isNotEmpty()) { { Text(errorText, color = MaterialTheme.colorScheme.error) } } else null,
             keyboardOptions = KeyboardOptions(
@@ -162,7 +197,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         Button(
             onClick = { node.action?.let(actions::handle) },
             enabled = enabled,
-            modifier = Modifier.applyStyle(node.style())
+            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         ) {
             Text(node.props["label"].asString())
         }
@@ -171,7 +206,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("checkbox") { node, _, formState ->
         val fieldId = node.id ?: ""
         val checked = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.applyStyle(node.style())) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             Checkbox(checked = checked, onCheckedChange = { formState[fieldId] = SduiValue.BooleanValue(it) })
             Text(node.props["label"].asString())
         }
@@ -182,7 +217,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val checked = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.applyStyle(node.style()).fillMaxWidth()
+            modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node)
         ) {
             Text(node.props["label"].asString(), modifier = Modifier.weight(1f))
             Switch(checked = checked, onCheckedChange = { formState[fieldId] = SduiValue.BooleanValue(it) })
@@ -193,7 +228,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val selected = formState.getString(fieldId)
         val options = node.props["options"].asList().map { it.asString() }
-        Column(modifier = Modifier.applyStyle(node.style())) {
+        Column(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             options.forEach { option ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(selected = selected == option, onClick = { formState.setString(fieldId, option) })
@@ -208,7 +243,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var expanded by remember { mutableStateOf(false) }
         val options = node.props["options"].asList().map { it.asString() }
         val selected = formState.getString(fieldId).takeIf { it.isNotEmpty() } ?: node.props["placeholder"].asString().takeIf { it.isNotEmpty() } ?: "Select"
-        Box(modifier = Modifier.applyStyle(node.style())) {
+        Box(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             OutlinedButton(onClick = { expanded = true }) { Text(selected) }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 options.forEach { option ->
@@ -225,12 +260,12 @@ fun ComponentRegistry.registerCoreWidgets() {
         AssistChip(
             onClick = { node.action?.let(actions::handle) },
             label = { Text(node.props["label"].asString()) },
-            modifier = Modifier.applyStyle(node.style())
+            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         )
     }
 
     register("badge") { node, _, _ ->
-        Badge(modifier = Modifier.applyStyle(node.style())) {
+        Badge(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             Text(node.props["count"].asString())
         }
     }
@@ -239,9 +274,9 @@ fun ComponentRegistry.registerCoreWidgets() {
         val progress = node.props["progress"].asFloat()
         val variant = node.props["variant"].asString()
         if (variant == "circular") {
-            if (progress != null) CircularProgressIndicator(progress = { progress }) else CircularProgressIndicator()
+            if (progress != null) CircularProgressIndicator(progress = { progress }, modifier = Modifier.applySemantics(node)) else CircularProgressIndicator(modifier = Modifier.applySemantics(node))
         } else {
-            val modifier = Modifier.applyStyle(node.style()).fillMaxWidth()
+            val modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node)
             if (progress != null) LinearProgressIndicator(progress = { progress }, modifier = modifier)
             else LinearProgressIndicator(modifier = modifier)
         }
@@ -249,10 +284,10 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("spacer") { node, _, _ ->
         val sizeValue = node.style().size
-        Spacer(Modifier.size(if (sizeValue != null) resolveSpacing(sizeValue) else 8.dp))
+        Spacer(Modifier.size(if (sizeValue != null) resolveSpacing(sizeValue) else 8.dp).applySemantics(node))
     }
 
-    register("divider") { _, _, _ -> HorizontalDivider() }
+    register("divider") { node, _, _ -> HorizontalDivider(Modifier.applySemantics(node)) }
 
     register("nativeSlot") { node, _, _ ->
         when (node.props["id"].asString()) {
@@ -269,7 +304,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                 onDismissRequest = { formState[fieldId] = SduiValue.BooleanValue(false) },
                 title = if (titleText.isNotEmpty()) { { Text(titleText) } } else null,
                 text = {
-                    Column {
+                    Column(Modifier.applySemantics(node)) {
                         node.children.forEach { child -> Render(child, actions, formState) }
                     }
                 },
@@ -296,7 +331,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
         if (wantVisible || sheetState.isVisible) {
             ModalBottomSheet(onDismissRequest = { formState[fieldId] = SduiValue.BooleanValue(false) }, sheetState = sheetState) {
-                Column(Modifier.padding(16.dp)) {
+                Column(Modifier.padding(16.dp).applySemantics(node)) {
                     node.children.forEach { child -> Render(child, actions, formState) }
                 }
             }
@@ -313,7 +348,7 @@ fun ComponentRegistry.registerCoreWidgets() {
             value = current,
             onValueChange = { formState[fieldId] = SduiValue.NumberValue(it.toDouble()) },
             valueRange = min..max,
-            modifier = Modifier.applyStyle(node.style()).fillMaxWidth()
+            modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node)
         )
     }
 
@@ -321,7 +356,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val value = node.props["value"].asFloat() ?: 0f
         val maxStars = node.props["max"].asInt() ?: 5
         val star = materialIcon("star")
-        Row(modifier = Modifier.applyStyle(node.style())) {
+        Row(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             repeat(maxStars) { index ->
                 if (star != null) {
                     Icon(
@@ -338,7 +373,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val labels = node.props["labels"].asList().map { it.asString() }
         val selected = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toInt() ?: 0
-        Column(modifier = Modifier.applyStyle(node.style())) {
+        Column(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             TabRow(selectedTabIndex = selected) {
                 labels.forEachIndexed { index, label ->
                     Tab(
@@ -356,7 +391,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val expanded = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
         val chevron = materialIcon(if (expanded) "arrowUp" else "arrowDown")
-        Column(modifier = Modifier.applyStyle(node.style()).animateContentSize()) {
+        Column(modifier = Modifier.applyStyle(node.style()).animateContentSize().applySemantics(node)) {
             Row(
                 modifier = Modifier.fillMaxWidth().clickable { formState[fieldId] = SduiValue.BooleanValue(!expanded) },
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -376,7 +411,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val heightDp = node.props["height"].asInt() ?: 300
         LazyVerticalGrid(
             columns = GridCells.Fixed(columnsCount),
-            modifier = Modifier.applyStyle(node.style()).height(heightDp.dp)
+            modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)
         ) {
             items(node.children) { child -> Render(child, actions, formState) }
         }
@@ -384,7 +419,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("list") { node, actions, formState ->
         val heightDp = node.props["height"].asInt() ?: 300
-        LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp)) {
+        LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
             items(node.children) { child -> Render(child, actions, formState) }
         }
     }
@@ -392,7 +427,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("flowRow") { node, actions, formState ->
         val style = node.style()
-        FlowRow(modifier = Modifier.applyStyle(style), horizontalArrangement = parseArrangement(style.arrangement)) {
+        FlowRow(modifier = Modifier.applyStyle(style).applySemantics(node), horizontalArrangement = parseArrangement(style.arrangement)) {
             node.children.forEach { child -> Render(child, actions, formState) }
         }
     }
@@ -400,7 +435,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("pager") { node, actions, formState ->
         val heightDp = node.props["height"].asInt() ?: 200
         val pagerState = rememberPagerState(pageCount = { node.children.size })
-        HorizontalPager(state = pagerState, modifier = Modifier.applyStyle(node.style()).height(heightDp.dp)) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) { page ->
             Render(node.children[page], actions, formState)
         }
     }
@@ -409,7 +444,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val length = node.props["length"].asInt() ?: 6
         val code = formState.getString(fieldId)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.applyStyle(node.style())) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             repeat(length) { index ->
                 OutlinedTextField(
                     value = code.getOrNull(index)?.toString() ?: "",
@@ -431,7 +466,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var showDialog by remember { mutableStateOf(false) }
         val selectedMillis = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toLong()
         val label = node.props["label"].asString().takeIf { it.isNotEmpty() } ?: "Select date"
-        OutlinedButton(onClick = { showDialog = true }, modifier = Modifier.applyStyle(node.style())) {
+        OutlinedButton(onClick = { showDialog = true }, modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             Text(if (selectedMillis != null) "Date selected" else label)
         }
         if (showDialog) {
@@ -461,14 +496,14 @@ fun ComponentRegistry.registerCoreWidgets() {
             active = expanded,
             onActiveChange = { expanded = it },
             placeholder = { Text(placeholder) },
-            modifier = Modifier.applyStyle(node.style())
+            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         ) {}
     }
 
     register("skeleton") { node, _, _ ->
         val style = node.style()
         ShimmerBox(
-            modifier = Modifier.applyStyle(style).height((node.props["height"].asInt() ?: 16).dp),
+            modifier = Modifier.applyStyle(style).height((node.props["height"].asInt() ?: 16).dp).applySemantics(node),
             cornerRadius = style.cornerRadius ?: 4
         )
     }
