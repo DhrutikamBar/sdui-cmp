@@ -1,33 +1,51 @@
-# Implementation Plan - Fix Build Error
+# Implementation Plan - SDUI Testing Strategy
 
-The project currently fails to build with the error:
-`Unable to load class 'org.gradle.api.internal.plugins.DefaultArtifactPublicationSet'`
+This plan establishes a comprehensive testing suite to verify all the "Elite" and production-grade features developed so far.
 
-This is caused by a version mismatch between Gradle (9.6.1) and the Android Gradle Plugin (8.7.0). Gradle 9.x removed internal APIs that AGP 8.7.0 still relies on.
+## User Review Required
+
+> [!IMPORTANT]
+> **Test Dependencies**: I will add `kotlin-test` and Compose testing libraries to the project. This will slightly increase the build configuration complexity but is required for verification.
 
 ## Proposed Changes
 
-I have two options to fix this:
+### 1. Test Infrastructure
 
-### Option 1: Downgrade Gradle (Recommended for quick fix)
-Downgrade Gradle to 8.11.1 to match AGP 8.7.0. This is a simple change that maintains the current project structure.
+#### [MODIFY] [shared/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/shared/build.gradle.kts)
+- Add `kotlin.test` dependency to `commonTest`.
 
-### Option 2: Upgrade to AGP 9.x (Modern approach for 2026)
-Upgrade to AGP 9.3.0 and Kotlin 2.4.10. This requires:
-- Splitting `composeApp` into a dedicated `androidApp` module and a `shared-ui` KMP library.
-- Migrating to the new `com.android.kotlin.multiplatform.library` plugin.
-- Updating DSLs to the AGP 9 standards.
+#### [MODIFY] [composeApp/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/build.gradle.kts)
+- Add `compose.uiTestJUnit4` and `kotlin.test` dependencies.
 
-I will proceed with **Option 1** first as it's the most direct fix for the current error, unless you prefer the full AGP 9 migration.
+### 2. Logic Verification (Unit Tests)
 
-#### [MODIFY] [gradle-wrapper.properties](file:///D:/chikul/sdui-demo/sdui-demo/gradle/wrapper/gradle-wrapper.properties)
-- Downgrade `distributionUrl` to Gradle 8.11.1.
+#### [NEW] [ConditionTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/shared/src/commonTest/kotlin/com/example/sdui/shared/ConditionTest.kt)
+- Test all condition types: `Equals`, `NotEmpty`, `IsTrue`, `Matches`, `And`, `Or`, `Not`.
+- Test the new `Script` evaluator with arithmetic operations.
+
+#### [NEW] [InterpolationTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonTest/kotlin/com/example/sdui/app/InterpolationTest.kt)
+- Verify `{{fieldId}}` interpolation works correctly with `FormState`.
+
+### 3. Rendering & Interaction (UI Tests)
+
+#### [NEW] [SduiUiTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/androidMain/kotlin/com/example/sdui/app/SduiUiTest.kt)
+- Verify that components with `visibleWhen` appear/disappear based on `FormState`.
+- Verify `onAppear` lifecycle hooks are triggered.
+- Verify `AnalyticsInterceptor` captures events.
+
+### 4. Integration Verification
+
+#### [NEW] [PrefetchTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonTest/kotlin/com/example/sdui/app/PrefetchTest.kt)
+- Verify `UiScanner` correctly identifies all navigation paths in a tree.
+- Verify `UiRepository` populates the cache during `prefetch`.
+
+---
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `./gradlew :composeApp:assembleDebug` to verify the build completes successfully.
-- Run `./gradlew :server:run` to ensure the backend still builds and starts.
+- Run `./gradlew :shared:allTests`
+- Run `./gradlew :composeApp:connectedAndroidTest` (requires emulator) or use JVM host tests.
 
 ### Manual Verification
-- Verify that the IDE syncs successfully after the change.
+- A set of "Testing Instructions" will be provided in a new artifact to guide you through manual verification of Haptics and Accessibility.

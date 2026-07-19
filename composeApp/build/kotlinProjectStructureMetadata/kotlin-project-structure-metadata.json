@@ -45,7 +45,11 @@
           "org.jetbrains.compose.material3:material3",
           "io.ktor:ktor-client-core",
           "io.ktor:ktor-client-content-negotiation",
-          "io.ktor:ktor-serialization-kotlinx-json"
+          "io.ktor:ktor-serialization-kotlinx-json",
+          "org.jetbrains.compose.material:material-icons-extended",
+          "io.coil-kt.coil3:coil-compose",
+          "io.coil-kt.coil3:coil-network-ktor3",
+          "org.jetbrains.androidx.navigation:navigation-compose"
         ],
         "sourceSetCInteropMetadataDirectory": "appleMain-cinterop",
         "binaryLayout": "klib",
@@ -73,6 +77,10 @@
           "io.ktor:ktor-client-core",
           "io.ktor:ktor-client-content-negotiation",
           "io.ktor:ktor-serialization-kotlinx-json",
+          "org.jetbrains.compose.material:material-icons-extended",
+          "io.coil-kt.coil3:coil-compose",
+          "io.coil-kt.coil3:coil-network-ktor3",
+          "org.jetbrains.androidx.navigation:navigation-compose",
           "io.ktor:ktor-client-darwin"
         ],
         "sourceSetCInteropMetadataDirectory": "iosMain-cinterop",
@@ -92,7 +100,11 @@
           "org.jetbrains.compose.material3:material3",
           "io.ktor:ktor-client-core",
           "io.ktor:ktor-client-content-negotiation",
-          "io.ktor:ktor-serialization-kotlinx-json"
+          "io.ktor:ktor-serialization-kotlinx-json",
+          "org.jetbrains.compose.material:material-icons-extended",
+          "io.coil-kt.coil3:coil-compose",
+          "io.coil-kt.coil3:coil-network-ktor3",
+          "org.jetbrains.androidx.navigation:navigation-compose"
         ],
         "sourceSetCInteropMetadataDirectory": "nativeMain-cinterop",
         "binaryLayout": "klib",

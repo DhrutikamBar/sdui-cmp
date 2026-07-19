@@ -1,7 +1,7 @@
 [
   {
-    "moduleId": "module org.jetbrains.kotlin:kotlin-stdlib:2.1.10",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlin-kotlin-stdlib-2.1.10-commonMain-ITmP6A.klib",
+    "moduleId": "module org.jetbrains.kotlin:kotlin-stdlib:2.2.20",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlin-kotlin-stdlib-2.2.20-commonMain-Y8sbrw.klib",
     "sourceSetName": "commonMain"
   },
   {
@@ -10,8 +10,8 @@
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.runtime:runtime:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.runtime-runtime-1.8.0-commonMain-4BN-zQ.klib",
+    "moduleId": "module org.jetbrains.compose.runtime:runtime:1.9.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.runtime-runtime-1.9.3-commonMain-QgBs-g.klib",
     "sourceSetName": "commonMain"
   },
   {
@@ -25,8 +25,8 @@
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module io.ktor:ktor-client-core:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-client-core-3.0.0-commonMain-86YTPA.klib",
+    "moduleId": "module io.ktor:ktor-client-core:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-client-core-3.0.1-commonMain-_X-3Yw.klib",
     "sourceSetName": "commonMain"
   },
   {
@@ -40,6 +40,56 @@
     "sourceSetName": "commonMain"
   },
   {
+    "moduleId": "module org.jetbrains.compose.material:material-icons-extended:1.7.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.material-material-icons-extended-1.7.3-commonMain-m2wuDA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module io.coil-kt.coil3:coil-compose:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-compose-3.0.4-commonMain-MF5mEw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module io.coil-kt.coil3:coil-network-ktor3:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-network-ktor3-3.0.4-commonMain-PuhmSg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.navigation:navigation-compose:2.9.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.navigation-navigation-compose-2.9.2-commonMain-HXa7Kg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.compose.runtime:runtime:1.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.compose.runtime-runtime-1.9.4-commonMain-_TGNUg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.animation:animation:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.animation-animation-1.8.2-commonMain-heSqMA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.ui:ui:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-1.8.2-commonMain-wXUFBw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.material:material-ripple:1.8.0",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.material-material-ripple-1.8.0-commonMain-fA0Fvg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.ui:ui-graphics:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-graphics-1.8.2-commonMain-HHvMxA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.ui:ui-text:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-text-1.8.2-commonMain-HUoj_Q.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
     "moduleId": "module org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0",
     "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlinx-kotlinx-coroutines-core-1.9.0-concurrentMain-ENDfhw.klib",
     "sourceSetName": "concurrentMain"
@@ -50,53 +100,28 @@
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.animation:animation:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.animation-animation-1.8.0-commonMain-hDRn4A.klib",
+    "moduleId": "module io.ktor:ktor-http:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-http-3.0.1-commonMain-HJ2v3w.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.ui:ui:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-1.8.0-commonMain-PqwKWw.klib",
+    "moduleId": "module io.ktor:ktor-events:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-events-3.0.1-commonMain-EwGNrw.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.material:material-ripple:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.material-material-ripple-1.8.0-commonMain-fA0Fvg.klib",
+    "moduleId": "module io.ktor:ktor-websocket-serialization:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-websocket-serialization-3.0.1-commonMain-6RXyCg.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.ui:ui-graphics:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-graphics-1.8.0-commonMain-4mJ79Q.klib",
+    "moduleId": "module io.ktor:ktor-sse:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-sse-3.0.1-commonMain-NhOpkw.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.ui:ui-text:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-text-1.8.0-commonMain-OvwrHg.klib",
-    "sourceSetName": "commonMain"
-  },
-  {
-    "moduleId": "module io.ktor:ktor-http:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-http-3.0.0-commonMain-s0lQng.klib",
-    "sourceSetName": "commonMain"
-  },
-  {
-    "moduleId": "module io.ktor:ktor-events:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-events-3.0.0-commonMain-um6hkw.klib",
-    "sourceSetName": "commonMain"
-  },
-  {
-    "moduleId": "module io.ktor:ktor-websocket-serialization:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-websocket-serialization-3.0.0-commonMain-kjocfQ.klib",
-    "sourceSetName": "commonMain"
-  },
-  {
-    "moduleId": "module io.ktor:ktor-sse:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-sse-3.0.0-commonMain-GYvR-g.klib",
-    "sourceSetName": "commonMain"
-  },
-  {
-    "moduleId": "module io.ktor:ktor-serialization:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-serialization-3.0.0-commonMain-tkHGZA.klib",
+    "moduleId": "module io.ktor:ktor-serialization:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-serialization-3.0.1-commonMain-1bXsZA.klib",
     "sourceSetName": "commonMain"
   },
   {
@@ -115,43 +140,113 @@
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.animation:animation-core:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.animation-animation-core-1.8.0-commonMain-2smSyw.klib",
+    "moduleId": "module org.jetbrains.compose.material:material-icons-core:1.7.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.material-material-icons-core-1.7.3-commonMain-OY6u5w.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.foundation:foundation-layout:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.foundation-foundation-layout-1.8.0-commonMain-Urf8fw.klib",
+    "moduleId": "module io.coil-kt.coil3:coil:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-3.0.4-commonMain-vgEXBw.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.ui:ui-geometry:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-geometry-1.8.0-commonMain-1jjAnQ.klib",
+    "moduleId": "module io.coil-kt.coil3:coil-compose-core:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-compose-core-3.0.4-commonMain-LVMImg.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-common:2.8.4",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-common-2.8.4-commonMain-FPlmfg.klib",
+    "moduleId": "module io.coil-kt.coil3:coil-core:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-core-3.0.4-nonJsCommonMain-9CrlFg.klib",
+    "sourceSetName": "nonJsCommonMain"
+  },
+  {
+    "moduleId": "module io.coil-kt.coil3:coil-core:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-core-3.0.4-commonMain-9CrlFg.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.runtime:runtime-saveable:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.runtime-runtime-saveable-1.8.0-commonMain-HY_2Hg.klib",
+    "moduleId": "module io.coil-kt.coil3:coil-network-core:3.0.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.coil-kt.coil3-coil-network-core-3.0.4-commonMain-Eyr7Rw.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.ui:ui-unit:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-unit-1.8.0-commonMain-YP1muA.klib",
+    "moduleId": "module androidx.annotation:annotation:1.9.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.annotation-annotation-1.9.1-commonMain-WmoUwA.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.ui:ui-util:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-util-1.8.0-commonMain-TL6JCg.klib",
+    "moduleId": "module androidx.collection:collection:1.5.0",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.collection-collection-1.5.0-commonMain-j7f1lg.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module io.ktor:ktor-utils:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-utils-3.0.0-commonMain-j8VvdQ.klib",
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-common:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-common-2.9.6-commonMain-_EOCYQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-runtime-compose-2.9.6-commonMain-MM2pxQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-2.9.6-commonMain-o5UeXw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-compose-2.9.6-nativeMain-OmkHFA.klib",
+    "sourceSetName": "nativeMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-compose-2.9.6-nonAndroidMain-dmNbXw.klib",
+    "sourceSetName": "nonAndroidMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-compose-2.9.6-commonMain-dmNbXw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-viewmodel-savedstate-2.9.6-commonMain-HvVjYQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.navigation:navigation-common:2.9.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.navigation-navigation-common-2.9.2-commonMain-iP6YuQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.navigation:navigation-runtime:2.9.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.navigation-navigation-runtime-2.9.2-commonMain-wqr4yQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.savedstate:savedstate:1.3.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.savedstate-savedstate-1.3.6-commonMain-Gx5ULw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.savedstate:savedstate-compose:1.3.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.savedstate-savedstate-compose-1.3.6-commonMain-Fw7d1w.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.animation:animation-core:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.animation-animation-core-1.8.2-commonMain-59fNVA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.foundation:foundation-layout:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.foundation-foundation-layout-1.8.2-commonMain-6Rvizw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.runtime:runtime-saveable:1.9.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.runtime-runtime-saveable-1.9.3-commonMain-UtAgeQ.klib",
     "sourceSetName": "commonMain"
   },
   {
@@ -160,23 +255,123 @@
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module io.ktor:ktor-websockets:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-websockets-3.0.0-commonMain-tSaR_g.klib",
+    "moduleId": "module androidx.compose.runtime:runtime-annotation:1.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.compose.runtime-runtime-annotation-1.9.4-commonMain-k_1cjw.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module org.jetbrains.compose.annotation-internal:annotation:1.8.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.annotation-internal-annotation-1.8.0-commonMain-nX1O7g.klib",
+    "moduleId": "module org.jetbrains.compose.collection-internal:collection:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.collection-internal-collection-1.8.2-commonMain-wYBS5Q.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module io.ktor:ktor-io:3.0.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-io-3.0.0-commonMain-2pQ2MQ.klib",
+    "moduleId": "module org.jetbrains.compose.ui:ui-geometry:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-geometry-1.8.2-commonMain-pBZZJQ.klib",
     "sourceSetName": "commonMain"
   },
   {
-    "moduleId": "module androidx.annotation:annotation:1.9.1",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.annotation-annotation-1.9.1-commonMain-WmoUwA.klib",
+    "moduleId": "module org.jetbrains.compose.ui:ui-util:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-util-1.8.2-commonMain-E42TKw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.androidx.lifecycle:lifecycle-runtime:2.9.6",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.androidx.lifecycle-lifecycle-runtime-2.9.6-commonMain-WvMiUA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.annotation-internal:annotation:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.annotation-internal-annotation-1.8.2-commonMain-rFUiXw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.compose.ui:ui-unit:1.8.2",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.compose.ui-ui-unit-1.8.2-commonMain-YtGKSg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.kotlinx:atomicfu:0.27.0",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlinx-atomicfu-0.27.0-nativeUnixLikeMain-7K06eQ.klib",
+    "sourceSetName": "nativeUnixLikeMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.kotlinx:atomicfu:0.27.0",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlinx-atomicfu-0.27.0-nativeMain-7K06eQ.klib",
+    "sourceSetName": "nativeMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.kotlinx:atomicfu:0.27.0",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlinx-atomicfu-0.27.0-commonMain-7K06eQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module io.ktor:ktor-utils:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-utils-3.0.1-commonMain-mRaY8g.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module io.ktor:ktor-websockets:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-websockets-3.0.1-commonMain-6r0LVg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module com.squareup.okio:okio:3.9.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\com.squareup.okio-okio-3.9.1-systemFileSystemMain-ha3VpQ.klib",
+    "sourceSetName": "systemFileSystemMain"
+  },
+  {
+    "moduleId": "module com.squareup.okio:okio:3.9.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\com.squareup.okio-okio-3.9.1-zlibMain-ha3VpQ.klib",
+    "sourceSetName": "zlibMain"
+  },
+  {
+    "moduleId": "module com.squareup.okio:okio:3.9.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\com.squareup.okio-okio-3.9.1-commonMain-ha3VpQ.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.lifecycle:lifecycle-common:2.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.lifecycle-lifecycle-common-2.9.4-commonMain-2l5nFA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.lifecycle:lifecycle-runtime-compose:2.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.lifecycle-lifecycle-runtime-compose-2.9.4-commonMain-Jyns3Q.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.lifecycle:lifecycle-viewmodel:2.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.lifecycle-lifecycle-viewmodel-2.9.4-commonMain-YZugNA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.lifecycle-lifecycle-viewmodel-savedstate-2.9.4-commonMain-KTe1Gw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.savedstate:savedstate:1.3.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.savedstate-savedstate-1.3.3-commonMain-NwmUsg.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.savedstate:savedstate-compose:1.3.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.savedstate-savedstate-compose-1.3.3-commonMain-9pLK_g.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.compose.runtime:runtime-saveable:1.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.compose.runtime-runtime-saveable-1.9.4-commonMain-0zF0yA.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module androidx.lifecycle:lifecycle-runtime:2.9.4",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\androidx.lifecycle-lifecycle-runtime-2.9.4-commonMain-IrcNlw.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module io.ktor:ktor-io:3.0.1",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\composeApp\\build\\kotlinTransformedMetadataLibraries\\commonMain\\io.ktor-ktor-io-3.0.1-commonMain-BYlo6A.klib",
     "sourceSetName": "commonMain"
   },
   {

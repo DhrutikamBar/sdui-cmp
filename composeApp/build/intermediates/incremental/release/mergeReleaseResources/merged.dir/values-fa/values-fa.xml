@@ -14,7 +14,7 @@
     <string msgid="6312721426453364202" name="default_popup_window_title">"پنجره بالاپر"</string>
     <string msgid="1890207353314751437" name="dropdown_menu">"منوی کرکره‌ای"</string>
     <string msgid="6827826412747255547" name="in_progress">"درحال انجام"</string>
-    <string msgid="7933458017204019916" name="indeterminate">"برخی موارد علامت‌گذاری شده است"</string>
+    <string msgid="7933458017204019916" name="indeterminate">"ناقص علامت زده‌شده"</string>
     <string msgid="2988463736136100848" name="m3c_bottom_sheet_collapse_description">"جمع کردن برگ زیرین"</string>
     <string msgid="1555567894577437024" name="m3c_bottom_sheet_dismiss_description">"بستن برگ زیرین"</string>
     <string msgid="8403354765404029791" name="m3c_bottom_sheet_drag_handle_description">"دستگیره کشاندن"</string>

@@ -4,94 +4,83 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Badge
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.floatOrNull
-import kotlinx.serialization.json.jsonPrimitive
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.ui.graphics.Color
-import kotlinx.serialization.json.intOrNull
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import com.example.sdui.shared.SduiValue
+import com.example.sdui.shared.UiNode
 
 val LocalSnackBarHostState = compositionLocalOf<SnackbarHostState?> { null }
+val LocalResourceResolver = compositionLocalOf<ResourceResolver?> { null }
+
+fun String.resolve(): String {
+    if (!isResource()) return this
+    // We can't use LocalResourceResolver here since it's not Composable.
+    // So we'll need to pass the resolver to the widgets or use it in StyledText.
+    return this 
+}
+
+fun Modifier.applySemantics(node: UiNode): Modifier {
+    val s = node.semantics ?: return this
+    return this.semantics {
+        s.contentDescription?.let { contentDescription = it }
+        s.role?.let {
+            when (it) {
+                "button" -> role = Role.Button
+                "image" -> role = Role.Image
+                "checkbox" -> role = Role.Checkbox
+                "switch" -> role = Role.Switch
+                "radioButton" -> role = Role.RadioButton
+                "tab" -> role = Role.Tab
+                "header" -> heading()
+            }
+        }
+    }
+}
+
+private fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value ?: ""
+private fun SduiValue?.asFloat() = (this as? SduiValue.NumberValue)?.value?.toFloat()
+private fun SduiValue?.asInt() = (this as? SduiValue.NumberValue)?.value?.toInt()
+private fun SduiValue?.asBoolean() = (this as? SduiValue.BooleanValue)?.value ?: false
+private fun SduiValue?.asList() = (this as? SduiValue.ListValue)?.value ?: emptyList()
+
 @OptIn(ExperimentalMaterial3Api::class)
 fun ComponentRegistry.registerCoreWidgets() {
 
     register("column") { node, actions, formState ->
         val style = node.style()
-        var modifier = Modifier.applyStyle(style)
+        val isInsideScrollable = LocalIsInsideScrollable.current
+        var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
-        if (style.scrollable == true) modifier = modifier.verticalScroll(rememberScrollState())
+        if (style.scrollable == true && !isInsideScrollable) modifier = modifier.verticalScroll(rememberScrollState())
         if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
         Column(modifier = modifier, horizontalAlignment = parseColumnAlignment(style.alignment)) {
             node.children.forEach { child -> Render(child, actions, formState) }
@@ -100,9 +89,10 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("row") { node, actions, formState ->
         val style = node.style()
-        var modifier = Modifier.applyStyle(style)
+        val isInsideScrollable = LocalIsInsideScrollable.current
+        var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
-        if (style.scrollable == true) modifier = modifier.horizontalScroll(rememberScrollState())
+        if (style.scrollable == true && !isInsideScrollable) modifier = modifier.horizontalScroll(rememberScrollState())
         if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
         Row(
             modifier = modifier,
@@ -115,7 +105,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("box") { node, actions, formState ->
         val style = node.style()
-        var base = Modifier.applyStyle(style)
+        var base = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) base = base.animateContentSize()
         val clickableModifier = if (node.action != null) {
             base.clickable { node.action?.let(actions::handle) }
@@ -127,10 +117,10 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("text") { node, actions, _ ->
         val style = node.style()
-        var modifier = Modifier.applyStyle(style)
+        var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
         StyledText(
-            value = node.props["value"]?.jsonPrimitive?.contentOrNull ?: "",
+            value = node.props["value"].asString(),
             style = style,
             modifier = modifier
         )
@@ -138,19 +128,23 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("image") { node, actions, _ ->
         val style = node.style()
-        val url = node.props["url"]?.jsonPrimitive?.contentOrNull
-        val emoji = node.props["icon"]?.jsonPrimitive?.contentOrNull
-        val base = Modifier.applyStyle(style)
+        val resolver = LocalResourceResolver.current
+        val url = node.props["url"].asString().takeIf { it.isNotEmpty() }
+        val emoji = node.props["icon"].asString().takeIf { it.isNotEmpty() }
+        val base = Modifier.applyStyle(style).applySemantics(node)
         val clickableModifier = if (node.action != null) {
             base.clickable { node.action?.let(actions::handle) }
         } else base
         when {
-            url != null -> AsyncImage(
-                model = url,
-                contentDescription = null,
-                modifier = clickableModifier,
-                contentScale = ContentScale.Crop
-            )
+            url != null -> {
+                val finalModel = if (url.isResource()) resolver?.resolveImage(url) ?: url else url
+                AsyncImage(
+                    model = finalModel,
+                    contentDescription = null,
+                    modifier = clickableModifier,
+                    contentScale = ContentScale.Crop
+                )
+            }
             emoji != null -> Box(modifier = clickableModifier, contentAlignment = Alignment.Center) {
                 Text(emoji, fontSize = (style.fontSize ?: 20).sp, textAlign = TextAlign.Center)
             }
@@ -160,9 +154,9 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("icon") { node, actions, _ ->
         val style = node.style()
-        val vector = materialIcon(node.props["name"]?.jsonPrimitive?.contentOrNull ?: "")
-        val description = node.props["contentDescription"]?.jsonPrimitive?.contentOrNull
-        var base = Modifier.applyStyle(style)
+        val vector = materialIcon(node.props["name"].asString())
+        val description = node.props["contentDescription"].asString()
+        var base = Modifier.applyStyle(style).applySemantics(node)
         if (node.action != null) base = base.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
         val clickableModifier = if (node.action != null) base.clickable { node.action?.let(actions::handle) } else base
         if (vector != null) {
@@ -175,21 +169,21 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val style = node.style()
         val focusManager = LocalFocusManager.current
-        val keyboardType = when (node.props["keyboardType"]?.jsonPrimitive?.contentOrNull) {
+        val keyboardType = when (node.props["keyboardType"].asString()) {
             "number" -> KeyboardType.Number
             "email" -> KeyboardType.Email
             "phone" -> KeyboardType.Phone
             else -> KeyboardType.Text
         }
-        val hasError = node.errorWhen.isNotEmpty() && !node.errorWhen.all { it.isSatisfied(formState) }
-        val errorText = node.props["errorText"]?.jsonPrimitive?.contentOrNull
+        val hasError = node.errorWhen.isNotEmpty() && !node.errorWhen.all { it.evaluate(formState) }
+        val errorText = node.props["errorText"].asString()
         OutlinedTextField(
-            value = formState[fieldId] ?: "",
-            onValueChange = { formState[fieldId] = it },
-            label = { Text(node.props["label"]?.jsonPrimitive?.contentOrNull ?: "") },
-            modifier = Modifier.applyStyle(style),
+            value = formState.getString(fieldId),
+            onValueChange = { formState.setString(fieldId, it) },
+            label = { Text(node.props["label"].asString()) },
+            modifier = Modifier.applyStyle(style).applySemantics(node),
             isError = hasError,
-            supportingText = if (hasError && errorText != null) { { Text(errorText, color = MaterialTheme.colorScheme.error) } } else null,
+            supportingText = if (hasError && errorText.isNotEmpty()) { { Text(errorText, color = MaterialTheme.colorScheme.error) } } else null,
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType,
                 imeAction = ImeAction.Next
@@ -199,45 +193,45 @@ fun ComponentRegistry.registerCoreWidgets() {
     }
 
     register("button") { node, actions, formState ->
-        val enabled = node.rules.all { it.isSatisfied(formState) }
+        val enabled = node.rules.all { it.evaluate(formState) }
         Button(
             onClick = { node.action?.let(actions::handle) },
             enabled = enabled,
-            modifier = Modifier.applyStyle(node.style())
+            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         ) {
-            Text(node.props["label"]?.jsonPrimitive?.contentOrNull ?: "")
+            Text(node.props["label"].asString())
         }
     }
 
     register("checkbox") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val checked = formState[fieldId] == "true"
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.applyStyle(node.style())) {
-            Checkbox(checked = checked, onCheckedChange = { formState[fieldId] = it.toString() })
-            Text(node.props["label"]?.jsonPrimitive?.contentOrNull ?: "")
+        val checked = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
+            Checkbox(checked = checked, onCheckedChange = { formState[fieldId] = SduiValue.BooleanValue(it) })
+            Text(node.props["label"].asString())
         }
     }
 
     register("switch") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val checked = formState[fieldId] == "true"
+        val checked = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.applyStyle(node.style()).fillMaxWidth()
+            modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node)
         ) {
-            Text(node.props["label"]?.jsonPrimitive?.contentOrNull ?: "", modifier = Modifier.weight(1f))
-            Switch(checked = checked, onCheckedChange = { formState[fieldId] = it.toString() })
+            Text(node.props["label"].asString(), modifier = Modifier.weight(1f))
+            Switch(checked = checked, onCheckedChange = { formState[fieldId] = SduiValue.BooleanValue(it) })
         }
     }
 
     register("radioGroup") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val selected = formState[fieldId]
-        val options = (node.props["options"] as? JsonArray)?.mapNotNull { it.jsonPrimitive.contentOrNull } ?: emptyList()
-        Column(modifier = Modifier.applyStyle(node.style())) {
+        val selected = formState.getString(fieldId)
+        val options = node.props["options"].asList().map { it.asString() }
+        Column(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             options.forEach { option ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = selected == option, onClick = { formState[fieldId] = option })
+                    RadioButton(selected = selected == option, onClick = { formState.setString(fieldId, option) })
                     Text(option)
                 }
             }
@@ -247,14 +241,14 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("dropdown") { node, _, formState ->
         val fieldId = node.id ?: ""
         var expanded by remember { mutableStateOf(false) }
-        val options = (node.props["options"] as? JsonArray)?.mapNotNull { it.jsonPrimitive.contentOrNull } ?: emptyList()
-        val selected = formState[fieldId] ?: node.props["placeholder"]?.jsonPrimitive?.contentOrNull ?: "Select"
-        Box(modifier = Modifier.applyStyle(node.style())) {
+        val options = node.props["options"].asList().map { it.asString() }
+        val selected = formState.getString(fieldId).takeIf { it.isNotEmpty() } ?: node.props["placeholder"].asString().takeIf { it.isNotEmpty() } ?: "Select"
+        Box(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             OutlinedButton(onClick = { expanded = true }) { Text(selected) }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 options.forEach { option ->
                     DropdownMenuItem(text = { Text(option) }, onClick = {
-                        formState[fieldId] = option
+                        formState.setString(fieldId, option)
                         expanded = false
                     })
                 }
@@ -265,24 +259,24 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("chip") { node, actions, _ ->
         AssistChip(
             onClick = { node.action?.let(actions::handle) },
-            label = { Text(node.props["label"]?.jsonPrimitive?.contentOrNull ?: "") },
-            modifier = Modifier.applyStyle(node.style())
+            label = { Text(node.props["label"].asString()) },
+            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         )
     }
 
     register("badge") { node, _, _ ->
-        Badge(modifier = Modifier.applyStyle(node.style())) {
-            Text(node.props["count"]?.jsonPrimitive?.contentOrNull ?: "")
+        Badge(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
+            Text(node.props["count"].asString())
         }
     }
 
     register("progressBar") { node, _, _ ->
-        val progress = node.props["progress"]?.jsonPrimitive?.floatOrNull
-        val variant = node.props["variant"]?.jsonPrimitive?.contentOrNull
+        val progress = node.props["progress"].asFloat()
+        val variant = node.props["variant"].asString()
         if (variant == "circular") {
-            if (progress != null) CircularProgressIndicator(progress = { progress }) else CircularProgressIndicator()
+            if (progress != null) CircularProgressIndicator(progress = { progress }, modifier = Modifier.applySemantics(node)) else CircularProgressIndicator(modifier = Modifier.applySemantics(node))
         } else {
-            val modifier = Modifier.applyStyle(node.style()).fillMaxWidth()
+            val modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node)
             if (progress != null) LinearProgressIndicator(progress = { progress }, modifier = modifier)
             else LinearProgressIndicator(modifier = modifier)
         }
@@ -290,13 +284,13 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("spacer") { node, _, _ ->
         val sizeValue = node.style().size
-        Spacer(Modifier.size(if (sizeValue != null) resolveSpacing(sizeValue) else 8.dp))
+        Spacer(Modifier.size(if (sizeValue != null) resolveSpacing(sizeValue) else 8.dp).applySemantics(node))
     }
 
-    register("divider") { _, _, _ -> HorizontalDivider() }
+    register("divider") { node, _, _ -> HorizontalDivider(Modifier.applySemantics(node)) }
 
-    register("nativeSlot") { node, _, formState ->
-        when (node.props["id"]?.jsonPrimitive?.contentOrNull) {
+    register("nativeSlot") { node, _, _ ->
+        when (node.props["id"].asString()) {
             "balanceToggle" -> BalanceToggle(node)
             else -> {}
         }
@@ -304,23 +298,23 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("dialog") { node, actions, formState ->
         val fieldId = node.id ?: ""
-        if (formState[fieldId] == "true") {
-            val titleText = node.props["title"]?.jsonPrimitive?.contentOrNull
+        if (formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value) {
+            val titleText = node.props["title"].asString()
             AlertDialog(
-                onDismissRequest = { formState[fieldId] = "false" },
-                title = if (titleText != null) { { Text(titleText) } } else null,
+                onDismissRequest = { formState[fieldId] = SduiValue.BooleanValue(false) },
+                title = if (titleText.isNotEmpty()) { { Text(titleText) } } else null,
                 text = {
-                    Column {
+                    Column(Modifier.applySemantics(node)) {
                         node.children.forEach { child -> Render(child, actions, formState) }
                     }
                 },
                 confirmButton = {
-                    TextButton(onClick = { formState[fieldId] = "false" }) {
-                        Text(node.props["confirmLabel"]?.jsonPrimitive?.contentOrNull ?: "OK")
+                    TextButton(onClick = { formState[fieldId] = SduiValue.BooleanValue(false) }) {
+                        Text(node.props["confirmLabel"].asString().takeIf { it.isNotEmpty() } ?: "OK")
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { formState[fieldId] = "false" }) { Text("Cancel") }
+                    TextButton(onClick = { formState[fieldId] = SduiValue.BooleanValue(false) }) { Text("Cancel") }
                 }
             )
         }
@@ -328,7 +322,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("bottomSheet") { node, actions, formState ->
         val fieldId = node.id ?: ""
-        val wantVisible = formState[fieldId] == "true"
+        val wantVisible = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
         val sheetState = rememberModalBottomSheetState()
 
         LaunchedEffect(wantVisible) {
@@ -336,8 +330,8 @@ fun ComponentRegistry.registerCoreWidgets() {
         }
 
         if (wantVisible || sheetState.isVisible) {
-            ModalBottomSheet(onDismissRequest = { formState[fieldId] = "false" }, sheetState = sheetState) {
-                Column(Modifier.padding(16.dp)) {
+            ModalBottomSheet(onDismissRequest = { formState[fieldId] = SduiValue.BooleanValue(false) }, sheetState = sheetState) {
+                Column(Modifier.padding(16.dp).applySemantics(node)) {
                     node.children.forEach { child -> Render(child, actions, formState) }
                 }
             }
@@ -346,23 +340,23 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("slider") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val min = node.props["min"]?.jsonPrimitive?.floatOrNull ?: 0f
-        val max = node.props["max"]?.jsonPrimitive?.floatOrNull ?: 1f
-        val default = node.props["default"]?.jsonPrimitive?.floatOrNull ?: min
-        val current = formState[fieldId]?.toFloatOrNull() ?: default
+        val min = node.props["min"].asFloat() ?: 0f
+        val max = node.props["max"].asFloat() ?: 1f
+        val default = node.props["default"].asFloat() ?: min
+        val current = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toFloat() ?: default
         Slider(
             value = current,
-            onValueChange = { formState[fieldId] = it.toString() },
+            onValueChange = { formState[fieldId] = SduiValue.NumberValue(it.toDouble()) },
             valueRange = min..max,
-            modifier = Modifier.applyStyle(node.style()).fillMaxWidth()
+            modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node)
         )
     }
 
     register("rating") { node, _, _ ->
-        val value = node.props["value"]?.jsonPrimitive?.floatOrNull ?: 0f
-        val maxStars = node.props["max"]?.jsonPrimitive?.intOrNull ?: 5
+        val value = node.props["value"].asFloat() ?: 0f
+        val maxStars = node.props["max"].asInt() ?: 5
         val star = materialIcon("star")
-        Row(modifier = Modifier.applyStyle(node.style())) {
+        Row(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             repeat(maxStars) { index ->
                 if (star != null) {
                     Icon(
@@ -377,14 +371,14 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("tabs") { node, actions, formState ->
         val fieldId = node.id ?: ""
-        val labels = (node.props["labels"] as? JsonArray)?.mapNotNull { it.jsonPrimitive.contentOrNull } ?: emptyList()
-        val selected = formState[fieldId]?.toIntOrNull() ?: 0
-        Column(modifier = Modifier.applyStyle(node.style())) {
+        val labels = node.props["labels"].asList().map { it.asString() }
+        val selected = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toInt() ?: 0
+        Column(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             TabRow(selectedTabIndex = selected) {
                 labels.forEachIndexed { index, label ->
                     Tab(
                         selected = selected == index,
-                        onClick = { formState[fieldId] = index.toString() },
+                        onClick = { formState[fieldId] = SduiValue.NumberValue(index.toDouble()) },
                         text = { Text(label) }
                     )
                 }
@@ -395,15 +389,15 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("expandable") { node, actions, formState ->
         val fieldId = node.id ?: ""
-        val expanded = formState[fieldId] == "true"
+        val expanded = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
         val chevron = materialIcon(if (expanded) "arrowUp" else "arrowDown")
-        Column(modifier = Modifier.applyStyle(node.style()).animateContentSize()) {
+        Column(modifier = Modifier.applyStyle(node.style()).animateContentSize().applySemantics(node)) {
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { formState[fieldId] = (!expanded).toString() },
+                modifier = Modifier.fillMaxWidth().clickable { formState[fieldId] = SduiValue.BooleanValue(!expanded) },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(node.props["title"]?.jsonPrimitive?.contentOrNull ?: "")
+                Text(node.props["title"].asString())
                 if (chevron != null) Icon(imageVector = chevron, contentDescription = null)
             }
             if (expanded) {
@@ -413,19 +407,19 @@ fun ComponentRegistry.registerCoreWidgets() {
     }
 
     register("grid") { node, actions, formState ->
-        val columnsCount = node.props["columns"]?.jsonPrimitive?.intOrNull ?: 2
-        val heightDp = node.props["height"]?.jsonPrimitive?.intOrNull ?: 300
+        val columnsCount = node.props["columns"].asInt() ?: 2
+        val heightDp = node.props["height"].asInt() ?: 300
         LazyVerticalGrid(
             columns = GridCells.Fixed(columnsCount),
-            modifier = Modifier.applyStyle(node.style()).height(heightDp.dp)
+            modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)
         ) {
             items(node.children) { child -> Render(child, actions, formState) }
         }
     }
 
     register("list") { node, actions, formState ->
-        val heightDp = node.props["height"]?.jsonPrimitive?.intOrNull ?: 300
-        LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp)) {
+        val heightDp = node.props["height"].asInt() ?: 300
+        LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
             items(node.children) { child -> Render(child, actions, formState) }
         }
     }
@@ -433,24 +427,24 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("flowRow") { node, actions, formState ->
         val style = node.style()
-        FlowRow(modifier = Modifier.applyStyle(style), horizontalArrangement = parseArrangement(style.arrangement)) {
+        FlowRow(modifier = Modifier.applyStyle(style).applySemantics(node), horizontalArrangement = parseArrangement(style.arrangement)) {
             node.children.forEach { child -> Render(child, actions, formState) }
         }
     }
 
     register("pager") { node, actions, formState ->
-        val heightDp = node.props["height"]?.jsonPrimitive?.intOrNull ?: 200
+        val heightDp = node.props["height"].asInt() ?: 200
         val pagerState = rememberPagerState(pageCount = { node.children.size })
-        HorizontalPager(state = pagerState, modifier = Modifier.applyStyle(node.style()).height(heightDp.dp)) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) { page ->
             Render(node.children[page], actions, formState)
         }
     }
 
     register("otpInput") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val length = node.props["length"]?.jsonPrimitive?.intOrNull ?: 6
-        val code = formState[fieldId] ?: ""
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.applyStyle(node.style())) {
+        val length = node.props["length"].asInt() ?: 6
+        val code = formState.getString(fieldId)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             repeat(length) { index ->
                 OutlinedTextField(
                     value = code.getOrNull(index)?.toString() ?: "",
@@ -458,7 +452,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                         val digit = input.lastOrNull()
                         val chars = code.padEnd(length, ' ').toMutableList()
                         if (index < chars.size) chars[index] = digit ?: ' '
-                        formState[fieldId] = chars.joinToString("").trimEnd()
+                        formState.setString(fieldId, chars.joinToString("").trimEnd())
                     },
                     modifier = Modifier.width(48.dp),
                     singleLine = true
@@ -470,9 +464,9 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("datePicker") { node, _, formState ->
         val fieldId = node.id ?: ""
         var showDialog by remember { mutableStateOf(false) }
-        val selectedMillis = formState[fieldId]?.toLongOrNull()
-        val label = node.props["label"]?.jsonPrimitive?.contentOrNull ?: "Select date"
-        OutlinedButton(onClick = { showDialog = true }, modifier = Modifier.applyStyle(node.style())) {
+        val selectedMillis = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toLong()
+        val label = node.props["label"].asString().takeIf { it.isNotEmpty() } ?: "Select date"
+        OutlinedButton(onClick = { showDialog = true }, modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
             Text(if (selectedMillis != null) "Date selected" else label)
         }
         if (showDialog) {
@@ -481,7 +475,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                 onDismissRequest = { showDialog = false },
                 confirmButton = {
                     TextButton(onClick = {
-                        datePickerState.selectedDateMillis?.let { formState[fieldId] = it.toString() }
+                        datePickerState.selectedDateMillis?.let { formState[fieldId] = SduiValue.NumberValue(it.toDouble()) }
                         showDialog = false
                     }) { Text("OK") }
                 },
@@ -492,40 +486,37 @@ fun ComponentRegistry.registerCoreWidgets() {
 
     register("searchBar") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val query = formState[fieldId] ?: ""
+        val query = formState.getString(fieldId)
         var expanded by remember { mutableStateOf(false) }
-        val placeholder = node.props["placeholder"]?.jsonPrimitive?.contentOrNull ?: "Search"
+        val placeholder = node.props["placeholder"].asString().takeIf { it.isNotEmpty() } ?: "Search"
         SearchBar(
             query = query,
-            onQueryChange = { formState[fieldId] = it },
+            onQueryChange = { formState.setString(fieldId, it) },
             onSearch = { expanded = false },
             active = expanded,
             onActiveChange = { expanded = it },
             placeholder = { Text(placeholder) },
-            modifier = Modifier.applyStyle(node.style())
+            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         ) {}
     }
 
     register("skeleton") { node, _, _ ->
         val style = node.style()
         ShimmerBox(
-            modifier = Modifier.applyStyle(style).height((node.props["height"]?.jsonPrimitive?.intOrNull ?: 16).dp),
+            modifier = Modifier.applyStyle(style).height((node.props["height"].asInt() ?: 16).dp).applySemantics(node),
             cornerRadius = style.cornerRadius ?: 4
         )
     }
 
-
-
-
     register("snackbar") { node, _, formState ->
         val fieldId = node.id ?: ""
-        val visible = formState[fieldId] == "true"
-        val message = node.props["message"]?.jsonPrimitive?.contentOrNull ?: ""
+        val visible = formState[fieldId] is SduiValue.BooleanValue && (formState[fieldId] as SduiValue.BooleanValue).value
+        val message = node.props["message"].asString()
         val hostState = LocalSnackBarHostState.current
         LaunchedEffect(visible) {
             if (visible) {
                 hostState?.showSnackbar(message)
-                formState[fieldId] = "false"
+                formState[fieldId] = SduiValue.BooleanValue(false)
             }
         }
     }
@@ -534,7 +525,7 @@ fun ComponentRegistry.registerCoreWidgets() {
 @Composable
 private fun BalanceToggle(node: com.example.sdui.shared.UiNode) {
     var visible by remember { mutableStateOf(true) }
-    val amount = node.props["amount"]?.jsonPrimitive?.contentOrNull ?: ""
+    val amount = node.props["amount"].asString()
     Row(verticalAlignment = Alignment.CenterVertically) {
         AnimatedContent(targetState = visible, label = "balanceVisibility") { isVisible ->
             Text(if (isVisible) amount else "\u2022\u2022\u2022\u2022\u2022\u2022", fontSize = 32.sp)

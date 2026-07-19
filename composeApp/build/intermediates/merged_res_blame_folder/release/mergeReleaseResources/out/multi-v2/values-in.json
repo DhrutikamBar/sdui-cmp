@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-37:/values-in/values-in.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-41:/values-in/values-in.xml",
             "map": [
                 {
                     "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\01845c259ad92b18d712d9150b18d630\\transformed\\material3-release\\res\\values-in\\values-in.xml",
@@ -21,24 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cd934e4aa84bb95a192e6e847a3b7f74\\transformed\\ui-release\\res\\values-in\\values-in.xml",
-                    "from": {
-                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "185,275,357,455,555,641,724,815,902,987,1069,1152,1224,1316,1393,1470,1543,1621,1687",
-                        "endColumns": "89,81,97,99,85,82,90,86,84,81,82,71,91,76,76,72,77,65,118",
-                        "endOffsets": "270,352,450,550,636,719,810,897,982,1064,1147,1219,1311,1388,1465,1538,1616,1682,1801"
-                    },
-                    "to": {
-                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "914,1004,1086,1184,1284,1370,1453,7829,7916,8001,8083,8166,8238,8330,8407,8484,8658,8736,8802",
-                        "endColumns": "89,81,97,99,85,82,90,86,84,81,82,71,91,76,76,72,77,65,118",
-                        "endOffsets": "999,1081,1179,1279,1365,1448,1539,7911,7996,8078,8161,8233,8325,8402,8479,8552,8731,8797,8916"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\6f8dca69ee9f5714906cef6e01652f30\\transformed\\foundation-release\\res\\values-in\\values-in.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\019cbcda0a05c7a9d31505c02c1e00e6\\transformed\\foundation-release\\res\\values-in\\values-in.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",
@@ -55,7 +38,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9cd914d5f1f02a688d6c336728ddfc92\\transformed\\core-1.13.1\\res\\values-in\\values-in.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\87206edb74e97e27a5dfcb84220c1214\\transformed\\ui-release\\res\\values-in\\values-in.xml",
+                    "from": {
+                        "startLines": "3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "185,275,357,455,555,641,724,815,902,987,1069,1152,1224,1316,1393,1470,1543,1621,1687",
+                        "endColumns": "89,81,97,99,85,82,90,86,84,81,82,71,91,76,76,72,77,65,118",
+                        "endOffsets": "270,352,450,550,636,719,810,897,982,1064,1147,1219,1311,1388,1465,1538,1616,1682,1801"
+                    },
+                    "to": {
+                        "startLines": "10,11,12,13,14,15,16,74,75,76,77,78,79,80,81,82,84,85,86",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "914,1004,1086,1184,1284,1370,1453,7829,7916,8001,8083,8166,8238,8330,8407,8484,8658,8736,8802",
+                        "endColumns": "89,81,97,99,85,82,90,86,84,81,82,71,91,76,76,72,77,65,118",
+                        "endOffsets": "999,1081,1179,1279,1365,1448,1539,7911,7996,8078,8161,8233,8325,8402,8479,8552,8731,8797,8916"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\a923a82ee2cf5a149e749e7307372751\\transformed\\core-1.15.0\\res\\values-in\\values-in.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
