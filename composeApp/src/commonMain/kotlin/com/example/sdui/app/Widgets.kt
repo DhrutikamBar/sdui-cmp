@@ -140,7 +140,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                 val finalModel = if (url.isResource()) resolver?.resolveImage(url) ?: url else url
                 AsyncImage(
                     model = finalModel,
-                    contentDescription = null,
+                    contentDescription = node.semantics?.contentDescription,
                     modifier = clickableModifier,
                     contentScale = ContentScale.Crop
                 )

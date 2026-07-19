@@ -1,16 +1,16 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml:2:13-83
-INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml:2:13-83
+ADDED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml:2:13-83
+INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml:2:13-83
 	package
-		INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml
+		INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml
 	xmlns:android
-		ADDED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml:2:23-81
+		ADDED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml:2:23-81
 uses-sdk
-INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml reason: use-sdk injection requested
-INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml
-INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml
+INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml reason: use-sdk injection requested
+INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml
+INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml
 	android:targetSdkVersion
-		INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml
+		INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml
 	android:minSdkVersion
-		INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest4158022353363733138.xml
+		INJECTED from D:\chikul\sdui-demo\sdui-demo\shared\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14531337540685520516.xml

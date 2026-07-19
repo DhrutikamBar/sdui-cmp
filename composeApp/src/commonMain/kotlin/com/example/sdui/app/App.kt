@@ -133,7 +133,13 @@ private fun SduiScreenContent(
             val fetched = if (repository != null) {
                 repository.fetchScreen(path)
             } else {
-                decodeLocalScreen(LocalScreens.wallet)
+                when (path) {
+                    "/api/ui/home" -> decodeLocalScreen(LocalScreens.home)
+                    "/wallet" -> decodeLocalScreen(LocalScreens.wallet)
+                    "/checkout" -> decodeLocalScreen(LocalScreens.checkout)
+                    "/settings" -> decodeLocalScreen(LocalScreens.settings)
+                    else -> decodeLocalScreen(LocalScreens.home)
+                }
             }
             reporter.reportEvent("screen_view", mapOf("path" to path))
             

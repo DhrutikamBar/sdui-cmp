@@ -41,19 +41,23 @@ class UiRepository(val baseUrl: String) {
     }
 
     suspend fun fetchScreen(path: String, forceRefresh: Boolean = false): UiNode {
+        return fetchInternal(path, forceRefresh, usePrefetchLock = true)
+    }
+
+    private suspend fun fetchInternal(path: String, forceRefresh: Boolean, usePrefetchLock: Boolean): UiNode {
         if (!forceRefresh && cache.containsKey(path)) {
             return cache[path]!!
         }
 
-        // Check if there's an active prefetch job for this path
-        prefetchJobs[path]?.join()
+        if (usePrefetchLock) {
+            prefetchJobs[path]?.join()
+        }
 
         if (!forceRefresh && cache.containsKey(path)) {
             return cache[path]!!
         }
 
         try {
-            // Request Protobuf preferred, fallback to JSON
             val response: HttpResponse = client.get(baseUrl + path) {
                 contentType(ContentType.Application.ProtoBuf)
             }
@@ -71,10 +75,9 @@ class UiRepository(val baseUrl: String) {
 
         val job = scope.launch {
             try {
-                val screen = fetchScreen(path)
-                cache[path] = screen
+                fetchInternal(path, forceRefresh = false, usePrefetchLock = false)
             } catch (e: Exception) {
-                // Prefetch failed, ignore silently as fetchScreen will retry on demand
+                // Prefetch failed
             } finally {
                 prefetchJobs.remove(path)
             }

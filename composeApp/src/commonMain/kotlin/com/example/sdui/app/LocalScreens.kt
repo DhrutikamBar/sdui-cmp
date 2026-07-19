@@ -39,6 +39,22 @@ object LocalScreens {
               }
             },
             {
+              "id": "priceField", "type": "textInput",
+              "props": { "label": { "type": "string", "value": "Unit Price" }, "keyboardType": { "type": "string", "value": "number" } }
+            },
+            {
+              "id": "qtyField", "type": "textInput",
+              "props": { "label": { "type": "string", "value": "Quantity" }, "keyboardType": { "type": "string", "value": "number" } }
+            },
+            {
+              "type": "text",
+              "visibleWhen": [ { "type": "script", "expression": "priceField * qtyField > 100" } ],
+              "props": { 
+                "value": { "type": "string", "value": "Elite Bulk Discount Applied!" },
+                "style": { "type": "object", "value": { "color": { "type": "string", "value": "#2E7D32" }, "fontWeight": { "type": "string", "value": "bold" } } }
+              }
+            },
+            {
               "id": "submitButton",
               "type": "button",
               "props": { "label": { "type": "string", "value": "Submit" } },
@@ -74,6 +90,82 @@ object LocalScreens {
         }
     """.trimIndent()
 
+    val settings = """
+    {
+      "type": "column",
+      "props": {
+        "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "width": { "type": "string", "value": "fill" }, "scrollable": { "type": "boolean", "value": true } } }
+      },
+      "children": [
+        {
+          "type": "row",
+          "props": { "style": { "type": "object", "value": { "arrangement": { "type": "string", "value": "spaceBetween" }, "width": { "type": "string", "value": "fill" } } } },
+          "children": [
+            { "type": "text", "props": { "value": { "type": "string", "value": "Settings" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" } } } } },
+            { "type": "icon", "props": { "name": { "type": "string", "value": "settings" } } }
+          ]
+        },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "md" } } } } },
+        { "type": "text", "props": { "value": { "type": "string", "value": "Notifications" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
+        { "id": "pushNotif", "type": "switch", "props": { "label": { "type": "string", "value": "Push notifications" } } },
+        { "id": "emailNotif", "type": "switch", "props": { "label": { "type": "string", "value": "Email notifications" } } },
+        { "type": "text", "props": { "value": { "type": "string", "value": "Notification volume" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 13 }, "color": { "type": "string", "value": "onSurfaceVariant" } } } } },
+        { "id": "notifVolume", "type": "slider", "props": { "min": { "type": "number", "value": 0 }, "max": { "type": "number", "value": 100 }, "default": { "type": "number", "value": 70 } } },
+        { "type": "divider" },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
+        { "type": "text", "props": { "value": { "type": "string", "value": "Subscription plan" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
+        {
+          "id": "plan", "type": "radioGroup",
+          "props": { "options": { "type": "list", "value": [ { "type": "string", "value": "Basic" }, { "type": "string", "value": "Pro" }, { "type": "string", "value": "Team" } ] } }
+        },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
+        { "type": "text", "props": { "value": { "type": "string", "value": "Theme" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
+        {
+          "id": "theme", "type": "dropdown",
+          "props": {
+            "options": { "type": "list", "value": [ { "type": "string", "value": "System default" }, { "type": "string", "value": "Light" }, { "type": "string", "value": "Dark" } ] },
+            "placeholder": { "type": "string", "value": "Choose theme" }
+          }
+        },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
+        { "type": "text", "props": { "value": { "type": "string", "value": "Interests" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
+        {
+          "type": "flowRow",
+          "children": [
+            { "type": "chip", "props": { "label": { "type": "string", "value": "Trading" } } },
+            { "type": "chip", "props": { "label": { "type": "string", "value": "Fitness" } } },
+            { "type": "chip", "props": { "label": { "type": "string", "value": "Music" } } }
+          ]
+        },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
+        { "type": "text", "props": { "value": { "type": "string", "value": "Storage used: 6.2 GB of 10 GB" } } },
+        { "type": "progressBar", "props": { "progress": { "type": "number", "value": 0.62 } } },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "lg" } } } } },
+        {
+          "id": "saveButton", "type": "button",
+          "props": { "label": { "type": "string", "value": "Save changes" } },
+          "action": { "type": "toggleState", "target": "savedSnackbar" }
+        },
+        { "id": "savedSnackbar", "type": "snackbar", "props": { "message": { "type": "string", "value": "Settings saved" } } },
+        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
+        {
+          "id": "logoutButton", "type": "button",
+          "props": { "label": { "type": "string", "value": "Log out" } },
+          "action": { "type": "toggleState", "target": "logoutDialog" }
+        },
+        {
+          "id": "logoutDialog", "type": "dialog",
+          "props": {
+            "title": { "type": "string", "value": "Log out?" },
+            "confirmLabel": { "type": "string", "value": "Log out" }
+          },
+          "children": [
+            { "type": "text", "props": { "value": { "type": "string", "value": "You'll need to sign in again next time." } } }
+          ]
+        }
+      ]
+    }
+""".trimIndent()
     val checkout = """
         {
           "type": "column",
@@ -81,7 +173,14 @@ object LocalScreens {
           "children": [
             { "type": "text", "props": { "value": { "type": "string", "value": "Checkout" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" } } } } },
             { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-md" } } } } },
-            { "type": "image", "props": { "url": { "type": "string", "value": "https://picsum.photos/seed/headphones/400/400" }, "style": { "type": "object", "value": { "cornerRadius": { "type": "number", "value": 12 }, "size": { "type": "number", "value": 180 } } } } },
+            { 
+              "type": "image", 
+              "props": { 
+                "url": { "type": "string", "value": "https://picsum.photos/seed/headphones/400/400" }, 
+                "style": { "type": "object", "value": { "cornerRadius": { "type": "number", "value": 12 }, "size": { "type": "number", "value": 180 } } } 
+              },
+              "semantics": { "contentDescription": "Photo of the wireless headphones", "role": "image" }
+            },
             { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-sm" } } } } },
             { "type": "text", "props": { "value": { "type": "string", "value": "Wireless Headphones" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
             { "type": "text", "props": { "value": { "type": "string", "value": "${'$'}59.99" } } },

@@ -88,25 +88,51 @@ fun Condition.evaluate(state: FormState): Boolean {
 }
 
 /** 
- * A tiny "elite" expression evaluator. 
- * Supports: "field > value", "field < value", "field == value"
+ * A robust expression evaluator for SDUI.
+ * Supports multiple variables from FormState and basic arithmetic.
+ * Example: "price * qty > 100"
  */
 private fun evaluateScript(expression: String, state: FormState): Boolean {
-    val regex = Regex("""(\w+)\s*([><=]+)\s*(.+)""")
-    val match = regex.find(expression) ?: return false
-    val (field, op, rawValue) = match.destructured
+    // 1. Replace variables with their values
+    var interpolated = expression
+    state.values.forEach { (key, value) ->
+        val num = when (value) {
+            is SduiValue.NumberValue -> value.value
+            is SduiValue.StringValue -> value.value.toDoubleOrNull()
+            else -> null
+        }
+        if (num != null) {
+            interpolated = interpolated.replace(key, num.toString())
+        }
+    }
     
-    val fieldVal = (state[field] as? SduiValue.NumberValue)?.value ?: 0.0
-    val targetVal = rawValue.trim().toDoubleOrNull() ?: 0.0
+    // 2. Basic math parser for comparisons
+    val ops = listOf(">=", "<=", "==", ">", "<")
+    val op = ops.find { interpolated.contains(it) } ?: return false
+    val parts = interpolated.split(op, limit = 2)
+    if (parts.size != 2) return false
+    
+    val left = evaluateMath(parts[0])
+    val right = evaluateMath(parts[1])
     
     return when (op) {
-        ">" -> fieldVal > targetVal
-        "<" -> fieldVal < targetVal
-        "==" -> fieldVal == targetVal
-        ">=" -> fieldVal >= targetVal
-        "<=" -> fieldVal <= targetVal
+        ">" -> left > right
+        "<" -> left < right
+        "==" -> left == right
+        ">=" -> left >= right
+        "<=" -> left <= right
         else -> false
     }
+}
+
+private fun evaluateMath(expr: String): Double {
+    val clean = expr.trim()
+    // Support basic multiplication for "total == price * qty"
+    if (clean.contains("*")) {
+        val parts = clean.split("*")
+        return parts.map { it.trim().toDoubleOrNull() ?: 0.0 }.reduce { acc, d -> acc * d }
+    }
+    return clean.toDoubleOrNull() ?: 0.0
 }
 
 /** Tells children whether they are inside a scrollable container. */

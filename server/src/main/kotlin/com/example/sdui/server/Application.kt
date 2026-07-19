@@ -5,6 +5,7 @@ import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiAction
 import com.example.sdui.shared.UiNode
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.serialization.kotlinx.protobuf.protobuf
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -12,6 +13,8 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.protobuf.ProtoBuf
 
 private data class Product(val id: String, val name: String, val price: Double)
 
@@ -20,9 +23,13 @@ private val fakeProductApi = listOf(
     Product("p2", "Mechanical Keyboard", 89.00),
 )
 
+@OptIn(ExperimentalSerializationApi::class)
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        install(ContentNegotiation) { json() }
+        install(ContentNegotiation) { 
+            json() 
+            protobuf(ProtoBuf)
+        }
         routing {
             get("/api/ui/home") {
                 call.respond(buildHomeScreen())

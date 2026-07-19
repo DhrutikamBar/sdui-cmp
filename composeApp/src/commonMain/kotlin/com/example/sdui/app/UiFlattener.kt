@@ -22,6 +22,8 @@ object UiFlattener {
                 style.background == null && 
                 style.cornerRadius == null && 
                 style.padding == null &&
+                style.arrangement == null &&
+                style.alignment == null &&
                 node.action == null &&
                 node.visibleWhen.isEmpty()
 

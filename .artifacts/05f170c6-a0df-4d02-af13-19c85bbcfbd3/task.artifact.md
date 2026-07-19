@@ -1,6 +1,11 @@
-- [x] **Step 1: Lifecycle Hooks (`shared`)**
-- [x] **Step 2: Impression Tracking (`composeApp`)**
-- [x] **Step 3: Predictive Prefetching (`composeApp`)**
-- [x] **Step 4: Remote Design Tokens (`composeApp`)**
-- [x] **Step 5: Advanced Logic Scripting (`composeApp`)**
-- [x] **Step 6: Final Verification**
+- [x] **Phase 1: Fixing Regressions**
+    - [x] Implement robust `evaluateScript` in `ComponentRegistry.kt`
+    - [x] Update `UiFlattener.kt` to respect layout properties (alignment/arrangement)
+    - [x] Restore local routing logic in `App.kt`
+- [x] **Phase 2: Complete Protobuf Migration**
+    - [x] Add `kotlinx-serialization-protobuf` to `:server`
+    - [x] Configure `ContentNegotiation` with `protobuf` in `Application.kt`
+- [ ] **Phase 3: Cleanup & Verification**
+    - [ ] Uncomment server URL in `MainActivity.kt`
+    - [ ] Add a demo for the multi-variable script in `LocalScreens.kt`
+    - [ ] Final Build & Verification
