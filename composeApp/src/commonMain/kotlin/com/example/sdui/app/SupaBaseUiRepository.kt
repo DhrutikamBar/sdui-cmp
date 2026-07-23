@@ -25,7 +25,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import io.github.jan.supabase.annotations.SupabaseInternal
-import com.example.sdui.app.db.SduiDatabase
+import com.dhruti.sdui.sdk.db.SduiDatabase
+import com.dhruti.sdui.sdk.DatabaseDriverFactory
 import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalSerializationApi::class, SupabaseInternal::class)
@@ -101,7 +102,13 @@ class SupaBaseUiRepository(
         }
 
         // Concurrency: Wait for active prefetch if it exists
-        prefetchJobs[path]?.join()
+        try {
+            withTimeout(5000) {
+                prefetchJobs[path]?.join()
+            }
+        } catch (e: Exception) {
+            println("KTOR: Prefetch join timed out for $path")
+        }
 
         if (!forceRefresh && cache.containsKey(path)) {
             return cache[path]!!
@@ -111,7 +118,6 @@ class SupaBaseUiRepository(
         val persisted = queries.selectByPath(path).executeAsOneOrNull()
         if (!forceRefresh && persisted != null) {
             try {
-                // Lightweight check for updated_at
                 val remoteUpdatedAt = fetchUpdatedAt(path)
                 if (remoteUpdatedAt == persisted.updatedAt) {
                     val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
@@ -120,7 +126,6 @@ class SupaBaseUiRepository(
                     return contentNode
                 }
             } catch (e: Exception) {
-                // Lightweight check failed (likely network), fallback to persisted content
                 val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
                 cache[path] = contentNode
                 return contentNode
@@ -128,18 +133,12 @@ class SupaBaseUiRepository(
         }
 
         return try {
-            val screen = fetchInternal(path)
+            val row = fetchInternal(path)
+            val screen = row.content
             cache[path] = screen
             
-            // Persist
-            val remoteRow = fetchFullRow(path)
-            queries.upsert(
-                path = path,
-                content = Json.encodeToString(UiNode.serializer(), screen),
-                updatedAt = remoteRow.updated_at,
-                lastAccessedAt = Clock.System.now().toEpochMilliseconds()
-            )
-            enforceEvictionLimit()
+            // Persist in background
+            scope.launch { persistRow(path, row) }
             
             screen
         } catch (e: Exception) {
@@ -156,6 +155,13 @@ class SupaBaseUiRepository(
             .updated_at
     }
 
+    private suspend fun fetchInternal(path: String): FullScreenRow {
+        if (useBinaryTransport) {
+            tryFetchBinary(path)?.let { return FullScreenRow(it, "edge-function") }
+        }
+        return fetchFullRow(path)
+    }
+
     private suspend fun fetchFullRow(path: String): FullScreenRow {
         return supabase.from("screens")
             .select(columns = Columns.list("content", "updated_at")) {
@@ -164,26 +170,7 @@ class SupaBaseUiRepository(
             .decodeSingle<FullScreenRow>()
     }
 
-    private fun enforceEvictionLimit() {
-        val count = queries.countAll().executeAsOne()
-        if (count > 200) {
-            queries.deleteLeastRecentlyUsed(count - 200)
-        }
-    }
-
-    private suspend fun fetchInternal(path: String): UiNode {
-        // Priority 1: Try Binary/Protobuf from Edge Function if enabled
-        val binaryScreen = if (useBinaryTransport) tryFetchBinary(path) else null
-        return binaryScreen ?: fetchFromDatabase(path)
-    }
-
-    private suspend fun fetchFromDatabase(path: String): UiNode {
-        return fetchFullRow(path).content
-    }
-
     private suspend fun tryFetchBinary(path: String): UiNode? {
-        // This is a placeholder for high-efficiency binary transport.
-        // It hits a Supabase Edge Function that can return ProtoBuf.
         return try {
             val response = httpClient.get("${supabaseUrl}/functions/v1/sdui-binary") {
                 parameter("path", path)
@@ -198,7 +185,6 @@ class SupaBaseUiRepository(
 
             val bytes = response.body<ByteArray>()
             
-            // Signature verification
             signatureVerifier?.let { verify ->
                 val signature = response.headers["X-UI-Signature"] ?: ""
                 val bodyText = bytes.decodeToString()
@@ -208,7 +194,7 @@ class SupaBaseUiRepository(
             ProtoBuf.decodeFromByteArray(UiNode.serializer(), bytes)
         } catch (e: Exception) {
             println("KTOR: Binary fetch error: ${e.message}")
-            null // Fallback to DB
+            null
         }
     }
 
@@ -217,8 +203,9 @@ class SupaBaseUiRepository(
 
         val job = scope.launch {
             try {
-                val screen = fetchInternal(path)
-                cache[path] = screen
+                val row = fetchInternal(path)
+                cache[path] = row.content
+                persistRow(path, row)
             } catch (e: Exception) {
                 // Best-effort
             } finally {
@@ -228,10 +215,32 @@ class SupaBaseUiRepository(
         prefetchJobs[path] = job
     }
 
+    private fun persistRow(path: String, row: FullScreenRow) {
+        try {
+            queries.upsert(
+                path = path,
+                content = Json.encodeToString(UiNode.serializer(), row.content),
+                updatedAt = row.updated_at,
+                lastAccessedAt = Clock.System.now().toEpochMilliseconds()
+            )
+            enforceEvictionLimit()
+        } catch (e: Exception) {
+            println("KTOR: Persist failed for $path: ${e.message}")
+        }
+    }
+
+    private fun enforceEvictionLimit() {
+        val count = queries.countAll().executeAsOne()
+        if (count > 200) {
+            queries.deleteLeastRecentlyUsed(count - 200)
+        }
+    }
+
     fun clearCache() {
         cache.clear()
         prefetchJobs.values.forEach { it.cancel() }
         prefetchJobs.clear()
+        queries.deleteAll()
     }
 }
 

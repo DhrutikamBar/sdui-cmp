@@ -99,7 +99,7 @@ sealed class Condition {
  */
 @Serializable
 sealed class Feedback {
-    @Serializable @SerialName("haptic") data class Haptic(val type: String) : Feedback()
+    @Serializable @SerialName("haptic") data class Haptic(val intensity: String) : Feedback()
     @Serializable @SerialName("sound") data class Sound(val name: String) : Feedback()
 }
 

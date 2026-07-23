@@ -21,6 +21,9 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.7.3")
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
     }
 }
 

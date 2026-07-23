@@ -61,7 +61,7 @@ object LocalScreens {
               "action": { 
                 "type": "navigate", 
                 "target": "welcome",
-                "feedback": { "type": "haptic", "value": "heavy" }
+                "feedback": { "type": "haptic", "intensity": "heavy" }
               },
               "rules": [ { "type": "notEmpty", "field": "ageField" } ]
             }

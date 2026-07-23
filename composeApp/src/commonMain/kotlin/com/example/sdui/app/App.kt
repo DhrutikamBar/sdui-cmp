@@ -24,6 +24,7 @@ import com.example.sdui.shared.Feedback
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
 import com.example.sdui.shared.UiAction
+import com.dhruti.sdui.sdk.*
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.header
@@ -57,7 +58,12 @@ class FeedbackInterceptor(private val haptics: androidx.compose.ui.hapticfeedbac
     override fun intercept(action: UiAction, next: (UiAction) -> Unit) {
         action.feedback?.let { fb ->
             if (fb is Feedback.Haptic) {
-                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                val type = when (fb.intensity) {
+                    "heavy" -> HapticFeedbackType.LongPress
+                    "light" -> HapticFeedbackType.TextHandleMove
+                    else -> HapticFeedbackType.LongPress
+                }
+                haptics.performHapticFeedback(type)
             }
         }
         next(action)
@@ -146,6 +152,7 @@ private fun SduiScreenContent(
                 repository.fetchScreen(path)
             } catch (e: Exception) {
                 // If Supabase fetch fails, try local fallback for better DX
+                println("KTOR: Remote fetch failed for $path, trying local fallback...")
                 val localJsonStr = when (path) {
                     "home" -> LocalScreens.home
                     "welcome" -> LocalScreens.welcome
@@ -153,7 +160,12 @@ private fun SduiScreenContent(
                     "checkout" -> LocalScreens.checkout
                     else -> null
                 }
-                if (localJsonStr != null) decodeLocalScreen(localJsonStr) else throw e
+                if (localJsonStr != null) {
+                    println("KTOR: Using local fallback for $path")
+                    decodeLocalScreen(localJsonStr)
+                } else {
+                    throw e
+                }
             }
             
             reporter.reportEvent("screen_view", mapOf("path" to path))
@@ -219,7 +231,7 @@ private fun SduiScreenContent(
     val actions = ActionHandler { action -> actionRegistry.dispatch(action) }
 
     when {
-        screen != null -> registry.RenderRoot(screen!!, actions, formState)
+        screen != null -> SduiRenderer(screen!!, actions, formState = formState, registry = registry)
         loadError != null -> ErrorState(message = loadError!!, onRetry = { retryTrigger++ })
         else -> LoadingSkeleton()
     }
@@ -238,7 +250,7 @@ private fun LoadingSkeleton() {
 }
 
 @Composable
-private fun ErrorState(message: String, onRetry: () -> Unit) {
+fun ErrorState(message: String, onRetry: () -> Unit) {
     Column(
         Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

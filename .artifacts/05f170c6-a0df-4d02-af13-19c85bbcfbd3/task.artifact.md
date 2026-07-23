@@ -1,2 +1,15 @@
-- [x] Enable internal logging for Supabase client in `SupaBaseUiRepository.kt`
-- [x] Verify `SUPABASE:` logs in console
+- [ ] **Step 1: Module Setup (`:sdui-sdk`)**
+    - [ ] Add `:sdui-sdk` to `settings.gradle.kts`
+    - [ ] Create `sdui-sdk/build.gradle.kts`
+- [ ] **Step 2: Core Migration**
+    - [ ] Move shared logic to `sdui-sdk` (commonMain)
+    - [ ] Move platform implementations to `sdui-sdk` (androidMain/iosMain)
+    - [ ] Update packages to `com.dhruti.sdui.sdk`
+- [ ] **Step 3: Public API Development**
+    - [ ] Create `SduiRenderer.kt` entry point in SDK
+- [ ] **Step 4: App Integration (`:composeApp`)**
+    - [ ] Update `composeApp/build.gradle.kts` to depend on `:sdui-sdk`
+    - [ ] Refactor `App.kt` to use SDK components
+- [ ] **Step 5: Verification**
+    - [ ] Gradle Sync and Build
+    - [ ] Verify Demo App functionality

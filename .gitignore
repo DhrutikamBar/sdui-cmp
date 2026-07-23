@@ -1,0 +1,12 @@
+.kotlin/
+.gradle/
+build/
+server/build/
+shared/build/
+composeApp/build/
+local.properties
+.idea/
+*.iml
+*.signing/
+signing.properties
+secrets.properties
