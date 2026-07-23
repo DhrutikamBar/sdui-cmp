@@ -1,11 +1,11 @@
 package com.example.sdui.app
 
 import com.example.sdui.shared.UiNode
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 /**
- * Updated with "Ultimate Elite" features.
+ * Local fallback screens for development and resilience.
+ * Updated to use natural JSON format supported by the custom SduiValue serializer.
  */
 object LocalScreens {
 
@@ -13,7 +13,7 @@ object LocalScreens {
         {
           "type": "column",
           "props": {
-            "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" } } }
+            "style": { "padding": "md" }
           },
           "children": [
             { 
@@ -21,47 +21,47 @@ object LocalScreens {
               "sticky": true,
               "onAppear": { "type": "analytics", "target": "sign_up_header_impression" },
               "props": { 
-                "value": { "type": "string", "value": "Sign up" },
-                "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" }, "background": { "type": "string", "value": "surface" }, "width": { "type": "string", "value": "fill" } } }
+                "value": "Sign up",
+                "style": { "fontSize": 22, "fontWeight": "bold", "background": "surface", "width": "fill" }
               }
             },
             {
               "id": "ageField", "type": "textInput",
-              "props": { "label": { "type": "string", "value": "Your age" }, "keyboardType": { "type": "string", "value": "number" } }
+              "props": { "label": "Your age", "keyboardType": "number" }
             },
             {
               "id": "bulkDiscount",
               "type": "text",
               "visibleWhen": [ { "type": "script", "expression": "ageField > 18" } ],
               "props": { 
-                "value": { "type": "string", "value": "Adult Content Unlocked" },
-                "style": { "type": "object", "value": { "color": { "type": "string", "value": "brand-primary" } } }
+                "value": "Adult Content Unlocked",
+                "style": { "color": "brand-primary" }
               }
             },
             {
               "id": "priceField", "type": "textInput",
-              "props": { "label": { "type": "string", "value": "Unit Price" }, "keyboardType": { "type": "string", "value": "number" } }
+              "props": { "label": "Unit Price", "keyboardType": "number" }
             },
             {
               "id": "qtyField", "type": "textInput",
-              "props": { "label": { "type": "string", "value": "Quantity" }, "keyboardType": { "type": "string", "value": "number" } }
+              "props": { "label": "Quantity", "keyboardType": "number" }
             },
             {
               "type": "text",
               "visibleWhen": [ { "type": "script", "expression": "priceField * qtyField > 100" } ],
               "props": { 
-                "value": { "type": "string", "value": "Elite Bulk Discount Applied!" },
-                "style": { "type": "object", "value": { "color": { "type": "string", "value": "#2E7D32" }, "fontWeight": { "type": "string", "value": "bold" } } }
+                "value": "Elite Bulk Discount Applied!",
+                "style": { "color": "#2E7D32", "fontWeight": "bold" }
               }
             },
             {
               "id": "submitButton",
               "type": "button",
-              "props": { "label": { "type": "string", "value": "Submit" } },
+              "props": { "label": "Submit" },
               "action": { 
                 "type": "navigate", 
-                "target": "/welcome",
-                "feedback": { "type": "haptic", "value": { "type": "string", "value": "heavy" } }
+                "target": "welcome",
+                "feedback": { "type": "haptic", "value": "heavy" }
               },
               "rules": [ { "type": "notEmpty", "field": "ageField" } ]
             }
@@ -69,147 +69,85 @@ object LocalScreens {
         }
     """.trimIndent()
 
-    val wallet = """
+    val welcome = """
         {
           "type": "column",
-          "props": { "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "background": { "type": "string", "value": "brand-primary" }, "width": { "type": "string", "value": "fill" } } } },
+          "props": { "style": { "padding": "xl", "alignment": "center" } },
           "children": [
-            {
-              "type": "row",
-              "props": { "style": { "type": "object", "value": { "arrangement": { "type": "string", "value": "spaceBetween" }, "width": { "type": "string", "value": "fill" } } } },
-              "children": [
-                { "type": "column", "children": [
-                  { "type": "text", "props": { "value": { "type": "string", "value": "Welcome back," }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 13 }, "color": { "type": "string", "value": "#B0BEC5" } } } } },
-                  { "type": "text", "props": { "value": { "type": "string", "value": "Tanjiro Kamado" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 17 }, "fontWeight": { "type": "string", "value": "bold" }, "color": { "type": "string", "value": "#FFFFFF" } } } } }
-                ]}
-              ]
-            },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-xl" } } } } },
-            { "type": "nativeSlot", "props": { "id": { "type": "string", "value": "balanceToggle" }, "amount": { "type": "string", "value": "${'$'}32,149.00" } } }
+            { "type": "text", "props": { "value": "Welcome!", "style": { "fontSize": 32, "fontWeight": "bold" } } },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
+            { "type": "text", "props": { "value": "Your account has been created successfully." } },
+            { "type": "spacer", "props": { "size": 24 } },
+            { "type": "button", "props": { "label": "Go to Wallet" }, "action": { "type": "navigate", "target": "wallet" } }
           ]
         }
     """.trimIndent()
 
-    val settings = """
-    {
-      "type": "column",
-      "props": {
-        "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "width": { "type": "string", "value": "fill" }, "scrollable": { "type": "boolean", "value": true } } }
-      },
-      "children": [
+    val wallet = """
         {
-          "type": "row",
-          "props": { "style": { "type": "object", "value": { "arrangement": { "type": "string", "value": "spaceBetween" }, "width": { "type": "string", "value": "fill" } } } },
+          "type": "column",
+          "props": { "style": { "padding": "md", "background": "brand-primary", "width": "fill" } },
           "children": [
-            { "type": "text", "props": { "value": { "type": "string", "value": "Settings" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" } } } } },
-            { "type": "icon", "props": { "name": { "type": "string", "value": "settings" } } }
-          ]
-        },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "md" } } } } },
-        { "type": "text", "props": { "value": { "type": "string", "value": "Notifications" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
-        { "id": "pushNotif", "type": "switch", "props": { "label": { "type": "string", "value": "Push notifications" } } },
-        { "id": "emailNotif", "type": "switch", "props": { "label": { "type": "string", "value": "Email notifications" } } },
-        { "type": "text", "props": { "value": { "type": "string", "value": "Notification volume" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 13 }, "color": { "type": "string", "value": "onSurfaceVariant" } } } } },
-        { "id": "notifVolume", "type": "slider", "props": { "min": { "type": "number", "value": 0 }, "max": { "type": "number", "value": 100 }, "default": { "type": "number", "value": 70 } } },
-        { "type": "divider" },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
-        { "type": "text", "props": { "value": { "type": "string", "value": "Subscription plan" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
-        {
-          "id": "plan", "type": "radioGroup",
-          "props": { "options": { "type": "list", "value": [ { "type": "string", "value": "Basic" }, { "type": "string", "value": "Pro" }, { "type": "string", "value": "Team" } ] } }
-        },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
-        { "type": "text", "props": { "value": { "type": "string", "value": "Theme" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
-        {
-          "id": "theme", "type": "dropdown",
-          "props": {
-            "options": { "type": "list", "value": [ { "type": "string", "value": "System default" }, { "type": "string", "value": "Light" }, { "type": "string", "value": "Dark" } ] },
-            "placeholder": { "type": "string", "value": "Choose theme" }
-          }
-        },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
-        { "type": "text", "props": { "value": { "type": "string", "value": "Interests" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
-        {
-          "type": "flowRow",
-          "children": [
-            { "type": "chip", "props": { "label": { "type": "string", "value": "Trading" } } },
-            { "type": "chip", "props": { "label": { "type": "string", "value": "Fitness" } } },
-            { "type": "chip", "props": { "label": { "type": "string", "value": "Music" } } }
-          ]
-        },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
-        { "type": "text", "props": { "value": { "type": "string", "value": "Storage used: 6.2 GB of 10 GB" } } },
-        { "type": "progressBar", "props": { "progress": { "type": "number", "value": 0.62 } } },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "lg" } } } } },
-        {
-          "id": "saveButton", "type": "button",
-          "props": { "label": { "type": "string", "value": "Save changes" } },
-          "action": { "type": "toggleState", "target": "savedSnackbar" }
-        },
-        { "id": "savedSnackbar", "type": "snackbar", "props": { "message": { "type": "string", "value": "Settings saved" } } },
-        { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "sm" } } } } },
-        {
-          "id": "logoutButton", "type": "button",
-          "props": { "label": { "type": "string", "value": "Log out" } },
-          "action": { "type": "toggleState", "target": "logoutDialog" }
-        },
-        {
-          "id": "logoutDialog", "type": "dialog",
-          "props": {
-            "title": { "type": "string", "value": "Log out?" },
-            "confirmLabel": { "type": "string", "value": "Log out" }
-          },
-          "children": [
-            { "type": "text", "props": { "value": { "type": "string", "value": "You'll need to sign in again next time." } } }
+            {
+              "type": "row",
+              "props": { "style": { "arrangement": "spaceBetween", "width": "fill" } },
+              "children": [
+                { "type": "column", "children": [
+                  { "type": "text", "props": { "value": "Welcome back,", "style": { "fontSize": 13, "color": "#B0BEC5" } } },
+                  { "type": "text", "props": { "value": "Tanjiro Kamado", "style": { "fontSize": 17, "fontWeight": "bold", "color": "#FFFFFF" } } }
+                ]}
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": "spacing-xl" } } },
+            { "type": "nativeSlot", "props": { "id": "balanceToggle", "amount": "${'$'}32,149.00" } }
           ]
         }
-      ]
-    }
-""".trimIndent()
+    """.trimIndent()
+
     val checkout = """
         {
           "type": "column",
-          "props": { "style": { "type": "object", "value": { "padding": { "type": "string", "value": "md" }, "width": { "type": "string", "value": "fill" }, "animateSize": { "type": "boolean", "value": true } } } },
+          "props": { "style": { "padding": "md", "width": "fill", "animateSize": true } },
           "children": [
-            { "type": "text", "props": { "value": { "type": "string", "value": "Checkout" }, "style": { "type": "object", "value": { "fontSize": { "type": "number", "value": 22 }, "fontWeight": { "type": "string", "value": "bold" } } } } },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-md" } } } } },
+            { "type": "text", "props": { "value": "Checkout", "style": { "fontSize": 22, "fontWeight": "bold" } } },
+            { "type": "spacer", "props": { "style": { "size": "spacing-md" } } },
             { 
               "type": "image", 
               "props": { 
-                "url": { "type": "string", "value": "https://picsum.photos/seed/headphones/400/400" }, 
-                "style": { "type": "object", "value": { "cornerRadius": { "type": "number", "value": 12 }, "size": { "type": "number", "value": 180 } } } 
+                "url": "https://picsum.photos/seed/headphones/400/400", 
+                "style": { "cornerRadius": 12, "size": 180 } 
               },
               "semantics": { "contentDescription": "Photo of the wireless headphones", "role": "image" }
             },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "spacing-sm" } } } } },
-            { "type": "text", "props": { "value": { "type": "string", "value": "Wireless Headphones" }, "style": { "type": "object", "value": { "fontWeight": { "type": "string", "value": "bold" } } } } },
-            { "type": "text", "props": { "value": { "type": "string", "value": "${'$'}59.99" } } },
-            { "type": "rating", "props": { "value": { "type": "number", "value": 4 }, "max": { "type": "number", "value": 5 } } },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "md" } } } } },
+            { "type": "spacer", "props": { "style": { "size": "spacing-sm" } } },
+            { "type": "text", "props": { "value": "Wireless Headphones", "style": { "fontWeight": "bold" } } },
+            { "type": "text", "props": { "value": "${'$'}59.99" } },
+            { "type": "rating", "props": { "value": 4, "max": 5 } },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
             {
-              "id": "agreeTerms", "type": "checkbox", "props": { "label": { "type": "string", "value": "I agree to the terms and refund policy" } }
+              "id": "agreeTerms", "type": "checkbox", "props": { "label": "I agree to the terms and refund policy" }
             },
             {
               "type": "text",
-              "props": { "value": { "type": "string", "value": "Thanks for confirming — you're ready to check out." }, "style": { "type": "object", "value": { "color": { "type": "string", "value": "#2E7D32" }, "fontSize": { "type": "number", "value": 13 } } } },
+              "props": { "value": "Thanks for confirming — you're ready to check out.", "style": { "color": "#2E7D32", "fontSize": 13 } },
               "visibleWhen": [ { "type": "isTrue", "field": "agreeTerms" } ]
             },
-            { "type": "spacer", "props": { "style": { "type": "object", "value": { "size": { "type": "string", "value": "md" } } } } },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
             {
               "id": "placeOrderButton",
               "type": "button",
-              "props": { "label": { "type": "string", "value": "Place order" } },
+              "props": { "label": "Place order" },
               "action": {
                 "type": "apiCall",
                 "method": "POST",
                 "target": "/api/orders",
-                "body": { "productId": { "type": "string", "value": "p1" }, "paymentMethod": { "type": "string", "value": "{{paymentMethod}}" } },
-                "onSuccess": { "type": "navigate", "target": "/order-confirmed" },
+                "body": { "productId": "p1", "paymentMethod": "{{paymentMethod}}" },
+                "onSuccess": { "type": "navigate", "target": "order-confirmed" },
                 "onError": { "type": "toggleState", "target": "orderErrorSnackbar" }
               },
               "rules": [ { "type": "isTrue", "field": "agreeTerms" } ]
             },
-            { "id": "orderErrorSnackbar", "type": "snackbar", "props": { "message": { "type": "string", "value": "Couldn't place your order — please try again" } } }
+            { "id": "orderErrorSnackbar", "type": "snackbar", "props": { "message": "Couldn't place your order — please try again" } }
           ]
         }
     """.trimIndent()

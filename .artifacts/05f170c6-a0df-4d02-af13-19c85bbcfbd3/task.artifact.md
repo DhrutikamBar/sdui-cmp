@@ -1,11 +1,2 @@
-- [x] **Phase 1: Fixing Regressions**
-    - [x] Implement robust `evaluateScript` in `ComponentRegistry.kt`
-    - [x] Update `UiFlattener.kt` to respect layout properties (alignment/arrangement)
-    - [x] Restore local routing logic in `App.kt`
-- [x] **Phase 2: Complete Protobuf Migration**
-    - [x] Add `kotlinx-serialization-protobuf` to `:server`
-    - [x] Configure `ContentNegotiation` with `protobuf` in `Application.kt`
-- [ ] **Phase 3: Cleanup & Verification**
-    - [ ] Uncomment server URL in `MainActivity.kt`
-    - [ ] Add a demo for the multi-variable script in `LocalScreens.kt`
-    - [ ] Final Build & Verification
+- [x] Enable internal logging for Supabase client in `SupaBaseUiRepository.kt`
+- [x] Verify `SUPABASE:` logs in console

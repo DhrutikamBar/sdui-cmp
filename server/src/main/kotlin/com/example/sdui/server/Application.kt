@@ -7,6 +7,7 @@ import com.example.sdui.shared.UiNode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.serialization.kotlinx.protobuf.protobuf
 import io.ktor.server.application.install
+import io.ktor.server.plugins.compression.*
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
@@ -29,6 +30,12 @@ fun main() {
         install(ContentNegotiation) { 
             json() 
             protobuf(ProtoBuf)
+        }
+        install(Compression) {
+            gzip {
+                priority = 1.0
+                minimumSize(1024)
+            }
         }
         routing {
             get("/api/ui/home") {

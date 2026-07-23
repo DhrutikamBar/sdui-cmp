@@ -74,8 +74,8 @@
           "nativeMain"
         ],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib",
-          "org.jetbrains.kotlinx:kotlinx-serialization-json"
+          "org.jetbrains.kotlinx:kotlinx-serialization-json",
+          "org.jetbrains.kotlinx:kotlinx-serialization-protobuf"
         ],
         "sourceSetCInteropMetadataDirectory": "appleMain-cinterop",
         "binaryLayout": "klib",
@@ -85,7 +85,9 @@
         "name": "commonMain",
         "dependsOn": [],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib"
+          "org.jetbrains.kotlin:kotlin-stdlib",
+          "org.jetbrains.kotlinx:kotlinx-serialization-json",
+          "org.jetbrains.kotlinx:kotlinx-serialization-protobuf"
         ],
         "binaryLayout": "klib"
       },
@@ -95,8 +97,8 @@
           "appleMain"
         ],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib",
-          "org.jetbrains.kotlinx:kotlinx-serialization-json"
+          "org.jetbrains.kotlinx:kotlinx-serialization-json",
+          "org.jetbrains.kotlinx:kotlinx-serialization-protobuf"
         ],
         "sourceSetCInteropMetadataDirectory": "iosMain-cinterop",
         "binaryLayout": "klib",
@@ -108,8 +110,8 @@
           "commonMain"
         ],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib",
-          "org.jetbrains.kotlinx:kotlinx-serialization-json"
+          "org.jetbrains.kotlinx:kotlinx-serialization-json",
+          "org.jetbrains.kotlinx:kotlinx-serialization-protobuf"
         ],
         "sourceSetCInteropMetadataDirectory": "nativeMain-cinterop",
         "binaryLayout": "klib",

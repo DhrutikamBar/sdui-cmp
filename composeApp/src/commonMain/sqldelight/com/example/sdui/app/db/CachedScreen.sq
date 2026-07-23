@@ -1,0 +1,27 @@
+CREATE TABLE CachedScreen (
+    path TEXT NOT NULL PRIMARY KEY,
+    content TEXT NOT NULL,
+    updatedAt TEXT NOT NULL,
+    lastAccessedAt INTEGER NOT NULL
+);
+
+selectByPath:
+SELECT * FROM CachedScreen WHERE path = ?;
+
+upsert:
+INSERT OR REPLACE INTO CachedScreen(path, content, updatedAt, lastAccessedAt)
+VALUES (?, ?, ?, ?);
+
+touchLastAccessed:
+UPDATE CachedScreen SET lastAccessedAt = ? WHERE path = ?;
+
+countAll:
+SELECT COUNT(*) FROM CachedScreen;
+
+deleteLeastRecentlyUsed:
+DELETE FROM CachedScreen WHERE path IN (
+  SELECT path FROM CachedScreen ORDER BY lastAccessedAt ASC LIMIT :n
+);
+
+deleteAll:
+DELETE FROM CachedScreen;

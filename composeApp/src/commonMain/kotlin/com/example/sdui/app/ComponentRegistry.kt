@@ -89,50 +89,55 @@ fun Condition.evaluate(state: FormState): Boolean {
 
 /** 
  * A robust expression evaluator for SDUI.
- * Supports multiple variables from FormState and basic arithmetic.
- * Example: "price * qty > 100"
+ * Supports multiple variables from FormState, literals, and basic arithmetic.
+ * Examples: "price * qty > 100", "status == 'active'", "isPremium == true"
  */
 private fun evaluateScript(expression: String, state: FormState): Boolean {
-    // 1. Replace variables with their values
-    var interpolated = expression
-    state.values.forEach { (key, value) ->
-        val num = when (value) {
-            is SduiValue.NumberValue -> value.value
-            is SduiValue.StringValue -> value.value.toDoubleOrNull()
-            else -> null
-        }
-        if (num != null) {
-            interpolated = interpolated.replace(key, num.toString())
-        }
-    }
-    
-    // 2. Basic math parser for comparisons
     val ops = listOf(">=", "<=", "==", ">", "<")
-    val op = ops.find { interpolated.contains(it) } ?: return false
-    val parts = interpolated.split(op, limit = 2)
+    val op = ops.find { expression.contains(it) } ?: return false
+    val parts = expression.split(op, limit = 2)
     if (parts.size != 2) return false
-    
-    val left = evaluateMath(parts[0])
-    val right = evaluateMath(parts[1])
-    
+
+    val left = evaluateExpressionPart(parts[0], state)
+    val right = evaluateExpressionPart(parts[1], state)
+
+    if (left == null || right == null) return false
+
     return when (op) {
-        ">" -> left > right
-        "<" -> left < right
         "==" -> left == right
-        ">=" -> left >= right
-        "<=" -> left <= right
+        ">" -> if (left is Double && right is Double) left > right else false
+        "<" -> if (left is Double && right is Double) left < right else false
+        ">=" -> if (left is Double && right is Double) left >= right else false
+        "<=" -> if (left is Double && right is Double) left <= right else false
         else -> false
     }
 }
 
-private fun evaluateMath(expr: String): Double {
-    val clean = expr.trim()
-    // Support basic multiplication for "total == price * qty"
-    if (clean.contains("*")) {
-        val parts = clean.split("*")
-        return parts.map { it.trim().toDoubleOrNull() ?: 0.0 }.reduce { acc, d -> acc * d }
+private fun evaluateExpressionPart(part: String, state: FormState): Any? {
+    val raw = part.trim()
+    
+    if (raw.contains("*")) {
+        val subParts = raw.split("*")
+        return subParts.map { evaluateExpressionPart(it, state) as? Double ?: 0.0 }
+            .reduce { acc, d -> acc * d }
     }
-    return clean.toDoubleOrNull() ?: 0.0
+
+    // 1. Resolve from FormState
+    state[raw]?.let { sduiVal ->
+        return when (sduiVal) {
+            is SduiValue.StringValue -> sduiVal.value
+            is SduiValue.NumberValue -> sduiVal.value
+            is SduiValue.BooleanValue -> sduiVal.value
+            else -> null
+        }
+    }
+    
+    // 2. Literals
+    if (raw.startsWith("'") && raw.endsWith("'")) return raw.removeSurrounding("'")
+    if (raw == "true") return true
+    if (raw == "false") return false
+    
+    return raw.toDoubleOrNull()
 }
 
 /** Tells children whether they are inside a scrollable container. */
@@ -152,26 +157,24 @@ class ComponentRegistry {
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun RenderRoot(node: UiNode, actions: ActionHandler, formState: FormState) {
-        // Promote the root style to the LazyColumn itself
         val rootStyle = node.style()
-        
-        // We render the root container's children as top-level items in the LazyColumn.
-        // If the root isn't a layout, we just render the root itself as the single item.
+
         val flattenedNodes = if (node.type in listOf("column", "row", "box")) {
             node.children.flatMap { UiFlattener.flatten(it) }
         } else {
             UiFlattener.flatten(node)
         }
-        
+
         CompositionLocalProvider(LocalIsInsideScrollable provides true) {
             LazyColumn(Modifier.fillMaxSize().applyStyle(rootStyle)) {
-                flattenedNodes.forEach { itemNode ->
+                flattenedNodes.forEachIndexed { index, itemNode ->
+                    val key = itemNode.id ?: "item_$index"
                     if (itemNode.sticky) {
-                        stickyHeader(key = itemNode.id ?: itemNode.hashCode()) {
+                        stickyHeader(key = key) {
                             Render(itemNode, actions, formState)
                         }
                     } else {
-                        item(key = itemNode.id ?: itemNode.hashCode()) {
+                        item(key = key) {
                             Render(itemNode, actions, formState)
                         }
                     }

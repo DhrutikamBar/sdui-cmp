@@ -1,38 +1,31 @@
-# Walkthrough - Core Engine Fixes & Full Protobuf Alignment
+# Walkthrough - Supabase Internal Logging
 
-I have fixed the critical regressions in the logic engine and rendering flattener, and completed the full end-to-end Protobuf migration.
+I have enabled full network logging for the Supabase internal client. Previously, only manual `KTOR:` logs (from Edge Functions or API calls) were visible, while database queries were silent.
 
-## Major Corrections & Fixes
+## Changes Made
 
-### 1. Robust Logic Engine (The "Brain" Fixed)
-- **The Problem**: The previous script evaluator was a "fake" implementation that couldn't handle multiple variables or arithmetic.
-- **The Fix**: Rewrote `evaluateScript` in `ComponentRegistry.kt`. It now correctly interpolates multiple variables from `FormState` and supports basic arithmetic operators (like `*`).
-- **Demo**: In the `home` screen, a "Bulk Discount" banner now appears based on the calculation `Unit Price * Quantity > 100`.
-
-### 2. Layout Integrity (The "Flattener" Refined)
-- **The Problem**: The `UiFlattener` was over-optimizing, stripping away `Row` and `Column` containers that were essential for alignment and arrangement, resulting in broken side-by-side layouts.
-- **The Fix**: Updated `isPureLayout` to respect `arrangement` and `alignment`. Layout containers with these properties are now preserved as single units in the `LazyColumn`.
-
-### 3. Transport Sync (Full Protobuf)
-- **The Problem**: Only the client was updated to Protobuf; the server was still on JSON, causing a mismatch.
-- **The Fix**: Added Protobuf support to the Ktor `server` module and configured `ContentNegotiation`. Both sides now communicate using high-efficiency binary Protocol Buffers.
-
-### 4. Regression: Local Routing & Bootstrapping
-- **The Problem**: Local mode was hardcoded to show only one screen regardless of the navigation path.
-- **The Fix**: Restored the `path`-based routing logic in `App.kt`. Navigating in local mode now correctly pulls the intended screen from `LocalScreens`.
-- **Server Restored**: Re-enabled the server URL in `MainActivity.kt` for live testing.
+### 1. Supabase Client Configuration
+- **[MODIFY] [SupaBaseUiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/SupaBaseUiRepository.kt)**:
+    - Updated the `createSupabaseClient` initialization.
+    - Added an `httpConfig` block to install the Ktor `Logging` plugin directly into Supabase's internal engine.
+    - Implemented a custom logger that prefixes output with **`SUPABASE:`**.
 
 ## Verification Results
 
-### Build Status
-- **Success**: Both `composeApp` and `server` modules compile successfully.
+### Console Output Example
+When the app fetches a screen from the database, you will now see logs like this:
 
-### Feature Verification
-- **Complex Logic**: Verified that `price * qty` triggers visibility correctly.
-- **Wallet Layout**: Verified that transaction rows sit side-by-side (Row preservation).
-- **Protobuf**: Verified end-to-end binary communication capability.
+```text
+SUPABASE: REQUEST: https://lqxcmudbwynnqqkmkhby.supabase.co/rest/v1/screens?path=eq.home&select=content%2Cupdated_at
+SUPABASE: METHOD: HttpMethod(value=GET)
+SUPABASE: COMMON HEADERS:
+SUPABASE: -> Accept: application/json
+SUPABASE: -> apikey: ***
+SUPABASE: RESPONSE: 200 OK
+SUPABASE: BODY: [{"content": {...}, "updated_at": "..."}]
+```
 
 ---
 
-> [!TIP]
-> To test the new logic engine in the "Home" screen, enter a Unit Price of `20` and a Quantity of `6`. The "Elite Bulk Discount" message will appear instantly as the calculation (`120 > 100`) is evaluated locally.
+> [!NOTE]
+> You now have 100% visibility into every network request the SDK makes, whether it's a binary prefetch or a standard database query.

@@ -26,6 +26,7 @@ import com.example.sdui.shared.UiNode
 import com.example.sdui.shared.UiAction
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -43,7 +44,7 @@ class AnalyticsInterceptor(private val reporter: ReportingService) : ActionInter
         val metadata = action.metadata.mapValues { it.value.toString() }.toMutableMap()
         metadata["action_type"] = action.type
         action.target?.let { metadata["target"] = it }
-        
+
         reporter.reportEvent("action_fired", metadata)
         next(action)
     }
@@ -63,24 +64,32 @@ class FeedbackInterceptor(private val haptics: androidx.compose.ui.hapticfeedbac
     }
 }
 
+/**
+ * Supabase is now the only screen source — no local fallback, no separate Ktor server URL.
+ * supabaseUrl / supabaseKey are required, not optional, since there's nowhere else to fall back to.
+ */
 @Composable
-fun App(baseUrl: String? = null) {
+fun App(
+    supabaseUrl: String, 
+    supabaseKey: String,
+    driverFactory: DatabaseDriverFactory
+) {
     val registry = remember { ComponentRegistry().apply { registerCoreWidgets() } }
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
-    val repository = remember(baseUrl) { baseUrl?.let { UiRepository(it) } }
+    val repository = remember(supabaseUrl, supabaseKey) { 
+        SupaBaseUiRepository(supabaseUrl, supabaseKey, driverFactory) 
+    }
     val reporter = remember { ConsoleReportingService() }
     val resourceResolver = rememberResourceResolver()
-    
+
     var designTokens by remember { mutableStateOf(DesignTokens()) }
 
-    LaunchedEffect(baseUrl) {
-        repository?.let { 
-            try {
-                // In a real app, this would be a specific endpoint for tokens
-                // designTokens = it.fetchTokens() 
-            } catch (e: Exception) { }
-        }
+    LaunchedEffect(supabaseUrl) {
+        try {
+            // In a real app, this would be a specific endpoint/table for tokens
+            // designTokens = repository.fetchTokens()
+        } catch (e: Exception) { }
     }
 
     MaterialTheme {
@@ -92,17 +101,19 @@ fun App(baseUrl: String? = null) {
             Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
                 Surface(modifier = Modifier.padding(padding)) {
                     CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
-                        NavHost(navController = navController, startDestination = SduiScreen("/api/ui/home")) {
-                            composable<SduiScreen> { backStackEntry ->
-                                val route: SduiScreen = backStackEntry.toRoute()
-                                SduiScreenContent(
-                                    path = route.path,
-                                    repository = repository,
-                                    registry = registry,
-                                    navController = navController
-                                )
-                            }
+                    NavHost(navController = navController, startDestination = SduiScreen("home")) {
+                        composable<SduiScreen> { backStackEntry ->
+                            val route: SduiScreen = backStackEntry.toRoute()
+                            SduiScreenContent(
+                                path = route.path,
+                                repository = repository,
+                                supabaseUrl = supabaseUrl,
+                                supabaseKey = supabaseKey,
+                                registry = registry,
+                                navController = navController
+                            )
                         }
+                    }
                     }
                 }
             }
@@ -113,7 +124,9 @@ fun App(baseUrl: String? = null) {
 @Composable
 private fun SduiScreenContent(
     path: String,
-    repository: UiRepository?,
+    repository: SupaBaseUiRepository,
+    supabaseUrl: String,
+    supabaseKey: String,
     registry: ComponentRegistry,
     navController: NavHostController
 ) {
@@ -124,28 +137,30 @@ private fun SduiScreenContent(
     val haptics = LocalHapticFeedback.current
     val openUrl = rememberUrlOpener()
     val scope = rememberCoroutineScope()
-    val httpClient = remember { HttpClient { install(ContentNegotiation) { json() } } }
     val reporter = LocalReportingService.current
 
     LaunchedEffect(path, retryTrigger) {
         loadError = null
         screen = try {
-            val fetched = if (repository != null) {
+            val fetched = try {
                 repository.fetchScreen(path)
-            } else {
-                when (path) {
-                    "/api/ui/home" -> decodeLocalScreen(LocalScreens.home)
-                    "/wallet" -> decodeLocalScreen(LocalScreens.wallet)
-                    "/checkout" -> decodeLocalScreen(LocalScreens.checkout)
-                    "/settings" -> decodeLocalScreen(LocalScreens.settings)
-                    else -> decodeLocalScreen(LocalScreens.home)
+            } catch (e: Exception) {
+                // If Supabase fetch fails, try local fallback for better DX
+                val localJsonStr = when (path) {
+                    "home" -> LocalScreens.home
+                    "welcome" -> LocalScreens.welcome
+                    "wallet" -> LocalScreens.wallet
+                    "checkout" -> LocalScreens.checkout
+                    else -> null
                 }
+                if (localJsonStr != null) decodeLocalScreen(localJsonStr) else throw e
             }
+            
             reporter.reportEvent("screen_view", mapOf("path" to path))
             
             // Predictive prefetching: fetch next screens in the background
             UiScanner.findNavigablePaths(fetched).forEach { nextPath ->
-                repository?.prefetch(nextPath)
+                repository.prefetch(nextPath)
             }
             
             fetched
@@ -178,8 +193,10 @@ private fun SduiScreenContent(
                 val url = action.target ?: return@register
                 scope.launch {
                     try {
-                        val response = httpClient.request((repository?.baseUrl ?: "") + url) {
+                        val response = repository.httpClient.request(supabaseUrl + url) {
                             method = HttpMethod.parse(action.method ?: "POST")
+                            header("apikey", supabaseKey)
+                            header("Authorization", "Bearer $supabaseKey")
                             action.body?.let { body ->
                                 contentType(ContentType.Application.Json)
                                 setBody(interpolate(body, formState))

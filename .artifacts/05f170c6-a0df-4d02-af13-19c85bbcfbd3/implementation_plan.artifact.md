@@ -1,51 +1,19 @@
-# Implementation Plan - SDUI Testing Strategy
+# Implementation Plan - Enable Supabase Internal Logging
 
-This plan establishes a comprehensive testing suite to verify all the "Elite" and production-grade features developed so far.
-
-## User Review Required
-
-> [!IMPORTANT]
-> **Test Dependencies**: I will add `kotlin-test` and Compose testing libraries to the project. This will slightly increase the build configuration complexity but is required for verification.
+This plan ensures that Supabase's internal network requests (database queries) are logged to the IDE console, providing full visibility into all SDUI network traffic.
 
 ## Proposed Changes
 
-### 1. Test Infrastructure
+### 1. Configure Supabase Internal Logging
 
-#### [MODIFY] [shared/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/shared/build.gradle.kts)
-- Add `kotlin.test` dependency to `commonTest`.
-
-#### [MODIFY] [composeApp/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/build.gradle.kts)
-- Add `compose.uiTestJUnit4` and `kotlin.test` dependencies.
-
-### 2. Logic Verification (Unit Tests)
-
-#### [NEW] [ConditionTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/shared/src/commonTest/kotlin/com/example/sdui/shared/ConditionTest.kt)
-- Test all condition types: `Equals`, `NotEmpty`, `IsTrue`, `Matches`, `And`, `Or`, `Not`.
-- Test the new `Script` evaluator with arithmetic operations.
-
-#### [NEW] [InterpolationTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonTest/kotlin/com/example/sdui/app/InterpolationTest.kt)
-- Verify `{{fieldId}}` interpolation works correctly with `FormState`.
-
-### 3. Rendering & Interaction (UI Tests)
-
-#### [NEW] [SduiUiTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/androidMain/kotlin/com/example/sdui/app/SduiUiTest.kt)
-- Verify that components with `visibleWhen` appear/disappear based on `FormState`.
-- Verify `onAppear` lifecycle hooks are triggered.
-- Verify `AnalyticsInterceptor` captures events.
-
-### 4. Integration Verification
-
-#### [NEW] [PrefetchTest.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonTest/kotlin/com/example/sdui/app/PrefetchTest.kt)
-- Verify `UiScanner` correctly identifies all navigation paths in a tree.
-- Verify `UiRepository` populates the cache during `prefetch`.
-
----
+#### [MODIFY] [SupaBaseUiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/SupaBaseUiRepository.kt)
+- Update the `createSupabaseClient` block to include `httpConfig`.
+- Inside `httpConfig`, install the Ktor `Logging` plugin.
+- Use a custom logger with a `SUPABASE:` prefix to distinguish these logs from manual `KTOR:` logs.
 
 ## Verification Plan
 
-### Automated Tests
-- Run `./gradlew :shared:allTests`
-- Run `./gradlew :composeApp:connectedAndroidTest` (requires emulator) or use JVM host tests.
-
 ### Manual Verification
-- A set of "Testing Instructions" will be provided in a new artifact to guide you through manual verification of Haptics and Accessibility.
+1. **Check Logs**: Run the app and observe the IDE console.
+2. **Database Queries**: Verify that logs starting with `SUPABASE:` appear when a screen is fetched from the database.
+3. **Headers & Body**: Confirm that the log contains the full request URL, headers, and the returned JSON body.

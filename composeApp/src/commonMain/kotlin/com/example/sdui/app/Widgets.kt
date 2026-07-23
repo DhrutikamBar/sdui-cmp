@@ -72,6 +72,10 @@ private fun SduiValue?.asInt() = (this as? SduiValue.NumberValue)?.value?.toInt(
 private fun SduiValue?.asBoolean() = (this as? SduiValue.BooleanValue)?.value ?: false
 private fun SduiValue?.asList() = (this as? SduiValue.ListValue)?.value ?: emptyList()
 
+private fun UiNode.getContentDescription(): String? {
+    return semantics?.contentDescription ?: props["contentDescription"].asString().takeIf { it.isNotEmpty() }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 fun ComponentRegistry.registerCoreWidgets() {
 
@@ -140,7 +144,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                 val finalModel = if (url.isResource()) resolver?.resolveImage(url) ?: url else url
                 AsyncImage(
                     model = finalModel,
-                    contentDescription = node.semantics?.contentDescription,
+                    contentDescription = node.getContentDescription(),
                     modifier = clickableModifier,
                     contentScale = ContentScale.Crop
                 )
@@ -155,7 +159,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("icon") { node, actions, _ ->
         val style = node.style()
         val vector = materialIcon(node.props["name"].asString())
-        val description = node.props["contentDescription"].asString()
+        val description = node.getContentDescription()
         var base = Modifier.applyStyle(style).applySemantics(node)
         if (node.action != null) base = base.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
         val clickableModifier = if (node.action != null) base.clickable { node.action?.let(actions::handle) } else base
@@ -181,7 +185,7 @@ fun ComponentRegistry.registerCoreWidgets() {
             value = formState.getString(fieldId),
             onValueChange = { formState.setString(fieldId, it) },
             label = { Text(node.props["label"].asString()) },
-            modifier = Modifier.applyStyle(style).applySemantics(node),
+            modifier = Modifier.applyStyle(style).applySemantics(node).fillMaxWidth(),
             isError = hasError,
             supportingText = if (hasError && errorText.isNotEmpty()) { { Text(errorText, color = MaterialTheme.colorScheme.error) } } else null,
             keyboardOptions = KeyboardOptions(
