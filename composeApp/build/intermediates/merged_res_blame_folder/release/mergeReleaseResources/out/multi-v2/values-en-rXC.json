@@ -1,25 +1,8 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-42:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeReleaseResources-45:/values-en-rXC/values-en-rXC.xml",
             "map": [
-                {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\f84b0d858682ae7a2fb71139174bcab3\\transformed\\ui-release\\res\\values-en-rXC\\values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,296,481,678,880,1067,1252,1445,1633,1820,2001,2186,2352,2538,2716,2891,3062,3241,3408",
-                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,185,177,174,170,178,166,237",
-                        "endOffsets": "291,476,673,875,1062,1247,1440,1628,1815,1996,2181,2347,2533,2711,2886,3057,3236,3403,3641"
-                    },
-                    "to": {
-                        "startLines": "9,10,12,13,14,18,19,77,78,79,80,81,82,83,84,85,87,88,89",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "1532,1723,2108,2305,2507,3306,3491,15609,15797,15984,16165,16350,16516,16702,16880,17055,17430,17609,17776",
-                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,185,177,174,170,178,166,237",
-                        "endOffsets": "1718,1903,2300,2502,2689,3486,3679,15792,15979,16160,16345,16511,16697,16875,17050,17221,17604,17771,18009"
-                    }
-                },
                 {
                     "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\cb07076cc264da73679d9b3f00ee1106\\transformed\\browser-1.8.0\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
@@ -55,7 +38,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\8b303569c114d13cc78a93b341f83df9\\transformed\\core-1.15.0\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\9d8b86247b3b614007eff56963917c64\\transformed\\foundation\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,243",
+                        "endColumns": "187,186",
+                        "endOffsets": "238,425"
+                    },
+                    "to": {
+                        "startLines": "90,91",
+                        "startColumns": "4,4",
+                        "startOffsets": "18014,18202",
+                        "endColumns": "187,186",
+                        "endOffsets": "18197,18384"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\1011a916b8670e9d8235f9f2d2ebb492\\transformed\\core-1.16.0\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -72,20 +72,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\53b0d5b5a0d3298c48e0ccc0b3936947\\transformed\\foundation-release\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\5e090e14f35ccddae733daab7ba8dc72\\transformed\\ui\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,243",
-                        "endColumns": "187,186",
-                        "endOffsets": "238,425"
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "107,298,483,680,882,1069,1254,1447,1635,1822,2003,2188,2354,2540,2718,2893,3064,3243,3410",
+                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,185,177,174,170,178,166,241",
+                        "endOffsets": "293,478,675,877,1064,1249,1442,1630,1817,1998,2183,2349,2535,2713,2888,3059,3238,3405,3647"
                     },
                     "to": {
-                        "startLines": "90,91",
-                        "startColumns": "4,4",
-                        "startOffsets": "18014,18202",
-                        "endColumns": "187,186",
-                        "endOffsets": "18197,18384"
+                        "startLines": "9,10,12,13,14,18,19,77,78,79,80,81,82,83,84,85,87,88,89",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "1532,1723,2108,2305,2507,3306,3491,15609,15797,15984,16165,16350,16516,16702,16880,17055,17430,17609,17776",
+                        "endColumns": "190,184,196,201,186,184,192,187,186,180,184,165,185,177,174,170,178,166,237",
+                        "endOffsets": "1718,1903,2300,2502,2689,3486,3679,15792,15979,16160,16345,16511,16697,16875,17050,17221,17604,17771,18009"
                     }
                 }
             ]

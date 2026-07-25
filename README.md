@@ -4,9 +4,8 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 
 ## Architecture
 
-- **shared** — The wire contract. Defines the `UiNode` tree, `SduiValue` system, and `Condition` logic.
+- **shared** — The wire contract. Defines the `UiNode` tree, `SduiValue system, and `Condition` logic.
 - **composeApp** — The mobile client (Android + iOS). Fetches screens from Supabase, flattens the UI tree for 60fps performance, and handles local logic/state.
-- **server** — A reference Ktor backend. **Note**: The mobile app currently fetches live screens from Supabase directly; this module serves as an example of how to build a custom backend if needed.
 
 ## Key Features
 
@@ -29,12 +28,6 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 ### iOS
 - Requires a Mac with Xcode.
 - Run the `iosApp` via the Compose Multiplatform plugin or open the `iosApp` folder in Xcode.
-
-### Server (Reference)
-```bash
-./gradlew :server:run
-```
-Serves a sample home screen at `localhost:8080/api/ui/home`.
 
 ## Build & Test
 

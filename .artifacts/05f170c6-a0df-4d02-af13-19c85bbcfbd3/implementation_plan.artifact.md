@@ -1,25 +1,31 @@
-# Implementation Plan - Fix Build Error and Robustify Caching
+# Implementation Plan - Remove Server Module
 
-The current build is failing due to unresolved references to `System` in `SupaBaseUiRepository.kt`, likely caused by ambiguity or incomplete resolution of `Clock.System` in the Kotlin Multiplatform common code. Additionally, I will address the empty responses from Supabase seen in the logcat.
+This plan outlines the complete removal of the unused Ktor `server` module to streamline the project and resolve build issues in environments like JitPack.
 
 ## Proposed Changes
 
-### 1. Fix Build Errors in SupaBaseUiRepository
+### Root Project
 
-#### [MODIFY] [SupaBaseUiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/SupaBaseUiRepository.kt)
-- Replace `Clock.System.now()` with `kotlinx.datetime.Clock.System.now()` to eliminate any ambiguity with `java.lang.System`.
-- Ensure `kotlinx.datetime.Clock` is correctly utilized.
+#### [DELETE] [server directory](file:///D:/chikul/sdui-demo/sdui-demo/server)
+- Delete the entire `server/` directory and its contents.
 
-### 2. Robustify Empty Response Handling
+#### [MODIFY] [settings.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/settings.gradle.kts)
+- Remove `:server` from the `include` statement.
 
-#### [MODIFY] [SupaBaseUiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/SupaBaseUiRepository.kt)
-- Add a check for empty results in `fetchUpdatedAt` and `fetchFullRow`. If Supabase returns an empty list (which happens when a row is missing), the app should throw a descriptive `NoSuchElementException` so the local fallback logic in `App.kt` can take over gracefully.
+#### [MODIFY] [README.md](file:///D:/chikul/sdui-demo/sdui-demo/README.md)
+- Remove the "server" architecture bullet point.
+- Remove the "Server (Reference)" section from "Running the Project".
+
+### Compose App
+
+#### [MODIFY] [MainActivity.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/androidMain/kotlin/com/example/sdui/app/MainActivity.kt)
+- Remove comments referring to `./gradlew :server:run`.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `./gradlew :composeApp:assembleDebug` to verify the fix for the build error.
+- Run `./gradlew :sdui-sdk:publishToMavenLocal` to ensure the core SDK library still builds and publishes locally without the server module.
+- Run `./gradlew assemble` to ensure the entire project (shared, sdk, and app) still compiles correctly.
 
 ### Manual Verification
-- **Logcat Monitoring**: Verify that if a screen (like `topup`) is missing in Supabase, the app logs "Remote fetch failed" and switches to the local fallback instead of crashing or showing a blank screen.
-- **Cache Verification**: Relaunch the app and confirm `KTOR: [CACHE]` logs show successful disk hits for existing screens.
+- Verify that the `server/` directory is physically removed from the disk.

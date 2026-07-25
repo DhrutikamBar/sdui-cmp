@@ -20,15 +20,6 @@
           "nativeMain",
           "commonMain"
         ]
-      },
-      {
-        "name": "iosX64ApiElements",
-        "sourceSet": [
-          "iosMain",
-          "appleMain",
-          "nativeMain",
-          "commonMain"
-        ]
       }
     ],
     "sourceSets": [
@@ -38,18 +29,25 @@
           "nativeMain"
         ],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib",
+          "app.cash.sqldelight:runtime",
           "sdui-demo:shared",
+          "sdui-demo:sdui-sdk",
           "org.jetbrains.compose.runtime:runtime",
           "org.jetbrains.compose.foundation:foundation",
           "org.jetbrains.compose.material3:material3",
           "io.ktor:ktor-client-core",
+          "io.ktor:ktor-client-encoding",
           "io.ktor:ktor-client-content-negotiation",
+          "io.ktor:ktor-client-logging",
           "io.ktor:ktor-serialization-kotlinx-json",
+          "io.ktor:ktor-serialization-kotlinx-protobuf",
           "org.jetbrains.compose.material:material-icons-extended",
           "io.coil-kt.coil3:coil-compose",
           "io.coil-kt.coil3:coil-network-ktor3",
-          "org.jetbrains.androidx.navigation:navigation-compose"
+          "org.jetbrains.androidx.navigation:navigation-compose",
+          "io.github.jan-tennert.supabase:postgrest-kt",
+          "app.cash.sqldelight:coroutines-extensions",
+          "org.jetbrains.kotlinx:kotlinx-datetime"
         ],
         "sourceSetCInteropMetadataDirectory": "appleMain-cinterop",
         "binaryLayout": "klib",
@@ -59,7 +57,26 @@
         "name": "commonMain",
         "dependsOn": [],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib"
+          "app.cash.sqldelight:runtime",
+          "org.jetbrains.kotlin:kotlin-stdlib",
+          "sdui-demo:shared",
+          "sdui-demo:sdui-sdk",
+          "org.jetbrains.compose.runtime:runtime",
+          "org.jetbrains.compose.foundation:foundation",
+          "org.jetbrains.compose.material3:material3",
+          "io.ktor:ktor-client-core",
+          "io.ktor:ktor-client-encoding",
+          "io.ktor:ktor-client-content-negotiation",
+          "io.ktor:ktor-client-logging",
+          "io.ktor:ktor-serialization-kotlinx-json",
+          "io.ktor:ktor-serialization-kotlinx-protobuf",
+          "org.jetbrains.compose.material:material-icons-extended",
+          "io.coil-kt.coil3:coil-compose",
+          "io.coil-kt.coil3:coil-network-ktor3",
+          "org.jetbrains.androidx.navigation:navigation-compose",
+          "io.github.jan-tennert.supabase:postgrest-kt",
+          "app.cash.sqldelight:coroutines-extensions",
+          "org.jetbrains.kotlinx:kotlinx-datetime"
         ],
         "binaryLayout": "klib"
       },
@@ -69,19 +86,27 @@
           "appleMain"
         ],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib",
+          "app.cash.sqldelight:runtime",
           "sdui-demo:shared",
+          "sdui-demo:sdui-sdk",
           "org.jetbrains.compose.runtime:runtime",
           "org.jetbrains.compose.foundation:foundation",
           "org.jetbrains.compose.material3:material3",
           "io.ktor:ktor-client-core",
+          "io.ktor:ktor-client-encoding",
           "io.ktor:ktor-client-content-negotiation",
+          "io.ktor:ktor-client-logging",
           "io.ktor:ktor-serialization-kotlinx-json",
+          "io.ktor:ktor-serialization-kotlinx-protobuf",
           "org.jetbrains.compose.material:material-icons-extended",
           "io.coil-kt.coil3:coil-compose",
           "io.coil-kt.coil3:coil-network-ktor3",
           "org.jetbrains.androidx.navigation:navigation-compose",
-          "io.ktor:ktor-client-darwin"
+          "io.github.jan-tennert.supabase:postgrest-kt",
+          "app.cash.sqldelight:coroutines-extensions",
+          "org.jetbrains.kotlinx:kotlinx-datetime",
+          "io.ktor:ktor-client-darwin",
+          "app.cash.sqldelight:native-driver"
         ],
         "sourceSetCInteropMetadataDirectory": "iosMain-cinterop",
         "binaryLayout": "klib",
@@ -93,18 +118,25 @@
           "commonMain"
         ],
         "moduleDependency": [
-          "org.jetbrains.kotlin:kotlin-stdlib",
+          "app.cash.sqldelight:runtime",
           "sdui-demo:shared",
+          "sdui-demo:sdui-sdk",
           "org.jetbrains.compose.runtime:runtime",
           "org.jetbrains.compose.foundation:foundation",
           "org.jetbrains.compose.material3:material3",
           "io.ktor:ktor-client-core",
+          "io.ktor:ktor-client-encoding",
           "io.ktor:ktor-client-content-negotiation",
+          "io.ktor:ktor-client-logging",
           "io.ktor:ktor-serialization-kotlinx-json",
+          "io.ktor:ktor-serialization-kotlinx-protobuf",
           "org.jetbrains.compose.material:material-icons-extended",
           "io.coil-kt.coil3:coil-compose",
           "io.coil-kt.coil3:coil-network-ktor3",
-          "org.jetbrains.androidx.navigation:navigation-compose"
+          "org.jetbrains.androidx.navigation:navigation-compose",
+          "io.github.jan-tennert.supabase:postgrest-kt",
+          "app.cash.sqldelight:coroutines-extensions",
+          "org.jetbrains.kotlinx:kotlinx-datetime"
         ],
         "sourceSetCInteropMetadataDirectory": "nativeMain-cinterop",
         "binaryLayout": "klib",

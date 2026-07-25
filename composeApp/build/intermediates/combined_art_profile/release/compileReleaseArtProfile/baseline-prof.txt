@@ -773,103 +773,6 @@ HSPLcoil3/compose/internal/UtilsKt$$ExternalSyntheticLambda1;->invoke(Ljava/lang
 Lcoil3/compose/internal/UtilsKt$$ExternalSyntheticLambda2;
 HSPLcoil3/compose/internal/UtilsKt$$ExternalSyntheticLambda2;-><init>(Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 HSPLcoil3/compose/internal/UtilsKt$$ExternalSyntheticLambda2;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
-# Baseline profile rules for androidx.compose.foundation
-# =============================================
-#
-# Include all methods in common top level classes
-HSPLandroidx/compose/foundation/AbstractClickable**->**(**)**
-HSPLandroidx/compose/foundation/AndroidEdgeEffectOverscrollEffect**->**(**)**
-HSPLandroidx/compose/foundation/AndroidOverscroll_**->**(**)**
-HSPLandroidx/compose/foundation/BackgroundElement;->**(**)**
-HSPLandroidx/compose/foundation/BackgroundNode;->**(**)**
-HSPLandroidx/compose/foundation/BorderKt**->**(**)**
-HSPLandroidx/compose/foundation/BorderStroke;->**(**)**
-HSPLandroidx/compose/foundation/CanvasKt**->**(**)**
-HSPLandroidx/compose/foundation/Clickable**->**(**)**
-HSPLandroidx/compose/foundation/DrawOverscrollModifier;->**(**)**
-HSPLandroidx/compose/foundation/EdgeEffectWrapper;->**(**)**
-HSPLandroidx/compose/foundation/Focusable**->**(**)**
-HSPLandroidx/compose/foundation/FocusedBounds**->**(**)**
-HSPLandroidx/compose/foundation/Hoverable**->**(**)**
-HSPLandroidx/compose/foundation/ImageKt**->**(**)**
-HSPLandroidx/compose/foundation/IndicationKt**->**(**)**
-HSPLandroidx/compose/foundation/IndicationModifier;->**(**)**
-HSPLandroidx/compose/foundation/MutatePriority;->**(**)**
-HSPLandroidx/compose/foundation/MutatorMutex**->**(**)**
-HSPLandroidx/compose/foundation/PinnableParentConsumer;->**(**)**
-HSPLandroidx/compose/foundation/ScrollKt**->**(**)**
-HSPLandroidx/compose/foundation/ScrollState**->**(**)**
-HSPLandroidx/compose/foundation/ScrollingLayoutModifier**->**(**)**
-#
-# Include everything inside of the gestures namespace
-HSPLandroidx/compose/foundation/gestures/**->**(**)**
-#
-# Include everything inside of the interaction namespace
-HSPLandroidx/compose/foundation/interaction/*;->**(**)**
-
-# Include everything inside of the lazy namespaces
-HSPLandroidx/compose/foundation/lazy/**->**(**)**
-
-# Include everything inside relocation namespace
-HSPLandroidx/compose/foundation/relocation/**->**(**)**
-
-# Include everything inside selection namespace
-HSPLandroidx/compose/foundation/selection/**->**(**)**
-
-#
-# common shape classes
-HSPLandroidx/compose/foundation/shape/CornerBasedShape;->**(**)**
-HSPLandroidx/compose/foundation/shape/CornerSizeKt;->**(**)**
-HSPLandroidx/compose/foundation/shape/DpCornerSize;->**(**)**
-HSPLandroidx/compose/foundation/shape/RoundedCornerShape;->**(**)**
-HSPLandroidx/compose/foundation/shape/PercentCornerSize;->**(**)**
-#
-
-# Include everything inside of the text namespace
-HSPLandroidx/compose/foundation/text/*;->**(**)**
-HSPLandroidx/compose/foundation/text/modifiers/**->**(**)**
-HSPLandroidx/compose/foundation/text/selection/SimpleLayoutKt**->**(**)**
-HSPLandroidx/compose/foundation/text/selection/TextFieldSelectionManager;->**(**)**
-
-#
-# Include all of foundation
-Landroidx/compose/foundation/**;
-
-# Baseline profile rules for androidx.compose.foundation.layout
-# =============================================
-# Layout is incredibly important for performance, and represents many hot code paths. For now, we
-# will include all of the layout namespace
-HSPLandroidx/compose/foundation/layout/**->**(**)**
-Landroidx/compose/foundation/layout/**;
-# Baseline profile rules for androidx.compose.animation.core
-# =============================================
-# In practice it seems like almost every class in animation/core ends up getting loaded in even a
-# relatively small sample, and most end up getting marked as "HSP". Since Animation is a high value
-# target for performance - fade in, scroll, etc we are going to be liberal in the animation profile
-# rules and just mark the entire module.
-
-HSPLandroidx/compose/animation/core/**->**(**)**
-
-Landroidx/compose/animation/core/**;
-
-# Baseline profile rules for androidx.compose.animation
-# =============================================
-HSPLandroidx/compose/animation/AndroidFlingSpline**;->**(**)**
-HSPLandroidx/compose/animation/AnimatedVisibilityKt**->**(**)**
-HSPLandroidx/compose/animation/AnimatedVisibilityScope;-><init>(**)V
-HSPLandroidx/compose/animation/ChangeSize;->**(**)**
-HSPLandroidx/compose/animation/ColorVectorConverterKt**->**(**)**
-HSPLandroidx/compose/animation/CrossfadeAnimationItem;->**(**)**
-HSPLandroidx/compose/animation/CrossfadeKt**->**(**)**
-HSPLandroidx/compose/animation/EnterExitTransitionKt;->**(**)**
-HSPLandroidx/compose/animation/FlingCalculator**;->**(**)**
-HSPLandroidx/compose/animation/SingleValueAnimationKt;->**(**)**
-HSPLandroidx/compose/animation/SplineBasedFloatDecayAnimationSpec**->**(**)**
-HSPLandroidx/compose/animation/SplineBasedDecayKt;->**(**)**
-HSPLandroidx/compose/animation/TransitionData;->**(**)**
-
-# Include all of androidx.compose.animation
-Landroidx/compose/animation/*;
 Lcoil3/BitmapImage;
 HSPLcoil3/BitmapImage;-><init>(Landroid/graphics/Bitmap;Z)V
 HSPLcoil3/BitmapImage;->getBitmap()Landroid/graphics/Bitmap;
@@ -1725,11 +1628,444 @@ HSPLcoil3/util/Utils_androidKt;-><clinit>()V
 HSPLcoil3/util/Utils_androidKt;->getDEFAULT_BITMAP_CONFIG()Landroid/graphics/Bitmap$Config;
 HSPLcoil3/util/Utils_androidKt;->getNULL_COLOR_SPACE()Landroid/graphics/ColorSpace;
 HSPLcoil3/util/Utils_androidKt;->prepareToDraw(Lcoil3/Image;)V
-# Baseline profile rules for androidx.compose.ui.util
+# Baseline profile rules for androidx.compose.animation.core
 # =============================================
-HSPLandroidx/compose/ui/util/MathHelpersKt;->lerp(FFF)F
-Landroidx/compose/ui/util/MathHelpersKt;
+# In practice it seems like almost every class in animation/core ends up getting loaded in even a
+# relatively small sample, and most end up getting marked as "HSP". Since Animation is a high value
+# target for performance - fade in, scroll, etc we are going to be liberal in the animation profile
+# rules and just mark the entire module.
 
+HSPLandroidx/compose/animation/core/**->**(**)**
+
+Landroidx/compose/animation/core/**;
+
+# Baseline profile rules for androidx.compose.animation
+# =============================================
+HSPLandroidx/compose/animation/AndroidFlingSpline**;->**(**)**
+HSPLandroidx/compose/animation/AnimatedVisibilityKt**->**(**)**
+HSPLandroidx/compose/animation/AnimatedVisibilityScope;-><init>(**)V
+HSPLandroidx/compose/animation/ChangeSize;->**(**)**
+HSPLandroidx/compose/animation/ColorVectorConverterKt**->**(**)**
+HSPLandroidx/compose/animation/CrossfadeAnimationItem;->**(**)**
+HSPLandroidx/compose/animation/CrossfadeKt**->**(**)**
+HSPLandroidx/compose/animation/EnterExitTransitionKt;->**(**)**
+HSPLandroidx/compose/animation/FlingCalculator**;->**(**)**
+HSPLandroidx/compose/animation/SingleValueAnimationKt;->**(**)**
+HSPLandroidx/compose/animation/SplineBasedFloatDecayAnimationSpec**->**(**)**
+HSPLandroidx/compose/animation/SplineBasedDecayKt;->**(**)**
+HSPLandroidx/compose/animation/TransitionData;->**(**)**
+
+# Include all of androidx.compose.animation
+Landroidx/compose/animation/*;
+# Baseline profile rules for androidx.compose.foundation.layout
+# =============================================
+# Layout is incredibly important for performance, and represents many hot code paths. For now, we
+# will include all of the layout namespace
+HSPLandroidx/compose/foundation/layout/**->**(**)**
+Landroidx/compose/foundation/layout/**;
+# Baseline profile rules for androidx.compose.foundation
+# =============================================
+#
+# Include all methods in common top level classes
+HSPLandroidx/compose/foundation/AbstractClickable**->**(**)**
+HSPLandroidx/compose/foundation/AndroidEdgeEffectOverscrollEffect**->**(**)**
+HSPLandroidx/compose/foundation/AndroidOverscroll_**->**(**)**
+HSPLandroidx/compose/foundation/BackgroundElement;->**(**)**
+HSPLandroidx/compose/foundation/BackgroundNode;->**(**)**
+HSPLandroidx/compose/foundation/BorderKt**->**(**)**
+HSPLandroidx/compose/foundation/BorderStroke;->**(**)**
+HSPLandroidx/compose/foundation/CanvasKt**->**(**)**
+HSPLandroidx/compose/foundation/Clickable**->**(**)**
+HSPLandroidx/compose/foundation/DrawOverscrollModifier;->**(**)**
+HSPLandroidx/compose/foundation/EdgeEffectWrapper;->**(**)**
+HSPLandroidx/compose/foundation/Focusable**->**(**)**
+HSPLandroidx/compose/foundation/FocusedBounds**->**(**)**
+HSPLandroidx/compose/foundation/Hoverable**->**(**)**
+HSPLandroidx/compose/foundation/ImageKt**->**(**)**
+HSPLandroidx/compose/foundation/IndicationKt**->**(**)**
+HSPLandroidx/compose/foundation/IndicationModifier;->**(**)**
+HSPLandroidx/compose/foundation/MutatePriority;->**(**)**
+HSPLandroidx/compose/foundation/MutatorMutex**->**(**)**
+HSPLandroidx/compose/foundation/PinnableParentConsumer;->**(**)**
+HSPLandroidx/compose/foundation/ScrollKt**->**(**)**
+HSPLandroidx/compose/foundation/ScrollState**->**(**)**
+HSPLandroidx/compose/foundation/ScrollingLayoutModifier**->**(**)**
+#
+# Include everything inside of the gestures namespace
+HSPLandroidx/compose/foundation/gestures/**->**(**)**
+#
+# Include everything inside of the interaction namespace
+HSPLandroidx/compose/foundation/interaction/*;->**(**)**
+
+# Include everything inside of the lazy namespaces
+HSPLandroidx/compose/foundation/lazy/**->**(**)**
+
+# Include everything inside relocation namespace
+HSPLandroidx/compose/foundation/relocation/**->**(**)**
+
+# Include everything inside selection namespace
+HSPLandroidx/compose/foundation/selection/**->**(**)**
+
+#
+# common shape classes
+HSPLandroidx/compose/foundation/shape/CornerBasedShape;->**(**)**
+HSPLandroidx/compose/foundation/shape/CornerSizeKt;->**(**)**
+HSPLandroidx/compose/foundation/shape/DpCornerSize;->**(**)**
+HSPLandroidx/compose/foundation/shape/RoundedCornerShape;->**(**)**
+HSPLandroidx/compose/foundation/shape/PercentCornerSize;->**(**)**
+#
+
+# Include everything inside of the text namespace
+HSPLandroidx/compose/foundation/text/*;->**(**)**
+HSPLandroidx/compose/foundation/text/modifiers/**->**(**)**
+HSPLandroidx/compose/foundation/text/selection/SimpleLayoutKt**->**(**)**
+HSPLandroidx/compose/foundation/text/selection/TextFieldSelectionManager;->**(**)**
+
+#
+# Include all of foundation
+Landroidx/compose/foundation/**;
+
+HSPLandroidx/compose/foundation/AbstractClickableNode;->**(**)**
+HSPLandroidx/compose/foundation/AndroidEdgeEffectOverscrollEffect;->**(**)**
+HSPLandroidx/compose/foundation/AndroidEdgeEffectOverscrollFactory;->**(**)**
+HSPLandroidx/compose/foundation/AndroidOverscroll_androidKt**->**(**)**
+HPLandroidx/compose/foundation/Api31Impl;->**(**)**
+HSPLandroidx/compose/foundation/BackgroundElement;->**(**)**
+HSPLandroidx/compose/foundation/BackgroundKt**->**(**)**
+HSPLandroidx/compose/foundation/BackgroundNode;->**(**)**
+PLandroidx/compose/foundation/BorderKt**->**(**)**
+HPLandroidx/compose/foundation/BorderModifierNode;->**(**)**
+PLandroidx/compose/foundation/BorderModifierNodeElement;->**(**)**
+PLandroidx/compose/foundation/BorderStroke;->**(**)**
+PLandroidx/compose/foundation/BorderStrokeKt**->**(**)**
+HSPLandroidx/compose/foundation/CanvasKt**->**(**)**
+HSPLandroidx/compose/foundation/CheckScrollableContainerConstraintsKt**->**(**)**
+HSPLandroidx/compose/foundation/ClickableElement;->**(**)**
+HSPLandroidx/compose/foundation/ClickableKt**->**(**)**
+HSPLandroidx/compose/foundation/ClickableNode;->**(**)**
+SPLandroidx/compose/foundation/Clickable_androidKt**->**(**)**
+HSPLandroidx/compose/foundation/ClipScrollableContainerKt**->**(**)**
+HSPLandroidx/compose/foundation/CombinedClickableElement;->**(**)**
+HSPLandroidx/compose/foundation/CombinedClickableNode;->**(**)**
+SPLandroidx/compose/foundation/ComposeFoundationFlags;->**(**)**
+PLandroidx/compose/foundation/EdgeEffectCompat;->**(**)**
+HSPLandroidx/compose/foundation/EdgeEffectWrapper;->**(**)**
+HSPLandroidx/compose/foundation/ExcludeFromSystemGestureElement;->**(**)**
+HSPLandroidx/compose/foundation/ExcludeFromSystemGestureNode;->**(**)**
+HPLandroidx/compose/foundation/FocusableElement;->**(**)**
+HPLandroidx/compose/foundation/FocusableKt**->**(**)**
+HSPLandroidx/compose/foundation/FocusableNode;->**(**)**
+SPLandroidx/compose/foundation/FocusedBoundsObserverNode;->**(**)**
+SPLandroidx/compose/foundation/HorizontalScrollableClipShape;->**(**)**
+PLandroidx/compose/foundation/ImageKt**->**(**)**
+Landroidx/compose/foundation/Indication;
+SPLandroidx/compose/foundation/IndicationKt**->**(**)**
+PLandroidx/compose/foundation/IndicationModifierElement;->**(**)**
+PLandroidx/compose/foundation/IndicationModifierNode;->**(**)**
+Landroidx/compose/foundation/IndicationNodeFactory;
+SPLandroidx/compose/foundation/MutatePriority;->**(**)**
+PLandroidx/compose/foundation/MutationInterruptedException;->**(**)**
+HSPLandroidx/compose/foundation/MutatorMutex;->**(**)**
+SPLandroidx/compose/foundation/OverscrollConfiguration;->**(**)**
+SPLandroidx/compose/foundation/OverscrollConfiguration_androidKt**->**(**)**
+PLandroidx/compose/foundation/OverscrollEffect;->**(**)**
+Landroidx/compose/foundation/OverscrollFactory;
+HSPLandroidx/compose/foundation/OverscrollKt**->**(**)**
+HSPLandroidx/compose/foundation/OverscrollModifierElement;->**(**)**
+HSPLandroidx/compose/foundation/OverscrollModifierNode;->**(**)**
+PLandroidx/compose/foundation/ProgressSemanticsKt**->**(**)**
+HSPLandroidx/compose/foundation/RectListNode;->**(**)**
+HSPLandroidx/compose/foundation/ScrollKt**->**(**)**
+HSPLandroidx/compose/foundation/ScrollNode;->**(**)**
+HSPLandroidx/compose/foundation/ScrollState;->**(**)**
+HSPLandroidx/compose/foundation/ScrollableAreaElement;->**(**)**
+HSPLandroidx/compose/foundation/ScrollableAreaKt**->**(**)**
+HSPLandroidx/compose/foundation/ScrollableAreaNode;->**(**)**
+HSPLandroidx/compose/foundation/ScrollingLayoutElement;->**(**)**
+HSPLandroidx/compose/foundation/StretchOverscrollNode;->**(**)**
+HSPLandroidx/compose/foundation/SystemGestureExclusionKt**->**(**)**
+HSPLandroidx/compose/foundation/VerticalScrollableClipShape;->**(**)**
+PLandroidx/compose/foundation/WrappedOverscrollEffect;->**(**)**
+HSPLandroidx/compose/foundation/gestures/BringIntoViewRequestPriorityQueue;->**(**)**
+SPLandroidx/compose/foundation/gestures/BringIntoViewSpec;->**(**)**
+SPLandroidx/compose/foundation/gestures/BringIntoViewSpec_androidKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/ContentInViewNode;->**(**)**
+HSPLandroidx/compose/foundation/gestures/DefaultFlingBehavior;->**(**)**
+HSPLandroidx/compose/foundation/gestures/DefaultScrollableState;->**(**)**
+HPLandroidx/compose/foundation/gestures/DragEvent;->**(**)**
+HSPLandroidx/compose/foundation/gestures/DragGestureDetectorKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/DragGestureNode;->**(**)**
+Landroidx/compose/foundation/gestures/DragScope;
+HSPLandroidx/compose/foundation/gestures/DraggableElement;->**(**)**
+HSPLandroidx/compose/foundation/gestures/DraggableKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/DraggableNode;->**(**)**
+Landroidx/compose/foundation/gestures/DraggableState;
+Landroidx/compose/foundation/gestures/FlingBehavior;
+PLandroidx/compose/foundation/gestures/FlingCancellationException;->**(**)**
+HSPLandroidx/compose/foundation/gestures/ForEachGestureKt**->**(**)**
+Landroidx/compose/foundation/gestures/NestedScrollScope;
+SPLandroidx/compose/foundation/gestures/Orientation;->**(**)**
+Landroidx/compose/foundation/gestures/PressGestureScope;
+HSPLandroidx/compose/foundation/gestures/PressGestureScopeImpl;->**(**)**
+Landroidx/compose/foundation/gestures/ScrollScope;
+HSPLandroidx/compose/foundation/gestures/ScrollableContainerNode;->**(**)**
+Landroidx/compose/foundation/gestures/ScrollableDefaultFlingBehavior;
+HSPLandroidx/compose/foundation/gestures/ScrollableDefaults;->**(**)**
+PLandroidx/compose/foundation/gestures/ScrollableElement;->**(**)**
+HSPLandroidx/compose/foundation/gestures/ScrollableKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/ScrollableNestedScrollConnection;->**(**)**
+HSPLandroidx/compose/foundation/gestures/ScrollableNode;->**(**)**
+SPLandroidx/compose/foundation/gestures/ScrollableState;->**(**)**
+SPLandroidx/compose/foundation/gestures/ScrollableStateKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/ScrollingLogic;->**(**)**
+HSPLandroidx/compose/foundation/gestures/TapGestureDetectorKt**->**(**)**
+SPLandroidx/compose/foundation/gestures/TapGestureDetector_androidKt**->**(**)**
+Landroidx/compose/foundation/gestures/TargetedFlingBehavior;
+HSPLandroidx/compose/foundation/gestures/TouchSlopDetector;->**(**)**
+PLandroidx/compose/foundation/gestures/snapping/AnimationResult;->**(**)**
+PLandroidx/compose/foundation/gestures/snapping/FinalSnappingItem;->**(**)**
+HPLandroidx/compose/foundation/gestures/snapping/LazyListSnapLayoutInfoProviderKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/snapping/PagerSnapLayoutInfoProviderKt**->**(**)**
+HSPLandroidx/compose/foundation/gestures/snapping/SnapFlingBehavior;->**(**)**
+HSPLandroidx/compose/foundation/gestures/snapping/SnapFlingBehaviorKt**->**(**)**
+Landroidx/compose/foundation/gestures/snapping/SnapLayoutInfoProvider;
+SPLandroidx/compose/foundation/gestures/snapping/SnapPosition;->**(**)**
+HSPLandroidx/compose/foundation/gestures/snapping/SnapPositionKt**->**(**)**
+PLandroidx/compose/foundation/interaction/DragInteraction;->**(**)**
+Landroidx/compose/foundation/interaction/FocusInteraction;
+Landroidx/compose/foundation/interaction/Interaction;
+Landroidx/compose/foundation/interaction/InteractionSource;
+HSPLandroidx/compose/foundation/interaction/InteractionSourceKt**->**(**)**
+Landroidx/compose/foundation/interaction/MutableInteractionSource;
+HSPLandroidx/compose/foundation/interaction/MutableInteractionSourceImpl;->**(**)**
+SPLandroidx/compose/foundation/interaction/PressInteraction;->**(**)**
+PLandroidx/compose/foundation/internal/PlatformOptimizedCancellationException;->**(**)**
+PLandroidx/compose/foundation/internal/PlatformOptimizedCancellationException_jvmKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/Arrangement;->**(**)**
+HSPLandroidx/compose/foundation/layout/BoxChildDataElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/BoxChildDataNode;->**(**)**
+HSPLandroidx/compose/foundation/layout/BoxKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/BoxMeasurePolicy;->**(**)**
+Landroidx/compose/foundation/layout/BoxScope;
+HSPLandroidx/compose/foundation/layout/BoxScopeInstance;->**(**)**
+HSPLandroidx/compose/foundation/layout/BoxWithConstraintsKt**->**(**)**
+Landroidx/compose/foundation/layout/BoxWithConstraintsScope;
+HSPLandroidx/compose/foundation/layout/BoxWithConstraintsScopeImpl;->**(**)**
+HSPLandroidx/compose/foundation/layout/ColumnKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/ColumnMeasurePolicy;->**(**)**
+PLandroidx/compose/foundation/layout/ColumnScope;->**(**)**
+HSPLandroidx/compose/foundation/layout/ColumnScopeInstance;->**(**)**
+SPLandroidx/compose/foundation/layout/CrossAxisAlignment;->**(**)**
+SPLandroidx/compose/foundation/layout/Direction;->**(**)**
+HSPLandroidx/compose/foundation/layout/FillElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/FillNode;->**(**)**
+HPLandroidx/compose/foundation/layout/FlowLayoutBuildingBlocks;->**(**)**
+Landroidx/compose/foundation/layout/FlowLayoutData;
+HPLandroidx/compose/foundation/layout/FlowLayoutKt**->**(**)**
+PLandroidx/compose/foundation/layout/FlowLayoutOverflow;->**(**)**
+HPLandroidx/compose/foundation/layout/FlowLayoutOverflowState;->**(**)**
+HPLandroidx/compose/foundation/layout/FlowLineMeasurePolicy;->**(**)**
+HPLandroidx/compose/foundation/layout/FlowMeasurePolicy;->**(**)**
+PLandroidx/compose/foundation/layout/FlowRowOverflow;->**(**)**
+PLandroidx/compose/foundation/layout/FlowRowScopeInstance;->**(**)**
+HPLandroidx/compose/foundation/layout/HorizontalAlignElement;->**(**)**
+PLandroidx/compose/foundation/layout/HorizontalAlignNode;->**(**)**
+PLandroidx/compose/foundation/layout/IntrinsicHeightElement;->**(**)**
+PLandroidx/compose/foundation/layout/IntrinsicHeightNode;->**(**)**
+HSPLandroidx/compose/foundation/layout/IntrinsicKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/IntrinsicMeasureBlocks;->**(**)**
+SPLandroidx/compose/foundation/layout/IntrinsicSize;->**(**)**
+HSPLandroidx/compose/foundation/layout/IntrinsicSizeModifier;->**(**)**
+HSPLandroidx/compose/foundation/layout/IntrinsicWidthElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/IntrinsicWidthNode;->**(**)**
+PLandroidx/compose/foundation/layout/LayoutOrientation;->**(**)**
+HPLandroidx/compose/foundation/layout/LayoutWeightElement;->**(**)**
+HPLandroidx/compose/foundation/layout/LayoutWeightNode;->**(**)**
+HSPLandroidx/compose/foundation/layout/OffsetKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/OffsetPxElement;->**(**)**
+SPLandroidx/compose/foundation/layout/OffsetPxNode;->**(**)**
+HPLandroidx/compose/foundation/layout/OrientationIndependentConstraints;->**(**)**
+HSPLandroidx/compose/foundation/layout/PaddingElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/PaddingKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/PaddingNode;->**(**)**
+Landroidx/compose/foundation/layout/PaddingValues;
+HSPLandroidx/compose/foundation/layout/PaddingValuesElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/PaddingValuesImpl;->**(**)**
+HSPLandroidx/compose/foundation/layout/PaddingValuesModifier;->**(**)**
+HSPLandroidx/compose/foundation/layout/RowColumnImplKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/RowColumnMeasurePolicy;->**(**)**
+HSPLandroidx/compose/foundation/layout/RowColumnMeasurePolicyKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/RowColumnParentData;->**(**)**
+HSPLandroidx/compose/foundation/layout/RowKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/RowMeasurePolicy;->**(**)**
+HPLandroidx/compose/foundation/layout/RowScope;->**(**)**
+HSPLandroidx/compose/foundation/layout/RowScopeInstance;->**(**)**
+HSPLandroidx/compose/foundation/layout/SizeElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/SizeKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/SizeNode;->**(**)**
+HSPLandroidx/compose/foundation/layout/SpacerKt**->**(**)**
+HSPLandroidx/compose/foundation/layout/SpacerMeasurePolicy;->**(**)**
+HSPLandroidx/compose/foundation/layout/UnspecifiedConstraintsElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/UnspecifiedConstraintsNode;->**(**)**
+SPLandroidx/compose/foundation/layout/VerticalAlignElement;->**(**)**
+HSPLandroidx/compose/foundation/layout/VerticalAlignNode;->**(**)**
+HSPLandroidx/compose/foundation/layout/WrapContentElement;->**(**)**
+HPLandroidx/compose/foundation/layout/WrapContentNode;->**(**)**
+Landroidx/compose/foundation/lazy/CacheWindowListPrefetchStrategy;
+HSPLandroidx/compose/foundation/lazy/DefaultLazyListPrefetchStrategy;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyDslKt**->**(**)**
+Landroidx/compose/foundation/lazy/LazyItemScope;
+HSPLandroidx/compose/foundation/lazy/LazyItemScopeImpl;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyLayoutSemanticStateKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListBeyondBoundsModifierKt**->**(**)**
+SPLandroidx/compose/foundation/lazy/LazyListBeyondBoundsState;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListInterval;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListIntervalContent;->**(**)**
+Landroidx/compose/foundation/lazy/LazyListItemInfo;
+Landroidx/compose/foundation/lazy/LazyListItemProvider;
+HSPLandroidx/compose/foundation/lazy/LazyListItemProviderImpl;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListItemProviderKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListKt**->**(**)**
+Landroidx/compose/foundation/lazy/LazyListLayoutInfo;
+HSPLandroidx/compose/foundation/lazy/LazyListMeasureKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListMeasureResult;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListMeasuredItem;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListMeasuredItemProvider;->**(**)**
+Landroidx/compose/foundation/lazy/LazyListPrefetchScope;
+SPLandroidx/compose/foundation/lazy/LazyListPrefetchStrategy;->**(**)**
+SPLandroidx/compose/foundation/lazy/LazyListPrefetchStrategyKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListScope;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListScrollPosition;->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListSemanticsKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyListState;->**(**)**
+SPLandroidx/compose/foundation/lazy/LazyListStateKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/LazyList_androidKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/AndroidPrefetchScheduler;->**(**)**
+PLandroidx/compose/foundation/lazy/layout/Averages;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/AwaitFirstLayoutModifier;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/DefaultLazyKey;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/IntervalList;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/IntervalListKt**->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutAnimationSpecsNode;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutBeyondBoundsInfo;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutBeyondBoundsModifierElement;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutBeyondBoundsModifierLocalKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutBeyondBoundsModifierNode;->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutBeyondBoundsState;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutBeyondBoundsStateKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutIntervalContent;->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutItemAnimation;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemAnimator;->**(**)**
+SPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemAnimatorKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemContentFactory;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemContentFactoryKt**->**(**)**
+SPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemProvider;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemProviderKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutItemReusePolicy;->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutKeyIndexMap;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutKt**->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutMeasureScope;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutMeasureScopeImpl;->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutMeasuredItem;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutMeasuredItemKt**->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutMeasuredItemProvider;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutNearestRangeState;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutPinnableItem;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutPinnableItemKt**->**(**)**
+SPLandroidx/compose/foundation/lazy/layout/LazyLayoutPinnedItemList;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutPrefetchState;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutPrefetchStateKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutScrollDeltaBetweenPasses;->**(**)**
+Landroidx/compose/foundation/lazy/layout/LazyLayoutSemanticState;
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutSemanticsKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutSemanticsModifier;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutSemanticsModifierNode;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazyLayoutStickyItemsKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazySaveableStateHolder;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/LazySaveableStateHolderKt**->**(**)**
+SPLandroidx/compose/foundation/lazy/layout/Lazy_androidKt**->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/MutableIntervalList;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/NearestRangeKeyIndexMap;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/ObservableScopeInvalidator;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/PrefetchHandleProvider;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/PrefetchMetrics;->**(**)**
+Landroidx/compose/foundation/lazy/layout/PrefetchRequest;
+Landroidx/compose/foundation/lazy/layout/PrefetchRequestScope;
+Landroidx/compose/foundation/lazy/layout/PrefetchScheduler;
+HSPLandroidx/compose/foundation/lazy/layout/PrefetchScheduler_androidKt**->**(**)**
+SPLandroidx/compose/foundation/lazy/layout/StableValue;->**(**)**
+SPLandroidx/compose/foundation/lazy/layout/StickyItemsPlacement;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/TraversablePrefetchStateModifierElement;->**(**)**
+HSPLandroidx/compose/foundation/lazy/layout/TraversablePrefetchStateNode;->**(**)**
+HSPLandroidx/compose/foundation/pager/DefaultPagerNestedScrollConnection;->**(**)**
+HSPLandroidx/compose/foundation/pager/LazyLayoutPagerKt**->**(**)**
+SPLandroidx/compose/foundation/pager/LazyLayoutSemanticStateKt**->**(**)**
+HSPLandroidx/compose/foundation/pager/MeasuredPage;->**(**)**
+Landroidx/compose/foundation/pager/PageInfo;
+SPLandroidx/compose/foundation/pager/PageSize;->**(**)**
+SPLandroidx/compose/foundation/pager/PagerBeyondBoundsModifierKt**->**(**)**
+SPLandroidx/compose/foundation/pager/PagerBeyondBoundsState;->**(**)**
+SPLandroidx/compose/foundation/pager/PagerBringIntoViewSpec;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerDefaults;->**(**)**
+SPLandroidx/compose/foundation/pager/PagerIntervalContent;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerKt**->**(**)**
+Landroidx/compose/foundation/pager/PagerLayoutInfo;
+HPLandroidx/compose/foundation/pager/PagerLayoutInfoKt**->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerLayoutIntervalContent;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerLazyLayoutItemProvider;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerMeasureKt**->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerMeasurePolicyKt**->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerMeasureResult;->**(**)**
+Landroidx/compose/foundation/pager/PagerScope;
+SPLandroidx/compose/foundation/pager/PagerScopeImpl;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerScrollPosition;->**(**)**
+HPLandroidx/compose/foundation/pager/PagerScrollPositionKt**->**(**)**
+SPLandroidx/compose/foundation/pager/PagerSemanticsKt**->**(**)**
+SPLandroidx/compose/foundation/pager/PagerSnapDistance;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerSnapDistanceMaxPages;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerState;->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerStateKt**->**(**)**
+HSPLandroidx/compose/foundation/pager/PagerWrapperFlingBehavior;->**(**)**
+Landroidx/compose/foundation/relocation/BringIntoViewResponder;
+HSPLandroidx/compose/foundation/relocation/BringIntoViewResponderNode;->**(**)**
+PLandroidx/compose/foundation/selection/SelectableElement;->**(**)**
+PLandroidx/compose/foundation/selection/SelectableGroupKt**->**(**)**
+PLandroidx/compose/foundation/selection/SelectableKt**->**(**)**
+PLandroidx/compose/foundation/selection/SelectableNode;->**(**)**
+HPLandroidx/compose/foundation/selection/ToggleableElement;->**(**)**
+HPLandroidx/compose/foundation/selection/ToggleableKt**->**(**)**
+HPLandroidx/compose/foundation/selection/ToggleableNode;->**(**)**
+HSPLandroidx/compose/foundation/shape/CornerBasedShape;->**(**)**
+Landroidx/compose/foundation/shape/CornerSize;
+SPLandroidx/compose/foundation/shape/CornerSizeKt**->**(**)**
+HSPLandroidx/compose/foundation/shape/DpCornerSize;->**(**)**
+HSPLandroidx/compose/foundation/shape/PercentCornerSize;->**(**)**
+HSPLandroidx/compose/foundation/shape/RoundedCornerShape;->**(**)**
+HSPLandroidx/compose/foundation/shape/RoundedCornerShapeKt**->**(**)**
+HSPLandroidx/compose/foundation/text/AnnotatedStringResolveInlineContentKt**->**(**)**
+HSPLandroidx/compose/foundation/text/BasicTextKt**->**(**)**
+HSPLandroidx/compose/foundation/text/BasicText_androidKt**->**(**)**
+HSPLandroidx/compose/foundation/text/EmptyMeasurePolicy;->**(**)**
+SPLandroidx/compose/foundation/text/HeightInLinesModifierKt**->**(**)**
+Landroidx/compose/foundation/text/TextAutoSize;
+HSPLandroidx/compose/foundation/text/TextDelegateKt**->**(**)**
+HSPLandroidx/compose/foundation/text/modifiers/InlineDensity;->**(**)**
+HSPLandroidx/compose/foundation/text/modifiers/LayoutUtilsKt**->**(**)**
+HSPLandroidx/compose/foundation/text/modifiers/MultiParagraphLayoutCache;->**(**)**
+Landroidx/compose/foundation/text/modifiers/SelectionController;
+HSPLandroidx/compose/foundation/text/modifiers/TextAnnotatedStringElement;->**(**)**
+HSPLandroidx/compose/foundation/text/modifiers/TextAnnotatedStringNode;->**(**)**
+HSPLandroidx/compose/foundation/text/modifiers/TextAnnotatedStringNodeKt**->**(**)**
+Landroidx/compose/foundation/text/selection/SelectionRegistrar;
+SPLandroidx/compose/foundation/text/selection/SelectionRegistrarKt**->**(**)**
+SPLandroidx/compose/foundation/text/selection/TextSelectionColors;->**(**)**
+SPLandroidx/compose/foundation/text/selection/TextSelectionColorsKt**->**(**)**
+
+# Baseline profile rules for androidx.compose.ui.geometry
+# =============================================
+# All of geometry is highly used, small, and mathy, so we include everything
+HSPLandroidx/compose/ui/geometry/*;->**(**)**
+Landroidx/compose/ui/geometry/*;
 # Baseline profile rules for androidx.compose.ui.unit
 # =============================================
 # everything in unit is relatively small and in the hot path, so we just add everything
@@ -2513,11 +2849,11 @@ Landroidx/compose/ui/viewinterop/AndroidViewHolder;
 HSPLandroidx/compose/ui/window/DialogProperties;->**(**)**
 SPLandroidx/compose/ui/window/SecureFlagPolicy;->**(**)**
 
-# Baseline profile rules for androidx.compose.ui.geometry
+# Baseline profile rules for androidx.compose.ui.util
 # =============================================
-# All of geometry is highly used, small, and mathy, so we include everything
-HSPLandroidx/compose/ui/geometry/*;->**(**)**
-Landroidx/compose/ui/geometry/*;
+HSPLandroidx/compose/ui/util/MathHelpersKt;->lerp(FFF)F
+Landroidx/compose/ui/util/MathHelpersKt;
+
 # Baseline profile rules for androidx.compose.ui.text
 # =============================================
 
@@ -2658,6 +2994,32 @@ HSPLkotlin/text/StringsKt__StringsKt;->trim(Ljava/lang/String;[C)Ljava/lang/Stri
 HSPLkotlin/text/StringsKt___StringsKt;->first(Ljava/lang/CharSequence;)C
 HSPLkotlin/text/StringsKt___StringsKt;->slice(Ljava/lang/String;Lkotlin/ranges/IntRange;)Ljava/lang/String;
 
+# Baseline profiles for lifecycle-livedata
+
+HSPLandroidx/lifecycle/MediatorLiveData$Source;-><init>(Landroidx/lifecycle/LiveData;Landroidx/lifecycle/Observer;)V
+HSPLandroidx/lifecycle/MediatorLiveData$Source;->onChanged(Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/MediatorLiveData$Source;->plug()V
+HSPLandroidx/lifecycle/MediatorLiveData$Source;->unplug()V
+HSPLandroidx/lifecycle/MediatorLiveData;-><init>()V
+HSPLandroidx/lifecycle/MediatorLiveData;->addSource(Landroidx/lifecycle/LiveData;Landroidx/lifecycle/Observer;)V
+HSPLandroidx/lifecycle/MediatorLiveData;->onActive()V
+HSPLandroidx/lifecycle/MediatorLiveData;->onInactive()V
+HSPLandroidx/lifecycle/MediatorLiveData;->removeSource(Landroidx/lifecycle/LiveData;)V
+HSPLandroidx/lifecycle/Transformations$1;-><init>(Landroidx/lifecycle/MediatorLiveData;Landroidx/arch/core/util/Function;)V
+HSPLandroidx/lifecycle/Transformations$1;->onChanged(Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/Transformations$2$1;-><init>(Landroidx/lifecycle/Transformations$2;)V
+HSPLandroidx/lifecycle/Transformations$2$1;->onChanged(Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/Transformations$2;-><init>(Landroidx/arch/core/util/Function;Landroidx/lifecycle/MediatorLiveData;)V
+HSPLandroidx/lifecycle/Transformations$2;->onChanged(Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/Transformations;->map(Landroidx/lifecycle/LiveData;Landroidx/arch/core/util/Function;)Landroidx/lifecycle/LiveData;
+HSPLandroidx/lifecycle/Transformations;->switchMap(Landroidx/lifecycle/LiveData;Landroidx/arch/core/util/Function;)Landroidx/lifecycle/LiveData;
+Landroidx/lifecycle/MediatorLiveData$Source;
+Landroidx/lifecycle/MediatorLiveData;
+Landroidx/lifecycle/Transformations$1;
+Landroidx/lifecycle/Transformations$2$1;
+Landroidx/lifecycle/Transformations$2;
+Landroidx/lifecycle/Transformations;
+
 # Baseline profiles for lifecycle-process
 
 HSPLandroidx/lifecycle/EmptyActivityLifecycleCallbacks;-><init>()V
@@ -2741,6 +3103,118 @@ HSPLandroidx/lifecycle/MutableLiveData;-><init>()V
 HSPLandroidx/lifecycle/MutableLiveData;->setValue(Ljava/lang/Object;)V
 PLandroidx/lifecycle/LiveData$LifecycleBoundObserver;->detachObserver()V
 
+# Baseline Profile rules for lifecycle-runtime
+
+HPLandroidx/lifecycle/LifecycleRegistry;->backwardPass(Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/LifecycleRegistry$ObserverWithState;-><init>(Landroidx/lifecycle/LifecycleObserver;Landroidx/lifecycle/Lifecycle$State;)V
+HSPLandroidx/lifecycle/LifecycleRegistry$ObserverWithState;->dispatchEvent(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;-><init>(Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;-><init>(Landroidx/lifecycle/LifecycleOwner;Z)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->addObserver(Landroidx/lifecycle/LifecycleObserver;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->calculateTargetState(Landroidx/lifecycle/LifecycleObserver;)Landroidx/lifecycle/Lifecycle$State;
+HSPLandroidx/lifecycle/LifecycleRegistry;->enforceMainThreadIfNeeded(Ljava/lang/String;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->forwardPass(Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->getCurrentState()Landroidx/lifecycle/Lifecycle$State;
+HSPLandroidx/lifecycle/LifecycleRegistry;->handleLifecycleEvent(Landroidx/lifecycle/Lifecycle$Event;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->isSynced()Z
+HSPLandroidx/lifecycle/LifecycleRegistry;->min(Landroidx/lifecycle/Lifecycle$State;Landroidx/lifecycle/Lifecycle$State;)Landroidx/lifecycle/Lifecycle$State;
+HSPLandroidx/lifecycle/LifecycleRegistry;->moveToState(Landroidx/lifecycle/Lifecycle$State;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->popParentState()V
+HSPLandroidx/lifecycle/LifecycleRegistry;->pushParentState(Landroidx/lifecycle/Lifecycle$State;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->removeObserver(Landroidx/lifecycle/LifecycleObserver;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->setCurrentState(Landroidx/lifecycle/Lifecycle$State;)V
+HSPLandroidx/lifecycle/LifecycleRegistry;->sync()V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;-><init>()V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityCreated(Landroid/app/Activity;Landroid/os/Bundle;)V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPostCreated(Landroid/app/Activity;Landroid/os/Bundle;)V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPostResumed(Landroid/app/Activity;)V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPostStarted(Landroid/app/Activity;)V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityResumed(Landroid/app/Activity;)V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityStarted(Landroid/app/Activity;)V
+HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->registerIn(Landroid/app/Activity;)V
+HSPLandroidx/lifecycle/ReportFragment;-><init>()V
+HSPLandroidx/lifecycle/ReportFragment;->dispatch(Landroid/app/Activity;Landroidx/lifecycle/Lifecycle$Event;)V
+HSPLandroidx/lifecycle/ReportFragment;->dispatch(Landroidx/lifecycle/Lifecycle$Event;)V
+HSPLandroidx/lifecycle/ReportFragment;->dispatchCreate(Landroidx/lifecycle/ReportFragment$ActivityInitializationListener;)V
+HSPLandroidx/lifecycle/ReportFragment;->dispatchResume(Landroidx/lifecycle/ReportFragment$ActivityInitializationListener;)V
+HSPLandroidx/lifecycle/ReportFragment;->dispatchStart(Landroidx/lifecycle/ReportFragment$ActivityInitializationListener;)V
+HSPLandroidx/lifecycle/ReportFragment;->injectIfNeededIn(Landroid/app/Activity;)V
+HSPLandroidx/lifecycle/ReportFragment;->onActivityCreated(Landroid/os/Bundle;)V
+HSPLandroidx/lifecycle/ReportFragment;->onResume()V
+HSPLandroidx/lifecycle/ReportFragment;->onStart()V
+HSPLandroidx/lifecycle/ViewTreeLifecycleOwner;->set(Landroid/view/View;Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/ViewTreeViewModelStoreOwner;->set(Landroid/view/View;Landroidx/lifecycle/ViewModelStoreOwner;)V
+PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityDestroyed(Landroid/app/Activity;)V
+PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPaused(Landroid/app/Activity;)V
+PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPreDestroyed(Landroid/app/Activity;)V
+PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPrePaused(Landroid/app/Activity;)V
+PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPreStopped(Landroid/app/Activity;)V
+PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityStopped(Landroid/app/Activity;)V
+PLandroidx/lifecycle/ReportFragment;->onDestroy()V
+PLandroidx/lifecycle/ReportFragment;->onPause()V
+PLandroidx/lifecycle/ReportFragment;->onStop()V
+
+# Baseline Profiles for lifecycle-common
+
+HPLandroidx/lifecycle/Lifecycle$Event;->downFrom(Landroidx/lifecycle/Lifecycle$State;)Landroidx/lifecycle/Lifecycle$Event;
+HSPLandroidx/lifecycle/ClassesInfoCache$CallbackInfo;-><init>(Ljava/util/Map;)V
+HSPLandroidx/lifecycle/ClassesInfoCache$CallbackInfo;->invokeCallbacks(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/ClassesInfoCache$CallbackInfo;->invokeMethodsForEvent(Ljava/util/List;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/ClassesInfoCache$MethodReference;-><init>(ILjava/lang/reflect/Method;)V
+HSPLandroidx/lifecycle/ClassesInfoCache$MethodReference;->hashCode()I
+HSPLandroidx/lifecycle/ClassesInfoCache$MethodReference;->invokeCallback(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/ClassesInfoCache;-><clinit>()V
+HSPLandroidx/lifecycle/ClassesInfoCache;-><init>()V
+HSPLandroidx/lifecycle/ClassesInfoCache;->createInfo(Ljava/lang/Class;[Ljava/lang/reflect/Method;)Landroidx/lifecycle/ClassesInfoCache$CallbackInfo;
+HSPLandroidx/lifecycle/ClassesInfoCache;->getDeclaredMethods(Ljava/lang/Class;)[Ljava/lang/reflect/Method;
+HSPLandroidx/lifecycle/ClassesInfoCache;->getInfo(Ljava/lang/Class;)Landroidx/lifecycle/ClassesInfoCache$CallbackInfo;
+HSPLandroidx/lifecycle/ClassesInfoCache;->hasLifecycleMethods(Ljava/lang/Class;)Z
+HSPLandroidx/lifecycle/ClassesInfoCache;->verifyAndPutHandler(Ljava/util/Map;Landroidx/lifecycle/ClassesInfoCache$MethodReference;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Class;)V
+HSPLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onCreate(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onResume(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onStart(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
+HSPLandroidx/lifecycle/FullLifecycleObserverAdapter$1;-><clinit>()V
+HSPLandroidx/lifecycle/FullLifecycleObserverAdapter;-><init>(Landroidx/lifecycle/FullLifecycleObserver;Landroidx/lifecycle/LifecycleEventObserver;)V
+HSPLandroidx/lifecycle/FullLifecycleObserverAdapter;->onStateChanged(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;)V
+HSPLandroidx/lifecycle/Lifecycle$1;-><clinit>()V
+HSPLandroidx/lifecycle/Lifecycle$Event;-><clinit>()V
+HSPLandroidx/lifecycle/Lifecycle$Event;-><init>(Ljava/lang/String;I)V
+HSPLandroidx/lifecycle/Lifecycle$Event;->getTargetState()Landroidx/lifecycle/Lifecycle$State;
+HSPLandroidx/lifecycle/Lifecycle$Event;->upFrom(Landroidx/lifecycle/Lifecycle$State;)Landroidx/lifecycle/Lifecycle$Event;
+HSPLandroidx/lifecycle/Lifecycle$Event;->values()[Landroidx/lifecycle/Lifecycle$Event;
+HSPLandroidx/lifecycle/Lifecycle$State;-><clinit>()V
+HSPLandroidx/lifecycle/Lifecycle$State;-><init>(Ljava/lang/String;I)V
+HSPLandroidx/lifecycle/Lifecycle$State;->isAtLeast(Landroidx/lifecycle/Lifecycle$State;)Z
+HSPLandroidx/lifecycle/Lifecycle$State;->values()[Landroidx/lifecycle/Lifecycle$State;
+HSPLandroidx/lifecycle/Lifecycle;-><init>()V
+HSPLandroidx/lifecycle/Lifecycling;-><clinit>()V
+HSPLandroidx/lifecycle/Lifecycling;->generatedConstructor(Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
+HSPLandroidx/lifecycle/Lifecycling;->getAdapterName(Ljava/lang/String;)Ljava/lang/String;
+HSPLandroidx/lifecycle/Lifecycling;->getObserverConstructorType(Ljava/lang/Class;)I
+HSPLandroidx/lifecycle/Lifecycling;->lifecycleEventObserver(Ljava/lang/Object;)Landroidx/lifecycle/LifecycleEventObserver;
+HSPLandroidx/lifecycle/Lifecycling;->resolveObserverCallbackType(Ljava/lang/Class;)I
+HSPLandroidx/lifecycle/ReflectiveGenericLifecycleObserver;-><init>(Ljava/lang/Object;)V
+HSPLandroidx/lifecycle/ReflectiveGenericLifecycleObserver;->onStateChanged(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;)V
+PLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onDestroy(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
+PLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onPause(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
+PLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onStop(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
+
+# Baseline profiles for Lifecycle ViewModel
+
+HSPLandroidx/lifecycle/ViewModel;-><init>()V
+HSPLandroidx/lifecycle/ViewModelLazy;-><init>(Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
+HSPLandroidx/lifecycle/ViewModelLazy;->getValue()Landroidx/lifecycle/ViewModel;
+HSPLandroidx/lifecycle/ViewModelLazy;->getValue()Ljava/lang/Object;
+HSPLandroidx/lifecycle/ViewModelProvider;-><init>(Landroidx/lifecycle/ViewModelStore;Landroidx/lifecycle/ViewModelProvider$Factory;)V
+HSPLandroidx/lifecycle/ViewModelProvider;->get(Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
+HSPLandroidx/lifecycle/ViewModelProvider;->get(Ljava/lang/String;Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
+HSPLandroidx/lifecycle/ViewModelStore;-><init>()V
+HSPLandroidx/lifecycle/ViewModelStore;->get(Ljava/lang/String;)Landroidx/lifecycle/ViewModel;
+HSPLandroidx/lifecycle/ViewModelStore;->put(Ljava/lang/String;Landroidx/lifecycle/ViewModel;)V
+PLandroidx/lifecycle/ViewModel;->clear()V
+PLandroidx/lifecycle/ViewModel;->onCleared()V
+PLandroidx/lifecycle/ViewModelStore;->clear()V
+
 # Baseline profile rules for androidx.compose.runtime
 # =============================================
 #
@@ -2757,7 +3231,7 @@ HSPLandroidx/compose/runtime/AbstractApplier;->**(**)**
 HSPLandroidx/compose/runtime/ActualJvm_jvmKt;->identityHashCode(Ljava/lang/Object;)I
 HSPLandroidx/compose/runtime/ActualAndroid**->**(**)**
 HSPLandroidx/compose/runtime/Anchor;->**(**)**
-HSPLandroidx/compose/runtime/Applier$DefaultImpls;->**(**)**
+HSPLandroidx/compose/runtime/Applier**->**(**)**
 HSPLandroidx/compose/runtime/BroadcastFrameClock**->**(**)**
 HSPLandroidx/compose/runtime/ComposablesKt;->**(**)**
 HSPLandroidx/compose/runtime/ComposableSingletons**->**(**)**
@@ -2774,6 +3248,7 @@ HSPLandroidx/compose/runtime/DisposableEffectImpl;->**(**)**
 HSPLandroidx/compose/runtime/DisposableEffectScope;->**(**)**
 HSPLandroidx/compose/runtime/DynamicProvidableCompositionLocal;->**(**)**
 HSPLandroidx/compose/runtime/EffectsKt;->**(**)**
+HSPLandroidx/compose/runtime/GapComposer**->**(**)**
 HSPLandroidx/compose/runtime/GroupInfo;->**(**)**
 HSPLandroidx/compose/runtime/GroupKind**->**(**)**
 HSPLandroidx/compose/runtime/InvalidationResult;->**(**)**
@@ -2789,13 +3264,17 @@ HSPLandroidx/compose/runtime/ParcelableSnapshotMutableFloatState;->**(**)**
 HSPLandroidx/compose/runtime/ParcelableSnapshotMutableIntState;->**(**)**
 HSPLandroidx/compose/runtime/ParcelableSnapshotMutableLongState;->**(**)**
 HSPLandroidx/compose/runtime/ParcelableSnapshotMutableState**->**(**)**
+HSPLandroidx/compose/runtime/PausedCompositionImpl;->**(**)**
+HSPLandroidx/compose/runtime/PausedCompositionState;->**(**)**
 HSPLandroidx/compose/runtime/PausableMonotonicFrameClock;->**(**)**
 HSPLandroidx/compose/runtime/Pending**->**(**)**
 HSPLandroidx/compose/runtime/ProvidableCompositionLocal;->**(**)**
 HSPLandroidx/compose/runtime/ProvidedValue;->**(**)**
 HSPLandroidx/compose/runtime/RecomposeScopeImpl;->**(**)**
 HSPLandroidx/compose/runtime/Recomposer**->**(**)**
+HSPLandroidx/compose/runtime/RecordingApplier;->**(**)**
 HSPLandroidx/compose/runtime/ReferentialEqualityPolicy;->**(**)**
+HSPLandroidx/compose/runtime/RememberedCoroutineScope;->**(**)**
 HSPLandroidx/compose/runtime/SkippableUpdater;->**(**)**
 HSPLandroidx/compose/runtime/SlotReader;->**(**)**
 HSPLandroidx/compose/runtime/SlotTable;->**(**)**
@@ -2817,6 +3296,7 @@ HSPLandroidx/compose/runtime/StructuralEqualityPolicy;->**(**)**
 HSPLandroidx/compose/runtime/Trace;->**(**)**
 HSPLandroidx/compose/runtime/Updater**->**(**)**
 HSPLandroidx/compose/runtime/changelist/**->**(**)**
+HSPLandroidx/compose/runtime/composer/**->**(**)**
 HSPLandroidx/compose/runtime/internal/ComposableLambdaImpl**->**(**)**
 HSPLandroidx/compose/runtime/internal/ComposableLambdaKt;->**(**)**
 HSPLandroidx/compose/runtime/internal/IntRef;->**(**)**
@@ -3733,118 +4213,6 @@ HSPLandroidx/compose/runtime/saveable/SaveableStateHolderKt**->**(**)**
 HSPLandroidx/compose/runtime/saveable/SaveableStateRegistryKt;->**(**)**
 HSPLandroidx/compose/runtime/saveable/SaveableStateRegistryImpl;->**(**)**
 Landroidx/compose/runtime/saveable/*;
-# Baseline Profile rules for lifecycle-runtime
-
-HPLandroidx/lifecycle/LifecycleRegistry;->backwardPass(Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/LifecycleRegistry$ObserverWithState;-><init>(Landroidx/lifecycle/LifecycleObserver;Landroidx/lifecycle/Lifecycle$State;)V
-HSPLandroidx/lifecycle/LifecycleRegistry$ObserverWithState;->dispatchEvent(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;-><init>(Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;-><init>(Landroidx/lifecycle/LifecycleOwner;Z)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->addObserver(Landroidx/lifecycle/LifecycleObserver;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->calculateTargetState(Landroidx/lifecycle/LifecycleObserver;)Landroidx/lifecycle/Lifecycle$State;
-HSPLandroidx/lifecycle/LifecycleRegistry;->enforceMainThreadIfNeeded(Ljava/lang/String;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->forwardPass(Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->getCurrentState()Landroidx/lifecycle/Lifecycle$State;
-HSPLandroidx/lifecycle/LifecycleRegistry;->handleLifecycleEvent(Landroidx/lifecycle/Lifecycle$Event;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->isSynced()Z
-HSPLandroidx/lifecycle/LifecycleRegistry;->min(Landroidx/lifecycle/Lifecycle$State;Landroidx/lifecycle/Lifecycle$State;)Landroidx/lifecycle/Lifecycle$State;
-HSPLandroidx/lifecycle/LifecycleRegistry;->moveToState(Landroidx/lifecycle/Lifecycle$State;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->popParentState()V
-HSPLandroidx/lifecycle/LifecycleRegistry;->pushParentState(Landroidx/lifecycle/Lifecycle$State;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->removeObserver(Landroidx/lifecycle/LifecycleObserver;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->setCurrentState(Landroidx/lifecycle/Lifecycle$State;)V
-HSPLandroidx/lifecycle/LifecycleRegistry;->sync()V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;-><init>()V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityCreated(Landroid/app/Activity;Landroid/os/Bundle;)V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPostCreated(Landroid/app/Activity;Landroid/os/Bundle;)V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPostResumed(Landroid/app/Activity;)V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPostStarted(Landroid/app/Activity;)V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityResumed(Landroid/app/Activity;)V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityStarted(Landroid/app/Activity;)V
-HSPLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->registerIn(Landroid/app/Activity;)V
-HSPLandroidx/lifecycle/ReportFragment;-><init>()V
-HSPLandroidx/lifecycle/ReportFragment;->dispatch(Landroid/app/Activity;Landroidx/lifecycle/Lifecycle$Event;)V
-HSPLandroidx/lifecycle/ReportFragment;->dispatch(Landroidx/lifecycle/Lifecycle$Event;)V
-HSPLandroidx/lifecycle/ReportFragment;->dispatchCreate(Landroidx/lifecycle/ReportFragment$ActivityInitializationListener;)V
-HSPLandroidx/lifecycle/ReportFragment;->dispatchResume(Landroidx/lifecycle/ReportFragment$ActivityInitializationListener;)V
-HSPLandroidx/lifecycle/ReportFragment;->dispatchStart(Landroidx/lifecycle/ReportFragment$ActivityInitializationListener;)V
-HSPLandroidx/lifecycle/ReportFragment;->injectIfNeededIn(Landroid/app/Activity;)V
-HSPLandroidx/lifecycle/ReportFragment;->onActivityCreated(Landroid/os/Bundle;)V
-HSPLandroidx/lifecycle/ReportFragment;->onResume()V
-HSPLandroidx/lifecycle/ReportFragment;->onStart()V
-HSPLandroidx/lifecycle/ViewTreeLifecycleOwner;->set(Landroid/view/View;Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/ViewTreeViewModelStoreOwner;->set(Landroid/view/View;Landroidx/lifecycle/ViewModelStoreOwner;)V
-PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityDestroyed(Landroid/app/Activity;)V
-PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPaused(Landroid/app/Activity;)V
-PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPreDestroyed(Landroid/app/Activity;)V
-PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPrePaused(Landroid/app/Activity;)V
-PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityPreStopped(Landroid/app/Activity;)V
-PLandroidx/lifecycle/ReportFragment$LifecycleCallbacks;->onActivityStopped(Landroid/app/Activity;)V
-PLandroidx/lifecycle/ReportFragment;->onDestroy()V
-PLandroidx/lifecycle/ReportFragment;->onPause()V
-PLandroidx/lifecycle/ReportFragment;->onStop()V
-
-# Baseline Profiles for lifecycle-common
-
-HPLandroidx/lifecycle/Lifecycle$Event;->downFrom(Landroidx/lifecycle/Lifecycle$State;)Landroidx/lifecycle/Lifecycle$Event;
-HSPLandroidx/lifecycle/ClassesInfoCache$CallbackInfo;-><init>(Ljava/util/Map;)V
-HSPLandroidx/lifecycle/ClassesInfoCache$CallbackInfo;->invokeCallbacks(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Object;)V
-HSPLandroidx/lifecycle/ClassesInfoCache$CallbackInfo;->invokeMethodsForEvent(Ljava/util/List;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Object;)V
-HSPLandroidx/lifecycle/ClassesInfoCache$MethodReference;-><init>(ILjava/lang/reflect/Method;)V
-HSPLandroidx/lifecycle/ClassesInfoCache$MethodReference;->hashCode()I
-HSPLandroidx/lifecycle/ClassesInfoCache$MethodReference;->invokeCallback(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Object;)V
-HSPLandroidx/lifecycle/ClassesInfoCache;-><clinit>()V
-HSPLandroidx/lifecycle/ClassesInfoCache;-><init>()V
-HSPLandroidx/lifecycle/ClassesInfoCache;->createInfo(Ljava/lang/Class;[Ljava/lang/reflect/Method;)Landroidx/lifecycle/ClassesInfoCache$CallbackInfo;
-HSPLandroidx/lifecycle/ClassesInfoCache;->getDeclaredMethods(Ljava/lang/Class;)[Ljava/lang/reflect/Method;
-HSPLandroidx/lifecycle/ClassesInfoCache;->getInfo(Ljava/lang/Class;)Landroidx/lifecycle/ClassesInfoCache$CallbackInfo;
-HSPLandroidx/lifecycle/ClassesInfoCache;->hasLifecycleMethods(Ljava/lang/Class;)Z
-HSPLandroidx/lifecycle/ClassesInfoCache;->verifyAndPutHandler(Ljava/util/Map;Landroidx/lifecycle/ClassesInfoCache$MethodReference;Landroidx/lifecycle/Lifecycle$Event;Ljava/lang/Class;)V
-HSPLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onCreate(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onResume(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onStart(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
-HSPLandroidx/lifecycle/FullLifecycleObserverAdapter$1;-><clinit>()V
-HSPLandroidx/lifecycle/FullLifecycleObserverAdapter;-><init>(Landroidx/lifecycle/FullLifecycleObserver;Landroidx/lifecycle/LifecycleEventObserver;)V
-HSPLandroidx/lifecycle/FullLifecycleObserverAdapter;->onStateChanged(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;)V
-HSPLandroidx/lifecycle/Lifecycle$1;-><clinit>()V
-HSPLandroidx/lifecycle/Lifecycle$Event;-><clinit>()V
-HSPLandroidx/lifecycle/Lifecycle$Event;-><init>(Ljava/lang/String;I)V
-HSPLandroidx/lifecycle/Lifecycle$Event;->getTargetState()Landroidx/lifecycle/Lifecycle$State;
-HSPLandroidx/lifecycle/Lifecycle$Event;->upFrom(Landroidx/lifecycle/Lifecycle$State;)Landroidx/lifecycle/Lifecycle$Event;
-HSPLandroidx/lifecycle/Lifecycle$Event;->values()[Landroidx/lifecycle/Lifecycle$Event;
-HSPLandroidx/lifecycle/Lifecycle$State;-><clinit>()V
-HSPLandroidx/lifecycle/Lifecycle$State;-><init>(Ljava/lang/String;I)V
-HSPLandroidx/lifecycle/Lifecycle$State;->isAtLeast(Landroidx/lifecycle/Lifecycle$State;)Z
-HSPLandroidx/lifecycle/Lifecycle$State;->values()[Landroidx/lifecycle/Lifecycle$State;
-HSPLandroidx/lifecycle/Lifecycle;-><init>()V
-HSPLandroidx/lifecycle/Lifecycling;-><clinit>()V
-HSPLandroidx/lifecycle/Lifecycling;->generatedConstructor(Ljava/lang/Class;)Ljava/lang/reflect/Constructor;
-HSPLandroidx/lifecycle/Lifecycling;->getAdapterName(Ljava/lang/String;)Ljava/lang/String;
-HSPLandroidx/lifecycle/Lifecycling;->getObserverConstructorType(Ljava/lang/Class;)I
-HSPLandroidx/lifecycle/Lifecycling;->lifecycleEventObserver(Ljava/lang/Object;)Landroidx/lifecycle/LifecycleEventObserver;
-HSPLandroidx/lifecycle/Lifecycling;->resolveObserverCallbackType(Ljava/lang/Class;)I
-HSPLandroidx/lifecycle/ReflectiveGenericLifecycleObserver;-><init>(Ljava/lang/Object;)V
-HSPLandroidx/lifecycle/ReflectiveGenericLifecycleObserver;->onStateChanged(Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$Event;)V
-PLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onDestroy(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
-PLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onPause(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
-PLandroidx/lifecycle/DefaultLifecycleObserver$-CC;->$default$onStop(Landroidx/lifecycle/DefaultLifecycleObserver;Landroidx/lifecycle/LifecycleOwner;)V
-
-# Baseline profiles for Lifecycle ViewModel
-
-HSPLandroidx/lifecycle/ViewModel;-><init>()V
-HSPLandroidx/lifecycle/ViewModelLazy;-><init>(Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
-HSPLandroidx/lifecycle/ViewModelLazy;->getValue()Landroidx/lifecycle/ViewModel;
-HSPLandroidx/lifecycle/ViewModelLazy;->getValue()Ljava/lang/Object;
-HSPLandroidx/lifecycle/ViewModelProvider;-><init>(Landroidx/lifecycle/ViewModelStore;Landroidx/lifecycle/ViewModelProvider$Factory;)V
-HSPLandroidx/lifecycle/ViewModelProvider;->get(Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
-HSPLandroidx/lifecycle/ViewModelProvider;->get(Ljava/lang/String;Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
-HSPLandroidx/lifecycle/ViewModelStore;-><init>()V
-HSPLandroidx/lifecycle/ViewModelStore;->get(Ljava/lang/String;)Landroidx/lifecycle/ViewModel;
-HSPLandroidx/lifecycle/ViewModelStore;->put(Ljava/lang/String;Landroidx/lifecycle/ViewModel;)V
-PLandroidx/lifecycle/ViewModel;->clear()V
-PLandroidx/lifecycle/ViewModel;->onCleared()V
-PLandroidx/lifecycle/ViewModelStore;->clear()V
-
 # Baseline profile rules for androidx.compose.ui
 # =============================================
 #

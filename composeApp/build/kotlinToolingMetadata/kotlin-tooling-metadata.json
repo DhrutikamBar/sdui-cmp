@@ -43,17 +43,6 @@
       }
     },
     {
-      "target": "org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithSimulatorTests",
-      "platformType": "native",
-      "extras": {
-        "native": {
-          "konanTarget": "ios_x64",
-          "konanVersion": "2.3.10",
-          "konanAbiVersion": "2.3.0"
-        }
-      }
-    },
-    {
       "target": "org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget",
       "platformType": "common"
     }

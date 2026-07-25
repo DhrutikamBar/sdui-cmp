@@ -16,4 +16,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":shared", ":composeApp", ":server", ":sdui-sdk")
+include(":shared", ":composeApp", ":sdui-sdk")
