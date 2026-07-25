@@ -1,10 +1,6 @@
-- [x] **Step 1: Cleanup File System**
-    - [x] Delete `server/` directory
-- [x] **Step 2: Update Gradle Configuration**
-    - [x] Remove `:server` from `settings.gradle.kts`
-- [x] **Step 3: Cleanup Documentation & Comments**
-    - [x] Update `README.md`
-    - [x] Update `MainActivity.kt`
-    - [x] Update `MainViewController.kt`
-- [x] **Step 4: Verification**
-    - [x] Run `./gradlew :sdui-sdk:publishToMavenLocal`
+- [x] **Step 1: Build Scoping**
+    - [x] Create `jitpack.yml` at the repo root
+- [x] **Step 2: Toolchain Resolution**
+    - [x] Add Foojay resolver to `settings.gradle.kts`
+- [x] **Step 3: Verification**
+    - [x] Run local publish task

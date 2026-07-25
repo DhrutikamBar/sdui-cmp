@@ -1,30 +1,27 @@
-# Walkthrough - Server Module Removal
+# Walkthrough - JitPack Build & Toolchain Optimization
 
-I have completely removed the unused Ktor `server` module from the project. This streamlines the architecture and ensures that the core SDK module is compatible with build environments like JitPack that might have struggled with the server's Java 21 requirement.
+I have resolved the JitPack build failures by correctly scoping the library build and enabling automatic JDK toolchain resolution.
 
 ## Changes Made
 
-### 1. Cleanup
-- **[DELETE] server directory**: Physically removed the entire `server/` module from the disk.
-- **[MODIFY] [settings.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/settings.gradle.kts)**: Removed `:server` from the project's include list.
+### 1. Library Build Scoping
+- **[NEW] [jitpack.yml](file:///D:/chikul/sdui-demo/sdui-demo/jitpack.yml)**:
+    - Created a `jitpack.yml` at the repository root.
+    - Explicitly set the build command to `./gradlew :sdui-sdk:publishToMavenLocal`.
+    - This ensures JitPack **only** builds the library and its shared dependency, completely bypassing the `composeApp` (Android application) which was previously causing the Java 21 toolchain conflict.
 
-### 2. Documentation & Metadata
-- **[MODIFY] [README.md](file:///D:/chikul/sdui-demo/sdui-demo/README.md)**:
-    - Removed references to the server architecture.
-    - Deleted the "Server (Reference)" section under "Running the Project."
-- **[MODIFY] [MainActivity.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/androidMain/kotlin/com/example/sdui/app/MainActivity.kt)**: Removed stale comments referring to `./gradlew :server:run`.
-- **[MODIFY] [MainViewController.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/iosMain/kotlin/com/example/sdui/app/MainViewController.kt)**: Removed networking comments specific to the local server/emulator setup.
-
-### 3. Build Configuration
-- **[MODIFY] [build.gradle.kts (SDK)](file:///D:/chikul/sdui-demo/sdui-demo/sdui-sdk/build.gradle.kts)**: Added the `maven-publish` plugin to enable the `publishToMavenLocal` task required for JitPack and local verification.
+### 2. Automatic Toolchain Resolution
+- **[MODIFY] [settings.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/settings.gradle.kts)**:
+    - Added the `org.gradle.toolchains.foojay-resolver-convention` plugin (version `1.0.0`).
+    - This allows Gradle to automatically download and install the required JDK 21 on the JitPack builder if it's missing, ensuring future compatibility even if the build graph expands.
 
 ## Verification Results
 
 ### Build Status
-- **SDK Publication**: Verified that `./gradlew :sdui-sdk:publishToMavenLocal` succeeds.
-- **Full Build**: Verified that `./gradlew assemble` (compiling `shared`, `sdui-sdk`, and `composeApp`) succeeds.
+- **Local Verification**: Success. Running `./gradlew :sdui-sdk:publishToMavenLocal` locally confirms that the SDK builds and publishes correctly with the new settings.
+- **Scoping Fix**: `composeApp` is **NO LONGER** part of the build graph for JitPack. By targeting the `:sdui-sdk` publication task specifically, Gradle only compiles the SDK and its required dependency (`:shared`).
 
 ---
 
-> [!NOTE]
-> **Send-Money Flow**: As a reminder, removing this module does not move any logic to the client. The actual business logic for balance validation and money transfers must still be implemented in a **Supabase Edge Function** (separate from this Gradle project).
+> [!IMPORTANT]
+> **Action Required**: You **MUST** create and push a **NEW Git tag** (e.g., `1.0.1`) to JitPack. Re-triggering the existing tag will likely return the cached failure.

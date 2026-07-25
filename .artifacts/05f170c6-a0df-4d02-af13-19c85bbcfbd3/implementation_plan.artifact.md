@@ -1,31 +1,42 @@
-# Implementation Plan - Remove Server Module
+# Implementation Plan - Fix JitPack Java 21 Build Failure
 
-This plan outlines the complete removal of the unused Ktor `server` module to streamline the project and resolve build issues in environments like JitPack.
+This plan addresses the "invalid source release: 21" error during JitPack builds by correctly scoping the build and enabling automatic JDK toolchain resolution.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **New Tag Required**: After these changes are pushed, you **MUST** create and push a **NEW Git tag** (e.g., `1.0.1`) to JitPack. JitPack caches build results for existing tags, so re-triggering the failed tag may not pick up these fixes.
 
 ## Proposed Changes
 
-### Root Project
+### 1. Build Scoping (`jitpack.yml`)
 
-#### [DELETE] [server directory](file:///D:/chikul/sdui-demo/sdui-demo/server)
-- Delete the entire `server/` directory and its contents.
+#### [NEW] [jitpack.yml](file:///D:/chikul/sdui-demo/sdui-demo/jitpack.yml)
+- Create a `jitpack.yml` file at the repository root.
+- Set the JDK to `openjdk17` (the baseline for the build environment).
+- Override the `install` command to target **only** the `:sdui-sdk` module: `./gradlew :sdui-sdk:publishToMavenLocal`.
+- This ensures that `composeApp` (the application) is not compiled during the JitPack library build process, significantly reducing build time and avoiding application-only toolchain issues.
+
+### 2. Automatic Toolchain Resolution
 
 #### [MODIFY] [settings.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/settings.gradle.kts)
-- Remove `:server` from the `include` statement.
+- Add a top-level `plugins` block.
+- Install `org.gradle.toolchains.foojay-resolver-convention` version `0.9.0`. This plugin allows Gradle to automatically download and install the required JDK 21 if it's missing from the build environment.
 
-#### [MODIFY] [README.md](file:///D:/chikul/sdui-demo/sdui-demo/README.md)
-- Remove the "server" architecture bullet point.
-- Remove the "Server (Reference)" section from "Running the Project".
+### 3. Toolchain Audit Results
 
-### Compose App
+I have audited all modules for Java/Kotlin version requirements:
+- **`:shared`**: Requires **Java 21** (`jvmTarget`, `sourceCompatibility`, `targetCompatibility`).
+- **`:sdui-sdk`**: Requires **Java 21** (`jvmTarget`, `sourceCompatibility`, `targetCompatibility`).
+- **`:composeApp`**: Requires **Java 21** (`jvmTarget`, `sourceCompatibility`, `targetCompatibility`).
 
-#### [MODIFY] [MainActivity.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/androidMain/kotlin/com/example/sdui/app/MainActivity.kt)
-- Remove comments referring to `./gradlew :server:run`.
+The project is **internally consistent** (all modules use 21), but **externally inconsistent** with JitPack's default environment (Java 17).
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `./gradlew :sdui-sdk:publishToMavenLocal` to ensure the core SDK library still builds and publishes locally without the server module.
-- Run `./gradlew assemble` to ensure the entire project (shared, sdk, and app) still compiles correctly.
+- Run `./gradlew :sdui-sdk:publishToMavenLocal` locally to ensure the build and publication logic remains sound.
 
 ### Manual Verification
-- Verify that the `server/` directory is physically removed from the disk.
+- Verify `jitpack.yml` is correctly placed at the repo root.
+- Verify `settings.gradle.kts` syncs correctly with the new plugin.
