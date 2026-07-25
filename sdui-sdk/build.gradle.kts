@@ -4,7 +4,6 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("app.cash.sqldelight")
 }
 
 kotlin {
@@ -13,7 +12,7 @@ kotlin {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
-    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach {
+    listOf(iosArm64(), iosSimulatorArm64()).forEach {
         it.binaries.framework {
             baseName = "sdui-sdk"
             isStatic = true
@@ -35,8 +34,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation("io.coil-kt.coil3:coil-compose:3.0.4")
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.0.4")
-            implementation("app.cash.sqldelight:runtime:2.3.2")
-            implementation("app.cash.sqldelight:coroutines-extensions:2.3.2")
+            implementation("io.github.alexzhirkevich:compottie:2.2.4")
+            implementation("io.github.alexzhirkevich:compottie-network:2.2.4")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
         }
         commonTest.dependencies {
@@ -45,11 +44,9 @@ kotlin {
         androidMain.dependencies {
             implementation("androidx.activity:activity-compose:1.9.3")
             implementation("io.ktor:ktor-client-okhttp:3.0.0")
-            implementation("app.cash.sqldelight:android-driver:2.3.2")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")
-            implementation("app.cash.sqldelight:native-driver:2.3.2")
         }
     }
 }
@@ -63,13 +60,5 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-}
-
-sqldelight {
-    databases {
-        create("SduiDatabase") {
-            packageName.set("com.dhruti.sdui.sdk.db")
-        }
     }
 }

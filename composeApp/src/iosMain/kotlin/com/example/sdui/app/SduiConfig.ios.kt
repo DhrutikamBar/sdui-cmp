@@ -1,7 +1,8 @@
 package com.example.sdui.app
 
+import platform.Foundation.NSBundle
+
 actual object SduiConfig {
-    // In a production iOS app, these would be injected via xcconfig or build flags.
-    actual val supabaseUrl: String = "https://lqxcmudbwynnqqkmkhby.supabase.co"
-    actual val supabaseKey: String = "sb_publishable_JCA5nNbwkBSgVsnONOa8Sg_miTMDhf7"
+    actual val supabaseUrl: String = NSBundle.mainBundle.infoDictionary?.get("SUPABASE_URL") as? String ?: ""
+    actual val supabaseKey: String = NSBundle.mainBundle.infoDictionary?.get("SUPABASE_KEY") as? String ?: ""
 }

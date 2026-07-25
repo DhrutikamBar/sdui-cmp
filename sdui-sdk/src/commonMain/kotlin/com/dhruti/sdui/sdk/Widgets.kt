@@ -2,6 +2,7 @@ package com.dhruti.sdui.sdk
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import io.github.alexzhirkevich.compottie.*
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
 
@@ -505,6 +507,38 @@ fun ComponentRegistry.registerCoreWidgets() {
             modifier = Modifier.applyStyle(style).height((node.props["height"].asInt() ?: 16).dp).applySemantics(node),
             cornerRadius = style.cornerRadius ?: 4
         )
+    }
+
+    register("lottieAnimation") { node, _, _ ->
+        val url = node.props["url"].asString()
+        val loop = node.props["loop"].asBoolean()
+        
+        val result = rememberLottieComposition(spec = LottieCompositionSpec.Url(url))
+        
+        when {
+            result.isLoading -> {
+                ShimmerBox(Modifier.applyStyle(node.style()))
+            }
+            result.isSuccess -> {
+                val composition = result.value
+                val progress by animateLottieCompositionAsState(
+                    composition = composition,
+                    iterations = if (loop) Compottie.IterateForever else 1
+                )
+                Image(
+                    painter = rememberLottiePainter(
+                        composition = composition,
+                        progress = { progress }
+                    ),
+                    contentDescription = node.getContentDescription(),
+                    modifier = Modifier.applyStyle(node.style())
+                )
+            }
+            result.isFailure -> {
+                // Graceful failure: show nothing
+                Box(Modifier.applyStyle(node.style()))
+            }
+        }
     }
 
     register("snackbar") { node, _, formState ->

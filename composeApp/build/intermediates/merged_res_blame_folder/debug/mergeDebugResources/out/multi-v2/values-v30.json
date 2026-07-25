@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-42:/values-v30/values-v30.xml",
+            "outputFile": "com.example.sdui.app.composeApp-mergeDebugResources-45:/values-v30/values-v30.xml",
             "map": [
                 {
                     "source": "C:\\Users\\asus\\.gradle\\caches\\8.11.1\\transforms\\df19ccfa71397fac7f2e9ad0aebf14d8\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",

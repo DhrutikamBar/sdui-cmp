@@ -1,12 +1,17 @@
 [
   {
-    "moduleId": "module org.jetbrains.kotlin:kotlin-stdlib:2.1.0",
-    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\shared\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlin-kotlin-stdlib-2.1.0-commonMain-ITmP6A.klib",
+    "moduleId": "module org.jetbrains.kotlin:kotlin-stdlib:2.3.10",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\shared\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlin-kotlin-stdlib-2.3.10-commonMain-1ooqQQ.klib",
     "sourceSetName": "commonMain"
   },
   {
     "moduleId": "module org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3",
     "file": "D:\\chikul\\sdui-demo\\sdui-demo\\shared\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlinx-kotlinx-serialization-json-1.7.3-commonMain-O4ZS7Q.klib",
+    "sourceSetName": "commonMain"
+  },
+  {
+    "moduleId": "module org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.7.3",
+    "file": "D:\\chikul\\sdui-demo\\sdui-demo\\shared\\build\\kotlinTransformedMetadataLibraries\\commonMain\\org.jetbrains.kotlinx-kotlinx-serialization-protobuf-1.7.3-commonMain-XFqxPA.klib",
     "sourceSetName": "commonMain"
   },
   {

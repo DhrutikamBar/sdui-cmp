@@ -1,0 +1,9 @@
+// Configuration settings for Supabase
+// Link this file to your Xcode project and ensure the following keys are in your Info.plist:
+// <key>SUPABASE_URL</key>
+// <string>$(SUPABASE_URL)</string>
+// <key>SUPABASE_KEY</key>
+// <string>$(SUPABASE_KEY)</string>
+
+SUPABASE_URL = https:/$()/lqxcmudbwynnqqkmkhby.supabase.co
+SUPABASE_KEY = sb_publishable_JCA5nNbwkBSgVsnONOa8Sg_miTMDhf7

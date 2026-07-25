@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.graphics.Color
 import com.example.sdui.shared.Feedback
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
@@ -70,6 +71,8 @@ class FeedbackInterceptor(private val haptics: androidx.compose.ui.hapticfeedbac
     }
 }
 
+private fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value ?: ""
+
 /**
  * Supabase is now the only screen source — no local fallback, no separate Ktor server URL.
  * supabaseUrl / supabaseKey are required, not optional, since there's nowhere else to fall back to.
@@ -80,12 +83,22 @@ fun App(
     supabaseKey: String,
     driverFactory: DatabaseDriverFactory
 ) {
-    val registry = remember { ComponentRegistry().apply { registerCoreWidgets() } }
+    val registry = remember { 
+        ComponentRegistry().apply { 
+            registerCoreWidgets() 
+            register("nativeSlot") { node, _, _ ->
+                if (node.props["id"].asString() == "balanceToggle") {
+                    BalanceToggle(node)
+                }
+            }
+        } 
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
     val repository = remember(supabaseUrl, supabaseKey) { 
         SupaBaseUiRepository(supabaseUrl, supabaseKey, driverFactory) 
     }
+    val httpClient = repository.httpClient
     val reporter = remember { ConsoleReportingService() }
     val resourceResolver = rememberResourceResolver()
 
@@ -105,7 +118,11 @@ fun App(
             LocalDesignTokens provides designTokens
         ) {
             Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
-                Surface(modifier = Modifier.padding(padding)) {
+                Surface(
+                    modifier = Modifier.padding(padding),
+                //    color = resolveColor("brand-primary") ?: MaterialTheme.colorScheme.surface
+                    color = Color.White
+                ) {
                     CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
                     NavHost(navController = navController, startDestination = SduiScreen("home")) {
                         composable<SduiScreen> { backStackEntry ->
@@ -113,6 +130,7 @@ fun App(
                             SduiScreenContent(
                                 path = route.path,
                                 repository = repository,
+                                httpClient = httpClient,
                                 supabaseUrl = supabaseUrl,
                                 supabaseKey = supabaseKey,
                                 registry = registry,
@@ -130,7 +148,8 @@ fun App(
 @Composable
 private fun SduiScreenContent(
     path: String,
-    repository: SupaBaseUiRepository,
+    repository: ScreenSource,
+    httpClient: HttpClient,
     supabaseUrl: String,
     supabaseKey: String,
     registry: ComponentRegistry,
@@ -205,7 +224,7 @@ private fun SduiScreenContent(
                 val url = action.target ?: return@register
                 scope.launch {
                     try {
-                        val response = repository.httpClient.request(supabaseUrl + url) {
+                        val response = httpClient.request(supabaseUrl + url) {
                             method = HttpMethod.parse(action.method ?: "POST")
                             header("apikey", supabaseKey)
                             header("Authorization", "Bearer $supabaseKey")

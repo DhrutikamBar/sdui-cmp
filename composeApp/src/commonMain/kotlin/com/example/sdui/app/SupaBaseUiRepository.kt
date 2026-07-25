@@ -25,16 +25,15 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import io.github.jan.supabase.annotations.SupabaseInternal
-import com.dhruti.sdui.sdk.db.SduiDatabase
-import com.dhruti.sdui.sdk.DatabaseDriverFactory
-import kotlinx.datetime.Clock
+import com.example.sdui.app.db.SduiDatabase
+import com.dhruti.sdui.sdk.ScreenSource
 
 @OptIn(ExperimentalSerializationApi::class, SupabaseInternal::class)
 class SupaBaseUiRepository(
     private val supabaseUrl: String, 
     private val supabaseKey: String,
     driverFactory: DatabaseDriverFactory
-) {
+) : ScreenSource {
     private val database = SduiDatabase(driverFactory.createDriver())
     private val queries = database.cachedScreenQueries
 
@@ -64,6 +63,10 @@ class SupaBaseUiRepository(
     private val supabase = createSupabaseClient(supabaseUrl, supabaseKey) {
         install(Postgrest)
         httpConfig {
+            install(HttpTimeout) {
+                requestTimeoutMillis = 5000
+                connectTimeoutMillis = 5000
+            }
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
@@ -96,7 +99,7 @@ class SupaBaseUiRepository(
         header("Authorization", "Bearer $supabaseKey")
     }
 
-    suspend fun fetchScreen(path: String, forceRefresh: Boolean = false): UiNode {
+    override suspend fun fetchScreen(path: String, forceRefresh: Boolean): UiNode {
         if (!forceRefresh && cache.containsKey(path)) {
             return cache[path]!!
         }
@@ -117,19 +120,26 @@ class SupaBaseUiRepository(
         // Tier 2: Check Disk
         val persisted = queries.selectByPath(path).executeAsOneOrNull()
         if (!forceRefresh && persisted != null) {
+            println("KTOR: [CACHE] Found disk entry for $path. Checking staleness...")
             try {
                 val remoteUpdatedAt = fetchUpdatedAt(path)
                 if (remoteUpdatedAt == persisted.updatedAt) {
+                    println("KTOR: [CACHE] Disk entry is fresh. Loading from local DB.")
                     val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
                     cache[path] = contentNode
-                    queries.touchLastAccessed(Clock.System.now().toEpochMilliseconds(), path)
+                    queries.touchLastAccessed(getNowMillis(), path)
                     return contentNode
+                } else {
+                    println("KTOR: [CACHE] Disk entry is STALE. Remote: $remoteUpdatedAt, Local: ${persisted.updatedAt}")
                 }
             } catch (e: Exception) {
+                println("KTOR: [CACHE] Network check failed. Falling back to disk entry for offline mode.")
                 val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
                 cache[path] = contentNode
                 return contentNode
             }
+        } else if (persisted == null) {
+            println("KTOR: [CACHE] No disk entry for $path. Will fetch from network.")
         }
 
         return try {
@@ -151,8 +161,8 @@ class SupaBaseUiRepository(
             .select(columns = Columns.list("updated_at")) {
                 filter { eq("path", path) }
             }
-            .decodeSingle<UpdatedAtRow>()
-            .updated_at
+            .decodeSingleOrNull<UpdatedAtRow>()?.updated_at 
+            ?: throw NoSuchElementException("Screen not found in Supabase: $path")
     }
 
     private suspend fun fetchInternal(path: String): FullScreenRow {
@@ -167,7 +177,8 @@ class SupaBaseUiRepository(
             .select(columns = Columns.list("content", "updated_at")) {
                 filter { eq("path", path) }
             }
-            .decodeSingle<FullScreenRow>()
+            .decodeSingleOrNull<FullScreenRow>()
+            ?: throw NoSuchElementException("Screen not found in Supabase: $path")
     }
 
     private suspend fun tryFetchBinary(path: String): UiNode? {
@@ -198,7 +209,7 @@ class SupaBaseUiRepository(
         }
     }
 
-    fun prefetch(path: String) {
+    override fun prefetch(path: String) {
         if (cache.containsKey(path) || prefetchJobs.containsKey(path)) return
 
         val job = scope.launch {
@@ -221,7 +232,7 @@ class SupaBaseUiRepository(
                 path = path,
                 content = Json.encodeToString(UiNode.serializer(), row.content),
                 updatedAt = row.updated_at,
-                lastAccessedAt = Clock.System.now().toEpochMilliseconds()
+                lastAccessedAt = getNowMillis()
             )
             enforceEvictionLimit()
         } catch (e: Exception) {

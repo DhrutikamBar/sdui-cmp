@@ -13,7 +13,7 @@ kotlin {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
-    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach {
+    listOf(iosArm64(), iosSimulatorArm64()).forEach {
         it.binaries.framework {
             baseName = "composeApp"
             isStatic = true
@@ -38,6 +38,8 @@ kotlin {
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.0.4")
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.2")
             implementation("io.github.jan-tennert.supabase:postgrest-kt:3.1.0")
+            implementation("app.cash.sqldelight:runtime:2.3.2")
+            implementation("app.cash.sqldelight:coroutines-extensions:2.3.2")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
         }
@@ -47,9 +49,11 @@ kotlin {
         androidMain.dependencies {
             implementation("androidx.activity:activity-compose:1.9.3")
             implementation("io.ktor:ktor-client-okhttp:3.0.0")
+            implementation("app.cash.sqldelight:android-driver:2.3.2")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")
+            implementation("app.cash.sqldelight:native-driver:2.3.2")
         }
     }
 }

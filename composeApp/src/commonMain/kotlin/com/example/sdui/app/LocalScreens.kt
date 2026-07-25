@@ -55,6 +55,12 @@ object LocalScreens {
               }
             },
             {
+              "id": "lottieButton",
+              "type": "button",
+              "props": { "label": "Lottie Test" },
+              "action": { "type": "navigate", "target": "lottie-test" }
+            },
+            {
               "id": "submitButton",
               "type": "button",
               "props": { "label": "Submit" },

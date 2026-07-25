@@ -1,65 +1,25 @@
-# Implementation Plan - Extract SDUI SDK Module
+# Implementation Plan - Fix Build Error and Robustify Caching
 
-This plan outlines the refactoring of the project to extract a reusable `:sdui-sdk` module from the existing `composeApp`.
-
-## User Review Required
-
-> [!IMPORTANT]
-> **Package Renaming**: I will move reusable components to the `com.dhruti.sdui.sdk` package within the new module. This will require updating imports in `composeApp`.
->
-> **Module Structure**:
-> - `:shared`: Schema and Models.
-> - `:sdui-sdk`: Core rendering engine, widgets, and platform abstractions.
-> - `:composeApp`: Demo application, Supabase integration, and local screens.
+The current build is failing due to unresolved references to `System` in `SupaBaseUiRepository.kt`, likely caused by ambiguity or incomplete resolution of `Clock.System` in the Kotlin Multiplatform common code. Additionally, I will address the empty responses from Supabase seen in the logcat.
 
 ## Proposed Changes
 
-### 1. Project Configuration
+### 1. Fix Build Errors in SupaBaseUiRepository
 
-#### [MODIFY] [settings.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/settings.gradle.kts)
-- Include `:sdui-sdk`.
+#### [MODIFY] [SupaBaseUiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/SupaBaseUiRepository.kt)
+- Replace `Clock.System.now()` with `kotlinx.datetime.Clock.System.now()` to eliminate any ambiguity with `java.lang.System`.
+- Ensure `kotlinx.datetime.Clock` is correctly utilized.
 
-#### [NEW] [:sdui-sdk/build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/sdui-sdk/build.gradle.kts)
-- Configure KMP library for Android and iOS.
-- Apply SQLDelight and Compose plugins.
-- Add dependencies: `:shared`, Ktor, SQLDelight, Coil, Navigation (reusable parts).
+### 2. Robustify Empty Response Handling
 
-### 2. SDK Extraction
-
-#### [MOVE] Reusable Core Logic
-Move the following files from `composeApp` to `sdui-sdk` and update their package to `com.dhruti.sdui.sdk`:
-- `ComponentRegistry.kt`, `Widgets.kt`, `Style.kt`, `ActionRegistry.kt`, `Animations.kt`, `Icons.kt`, `UiFlattener.kt`, `UiScanner.kt`, `ReportingService.kt`.
-- `ResourceResolver.kt`, `UrlOpener.kt`, `DatabaseDriverFactory.kt` (including platform-specific implementations).
-- `CachedScreen.sq` (SQLDelight schema).
-
-#### [NEW] Public SDK API
-Create `SduiRenderer.kt` in `sdui-sdk` as the primary entry point:
-```kotlin
-@Composable
-fun SduiRenderer(
-    screen: UiNode,
-    actionHandler: ActionHandler,
-    modifier: Modifier = Modifier,
-    formState: FormState = rememberSaveable(saver = FormState.Saver) { FormState() }
-)
-```
-
-### 3. App Refactoring (`composeApp`)
-
-#### [MODIFY] [build.gradle.kts](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/build.gradle.kts)
-- Remove moved dependencies.
-- Add `implementation(project(":sdui-sdk"))`.
-
-#### [MODIFY] [App.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/App.kt)
-- Update imports and use `SduiRenderer` from the SDK.
-- Retain Supabase logic and `LocalScreens`.
+#### [MODIFY] [SupaBaseUiRepository.kt](file:///D:/chikul/sdui-demo/sdui-demo/composeApp/src/commonMain/kotlin/com/example/sdui/app/SupaBaseUiRepository.kt)
+- Add a check for empty results in `fetchUpdatedAt` and `fetchFullRow`. If Supabase returns an empty list (which happens when a row is missing), the app should throw a descriptive `NoSuchElementException` so the local fallback logic in `App.kt` can take over gracefully.
 
 ## Verification Plan
 
 ### Automated Tests
-- Run `./gradlew :sdui-sdk:allTests` (after moving tests).
-- Run `./gradlew :composeApp:assembleDebug` to ensure integration works.
+- Run `./gradlew :composeApp:assembleDebug` to verify the fix for the build error.
 
 ### Manual Verification
-- Verify that the app still loads screens from Supabase and `LocalScreens` correctly.
-- Verify that haptics and animations still function through the SDK.
+- **Logcat Monitoring**: Verify that if a screen (like `topup`) is missing in Supabase, the app logs "Remote fetch failed" and switches to the local fallback instead of crashing or showing a blank screen.
+- **Cache Verification**: Relaunch the app and confirm `KTOR: [CACHE]` logs show successful disk hits for existing screens.

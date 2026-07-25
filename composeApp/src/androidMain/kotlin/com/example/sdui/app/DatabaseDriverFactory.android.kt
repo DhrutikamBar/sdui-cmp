@@ -1,9 +1,9 @@
-package com.dhruti.sdui.sdk
+package com.example.sdui.app
 
 import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import com.dhruti.sdui.sdk.db.SduiDatabase
+import com.example.sdui.app.db.SduiDatabase
 
 actual class DatabaseDriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
