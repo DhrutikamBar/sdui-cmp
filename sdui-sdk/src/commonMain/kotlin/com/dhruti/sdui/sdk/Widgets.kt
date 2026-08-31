@@ -66,7 +66,7 @@ fun Modifier.applySemantics(node: UiNode): Modifier {
     }
 }
 
-private fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value ?: ""
+fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value ?: ""
 private fun SduiValue?.asFloat() = (this as? SduiValue.NumberValue)?.value?.toFloat()
 private fun SduiValue?.asInt() = (this as? SduiValue.NumberValue)?.value?.toInt()
 private fun SduiValue?.asBoolean() = (this as? SduiValue.BooleanValue)?.value ?: false

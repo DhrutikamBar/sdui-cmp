@@ -39,41 +39,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
 
 /**
- * Example interceptor for analytics.
- */
-class AnalyticsInterceptor(private val reporter: ReportingService) : ActionInterceptor {
-    override fun intercept(action: UiAction, next: (UiAction) -> Unit) {
-        val metadata = action.metadata.mapValues { it.value.toString() }.toMutableMap()
-        metadata["action_type"] = action.type
-        action.target?.let { metadata["target"] = it }
-
-        reporter.reportEvent("action_fired", metadata)
-        next(action)
-    }
-}
-
-/**
- * Handles haptic and sound feedback for actions.
- */
-class FeedbackInterceptor(private val haptics: androidx.compose.ui.hapticfeedback.HapticFeedback) : ActionInterceptor {
-    override fun intercept(action: UiAction, next: (UiAction) -> Unit) {
-        action.feedback?.let { fb ->
-            if (fb is Feedback.Haptic) {
-                val type = when (fb.intensity) {
-                    "heavy" -> HapticFeedbackType.LongPress
-                    "light" -> HapticFeedbackType.TextHandleMove
-                    else -> HapticFeedbackType.LongPress
-                }
-                haptics.performHapticFeedback(type)
-            }
-        }
-        next(action)
-    }
-}
-
-private fun SduiValue?.asString() = (this as? SduiValue.StringValue)?.value ?: ""
-
-/**
  * Supabase is now the only screen source — no local fallback, no separate Ktor server URL.
  * supabaseUrl / supabaseKey are required, not optional, since there's nowhere else to fall back to.
  */
@@ -120,8 +85,7 @@ fun App(
             Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
                 Surface(
                     modifier = Modifier.padding(padding),
-                //    color = resolveColor("brand-primary") ?: MaterialTheme.colorScheme.surface
-                    color = Color.White
+                    color = resolveColor("brand-primary") ?: MaterialTheme.colorScheme.surface
                 ) {
                     CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
                     NavHost(navController = navController, startDestination = SduiScreen("home")) {
