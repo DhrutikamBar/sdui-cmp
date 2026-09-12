@@ -206,13 +206,29 @@ fun ComponentRegistry.registerCoreWidgets() {
     }
 
     register("button") { node, actions, formState ->
-        val enabled = node.rules.all { it.evaluate(formState) }
+        val enabledByRules = node.rules.all { it.evaluate(formState) }
+        val loadingKey = node.props["loadingKey"].asString()
+        val isLoading = loadingKey.isNotEmpty() &&
+            ((formState[loadingKey] as? SduiValue.BooleanValue)?.value == true)
+        val label = if (isLoading) {
+            node.props["loadingLabel"].asString().ifEmpty { "Loading…" }
+        } else {
+            node.props["label"].asString()
+        }
         Button(
             onClick = { node.action?.let(actions::handle) },
-            enabled = enabled,
+            enabled = enabledByRules && !isLoading,
             modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         ) {
-            Text(node.props["label"].asString())
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                Spacer(Modifier.width(8.dp))
+            }
+            Text(label)
         }
     }
 
