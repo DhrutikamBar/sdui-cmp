@@ -38,15 +38,19 @@ class ActionRegistryTest {
         val calls = mutableListOf<String>()
         val registry = ActionRegistry(
             interceptors = listOf(
-                ActionInterceptor { _, next ->
-                    calls += "first-before"
-                    next(UiAction(type = "navigate", target = "welcome"))
-                    calls += "first-after"
+                object : ActionInterceptor {
+                    override fun intercept(action: UiAction, next: (UiAction) -> Unit) {
+                        calls += "first-before"
+                        next(UiAction(type = "navigate", target = "welcome"))
+                        calls += "first-after"
+                    }
                 },
-                ActionInterceptor { _, next ->
-                    calls += "second-before"
-                    next(UiAction(type = "navigate", target = "wallet"))
-                    calls += "second-after"
+                object : ActionInterceptor {
+                    override fun intercept(action: UiAction, next: (UiAction) -> Unit) {
+                        calls += "second-before"
+                        next(UiAction(type = "navigate", target = "wallet"))
+                        calls += "second-after"
+                    }
                 }
             )
         ).apply {
@@ -65,7 +69,13 @@ class ActionRegistryTest {
     fun deniedActionDoesNotReachInterceptors() {
         var intercepted = false
         val registry = ActionRegistry(
-            interceptors = listOf(ActionInterceptor { _, _ -> intercepted = true }),
+            interceptors = listOf(
+                object : ActionInterceptor {
+                    override fun intercept(action: UiAction, next: (UiAction) -> Unit) {
+                        intercepted = true
+                    }
+                }
+            ),
             actionPolicy = SduiActionPolicy { SduiActionDecision.Deny("Blocked") }
         )
 
