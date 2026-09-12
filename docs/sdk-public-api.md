@@ -34,7 +34,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - `ScreenRequest` and `ScreenLoadResult` provide typed success/failure delivery while preserving coroutine cancellation.
 - `ScreenLoadSource` represents memory, disk, network, or unknown provenance; sources with cache metadata may report a precise origin.
 - `cancelPrefetch` and `close` provide lifecycle hooks for host-owned cleanup.
-- `LocalDemoScreenSource` is the offline default. `SupabaseScreenSource` remains an optional reference-host implementation and is not a dependency of `sdui-sdk`.
+- `FirebaseFirestoreScreenSource` is the Android reference-host adapter. `LocalDemoScreenSource` supplies bundled fallback screens and is not a dependency of `sdui-sdk`.
 
 ### Host capabilities
 
@@ -72,7 +72,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - `openUrl` to HTTPS URLs; and
 - `apiCall` with a relative path and one of `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`.
 
-Everything else is denied before interceptors and handlers run. This is a baseline policy, not a substitute for server-side authorization, Supabase RLS, or a tenant-aware production policy.
+Everything else is denied before interceptors and handlers run. This is a baseline policy, not a substitute for server-side authorization or a tenant-aware production policy.
 
 ## Phase 1 completion
 
@@ -80,6 +80,4 @@ The reference host now consumes `ScreenLoadResult`, closes its `ScreenSource` wh
 
 Phase 3 semantic validation checks widget and action compatibility against host capabilities before rendering, and unknown widgets now have a deterministic placeholder fallback.
 
-Phase 3 increment 1 adds the backward-compatible `SduiDocument` envelope and `SduiDocumentCodec` validation boundary. The Supabase reference source validates network and disk payloads, normalizing accepted cache entries to the envelope format. Phase 3 increment 2 adds default structural safety limits for untrusted content.
-
-Phase 2 ownership increments: the Supabase source, SQLDelight cache/driver, cache clock, configuration, and `SupabaseApiCallClient` live under `com.example.sdui.demo`. `DemoApp` assembles those demo-only dependencies before calling the demo navigation shell. `SduiReferenceScreenHost` is the source- and navigation-agnostic composition point for host-provided capabilities. The renderer and wire schema remain unchanged.
+Current reference-host delivery uses the Android Firestore adapter and the bundled local fallback source. Both remain outside the reusable SDK boundary; the renderer and wire schema remain transport-agnostic.
