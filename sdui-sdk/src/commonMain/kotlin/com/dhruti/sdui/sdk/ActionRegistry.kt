@@ -14,7 +14,8 @@ interface ActionInterceptor {
  * Registry for action handlers and interceptors.
  */
 class ActionRegistry(
-    private val interceptors: List<ActionInterceptor> = emptyList()
+    private val interceptors: List<ActionInterceptor> = emptyList(),
+    private val actionPolicy: SduiActionPolicy = AllowAllSduiActionPolicy
 ) {
     private val handlers = mutableMapOf<String, (UiAction) -> Unit>()
 
@@ -23,6 +24,14 @@ class ActionRegistry(
     }
 
     fun dispatch(action: UiAction) {
+        when (val decision = actionPolicy.evaluate(action)) {
+            SduiActionDecision.Allow -> Unit
+            is SduiActionDecision.Deny -> {
+                println("Denied action type: ${action.type}. Reason: ${decision.reason}")
+                return
+            }
+        }
+
         var currentIndex = 0
         
         fun next(currentAction: UiAction) {

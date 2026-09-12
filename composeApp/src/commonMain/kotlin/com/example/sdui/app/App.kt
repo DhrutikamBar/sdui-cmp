@@ -46,7 +46,8 @@ import kotlinx.coroutines.launch
 fun App(
     supabaseUrl: String, 
     supabaseKey: String,
-    driverFactory: DatabaseDriverFactory
+    driverFactory: DatabaseDriverFactory,
+    actionPolicy: SduiActionPolicy = AllowAllSduiActionPolicy
 ) {
     val registry = remember { 
         ComponentRegistry().apply { 
@@ -60,6 +61,18 @@ fun App(
     }
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
+    val navigator = remember(navController) {
+        object : SduiNavigator {
+            override fun navigate(path: String) {
+                navController.navigate(SduiScreen(path))
+            }
+
+            override fun goBack() {
+                navController.popBackStack()
+            }
+        }
+    }
+    val urlHandler = rememberUrlOpener()
     val repository = remember(supabaseUrl, supabaseKey) { 
         SupaBaseUiRepository(supabaseUrl, supabaseKey, driverFactory) 
     }
@@ -98,7 +111,9 @@ fun App(
                                 supabaseUrl = supabaseUrl,
                                 supabaseKey = supabaseKey,
                                 registry = registry,
-                                navController = navController
+                                navigator = navigator,
+                                urlHandler = urlHandler,
+                                actionPolicy = actionPolicy
                             )
                         }
                     }
@@ -117,14 +132,15 @@ private fun SduiScreenContent(
     supabaseUrl: String,
     supabaseKey: String,
     registry: ComponentRegistry,
-    navController: NavHostController
+    navigator: SduiNavigator,
+    urlHandler: SduiUrlHandler,
+    actionPolicy: SduiActionPolicy
 ) {
     val formState = rememberSaveable(saver = FormState.Saver) { FormState() }
     var screen by remember { mutableStateOf<UiNode?>(null) }
     var loadError by remember { mutableStateOf<String?>(null) }
     var retryTrigger by remember { mutableStateOf(0) }
     val haptics = LocalHapticFeedback.current
-    val openUrl = rememberUrlOpener()
     val scope = rememberCoroutineScope()
     val reporter = LocalReportingService.current
 
@@ -167,17 +183,18 @@ private fun SduiScreenContent(
         }
     }
 
-    val actionRegistry = remember(navController, reporter) {
+    val actionRegistry = remember(navigator, urlHandler, actionPolicy, reporter, haptics, formState, scope) {
         lateinit var registryRef: ActionRegistry
         val registry = ActionRegistry(
             interceptors = listOf(
                 AnalyticsInterceptor(reporter),
                 FeedbackInterceptor(haptics)
-            )
+            ),
+            actionPolicy = actionPolicy
         ).apply {
-            register("navigate") { action -> action.target?.let { navController.navigate(SduiScreen(it)) } }
-            register("back") { navController.popBackStack() }
-            register("openUrl") { action -> action.target?.let(openUrl) }
+            register("navigate") { action -> action.target?.let(navigator::navigate) }
+            register("back") { navigator.goBack() }
+            register("openUrl") { action -> action.target?.let(urlHandler::open) }
             register("toggleState") { action ->
                 action.target?.let { key ->
                     val current = formState[key] as? SduiValue.BooleanValue
