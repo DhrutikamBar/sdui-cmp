@@ -13,7 +13,7 @@ class UiFlattenerTest {
             children = listOf(UiNode(type = "text"), UiNode(type = "button"))
         )
 
-        assertEquals(listOf("text", "button"), UiFlattener.flattenRoot(root).map(UiNode::type))
+        assertEquals(listOf("text", "button"), rootNodesForRendering(root).map(UiNode::type))
     }
 
     @Test
@@ -23,14 +23,14 @@ class UiFlattenerTest {
             children = listOf(UiNode(type = "text"), UiNode(type = "button"))
         )
 
-        assertEquals(listOf("row"), UiFlattener.flattenRoot(root).map(UiNode::type))
+        assertEquals(listOf("row"), rootNodesForRendering(root).map(UiNode::type))
     }
 
     @Test
     fun preservesBoxRootAsASingleLayoutNode() {
         val root = UiNode(type = "box", children = listOf(UiNode(type = "text")))
 
-        assertEquals(listOf("box"), UiFlattener.flattenRoot(root).map(UiNode::type))
+        assertEquals(listOf("box"), rootNodesForRendering(root).map(UiNode::type))
     }
 
     @Test
@@ -45,6 +45,6 @@ class UiFlattenerTest {
             children = listOf(UiNode(type = "text"))
         )
 
-        assertEquals(listOf("column"), UiFlattener.flattenRoot(root).map(UiNode::type))
+        assertEquals(listOf("column"), rootNodesForRendering(root).map(UiNode::type))
     }
 }
