@@ -44,4 +44,16 @@ class LocalDemoScreenSourceTest {
         val failure = assertIs<ScreenLoadResult.Failure>(result)
         assertEquals("No bundled SDUI screen for path: missing", failure.cause.message)
     }
+
+    @Test
+    fun loadsAllImportantBundledFallbackRoutes() = runBlocking {
+        val source = LocalDemoScreenSource()
+
+        listOf("send", "send-success", "settings", "order-confirmed", "lottie-test").forEach { path ->
+            val result = assertIs<ScreenLoadResult.Success>(
+                source.loadScreen(ScreenRequest(path = path))
+            )
+            assertEquals("column", result.screen.type)
+        }
+    }
 }

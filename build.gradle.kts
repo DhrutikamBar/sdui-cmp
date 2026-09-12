@@ -7,5 +7,4 @@ plugins {
     id("org.jetbrains.compose") version "1.8.0" apply false
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.0" apply false
     id("io.ktor.plugin") version "3.0.0" apply false
-    id("app.cash.sqldelight") version "2.3.2" apply false
 }

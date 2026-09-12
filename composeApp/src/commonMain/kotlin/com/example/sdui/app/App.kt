@@ -179,6 +179,11 @@ private fun SduiScreenContent(
                     "welcome" -> LocalScreens.welcome
                     "wallet" -> LocalScreens.wallet
                     "checkout" -> LocalScreens.checkout
+                    "send" -> LocalScreens.send
+                    "send-success" -> LocalScreens.sendSuccess
+                    "settings" -> LocalScreens.settings
+                    "order-confirmed" -> LocalScreens.orderConfirmed
+                    "lottie-test" -> LocalScreens.lottieTest
                     else -> null
                 }
                 if (localJsonStr != null) {

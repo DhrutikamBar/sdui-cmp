@@ -157,6 +157,68 @@ object LocalScreens {
           ]
         }
     """.trimIndent()
+
+    val send = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md" } },
+          "children": [
+            { "type": "text", "props": { "value": "Send money", "style": { "fontSize": 24, "fontWeight": "bold" } } },
+            { "id": "recipient", "type": "textInput", "props": { "label": "Recipient" } },
+            { "id": "amount", "type": "textInput", "props": { "label": "Amount", "keyboardType": "number" } },
+            { "type": "button", "props": { "label": "Continue" }, "rules": [
+              { "type": "notEmpty", "field": "recipient" },
+              { "type": "notEmpty", "field": "amount" }
+            ], "action": { "type": "navigate", "target": "send-success" } }
+          ]
+        }
+    """.trimIndent()
+
+    val sendSuccess = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "xl", "alignment": "center" } },
+          "children": [
+            { "type": "text", "props": { "value": "Payment successful", "style": { "fontSize": 26, "fontWeight": "bold", "color": "#2E7D32" } } },
+            { "type": "button", "props": { "label": "Back home" }, "action": { "type": "navigate", "target": "home" } }
+          ]
+        }
+    """.trimIndent()
+
+    val settings = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md" } },
+          "children": [
+            { "type": "text", "props": { "value": "Settings", "style": { "fontSize": 24, "fontWeight": "bold" } } },
+            { "id": "notificationsEnabled", "type": "checkbox", "props": { "label": "Enable notifications" } },
+            { "type": "button", "props": { "label": "Save" }, "action": { "type": "analytics", "target": "settings_saved" } }
+          ]
+        }
+    """.trimIndent()
+
+    val orderConfirmed = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "xl", "alignment": "center" } },
+          "children": [
+            { "type": "text", "props": { "value": "Order confirmed", "style": { "fontSize": 26, "fontWeight": "bold", "color": "#2E7D32" } } },
+            { "type": "button", "props": { "label": "Back home" }, "action": { "type": "navigate", "target": "home" } }
+          ]
+        }
+    """.trimIndent()
+
+    val lottieTest = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md" } },
+          "children": [
+            { "type": "text", "props": { "value": "Animation demo", "style": { "fontSize": 24, "fontWeight": "bold" } } },
+            { "type": "text", "props": { "value": "Offline fallback screen" } }
+          ]
+        }
+    """.trimIndent()
+
 }
 
 private val localJson = Json { ignoreUnknownKeys = true }
