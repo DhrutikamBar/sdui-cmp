@@ -153,6 +153,8 @@ class ComponentRegistry {
         renderers[type] = renderer
     }
 
+    fun supports(type: String): Boolean = type in renderers
+
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun RenderRoot(node: UiNode, actions: ActionHandler, formState: FormState) {
@@ -205,8 +207,8 @@ class ComponentRegistry {
             val context = mapOf("type" to node.type, "id" to (node.id ?: "unnamed"))
             reporter.reportEvent("missing_renderer", context)
             
-            // Graceful degradation: try fallback if it exists
             node.fallback?.let { Render(it, actions, formState) }
+                ?: Text("Unsupported component")
             return
         }
 

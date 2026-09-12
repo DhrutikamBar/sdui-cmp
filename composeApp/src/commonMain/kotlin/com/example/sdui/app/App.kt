@@ -86,7 +86,8 @@ fun App(
                                 actionPolicy = actionPolicy,
                                 reportingService = reportingService,
                                 resourceResolver = resourceResolver,
-                                designTokens = designTokens
+                                designTokens = designTokens,
+                                supportedActionTypes = demoSupportedActionTypes
                             )
                         }
                     }
@@ -114,7 +115,8 @@ fun SduiReferenceScreenHost(
     actionPolicy: SduiActionPolicy,
     reportingService: ReportingService,
     resourceResolver: ResourceResolver,
-    designTokens: DesignTokens = DesignTokens()
+    designTokens: DesignTokens = DesignTokens(),
+    supportedActionTypes: Set<String> = emptySet()
 ) {
     CompositionLocalProvider(
         LocalReportingService provides reportingService,
@@ -128,7 +130,8 @@ fun SduiReferenceScreenHost(
             registry = componentRegistry,
             navigator = navigator,
             urlHandler = urlHandler,
-            actionPolicy = actionPolicy
+            actionPolicy = actionPolicy,
+            supportedActionTypes = supportedActionTypes
         )
     }
 }
@@ -141,7 +144,8 @@ private fun SduiScreenContent(
     registry: ComponentRegistry,
     navigator: SduiNavigator,
     urlHandler: SduiUrlHandler,
-    actionPolicy: SduiActionPolicy
+    actionPolicy: SduiActionPolicy,
+    supportedActionTypes: Set<String>
 ) {
     val formState = rememberSaveable(saver = FormState.Saver) { FormState() }
     var screen by remember { mutableStateOf<UiNode?>(null) }
@@ -179,6 +183,14 @@ private fun SduiScreenContent(
                 }
             }
             
+            SduiSemanticValidator.validate(
+                root = fetched,
+                isWidgetSupported = registry::supports,
+                isActionSupported = { type ->
+                    supportedActionTypes.isEmpty() || type in supportedActionTypes
+                }
+            )
+
             reporter.reportEvent("screen_view", mapOf("path" to path))
             
             // Predictive prefetching: fetch next screens in the background
@@ -273,3 +285,11 @@ fun ErrorState(message: String, onRetry: () -> Unit) {
         Button(onClick = onRetry) { Text("Retry") }
     }
 }
+
+private val demoSupportedActionTypes = setOf(
+    "navigate",
+    "back",
+    "openUrl",
+    "toggleState",
+    "apiCall"
+)

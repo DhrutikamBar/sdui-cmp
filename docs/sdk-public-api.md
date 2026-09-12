@@ -20,6 +20,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - `SduiDocumentCodec` is the required untrusted-content boundary. It accepts both `SduiDocument` and legacy bare `UiNode` JSON, validates the supported schema version, and normalizes accepted legacy payloads.
 - `SduiPayloadLimits` bounds payload size, node count/depth, action/condition/value depth, strings, maps, and lists. Hosts may use stricter limits.
 - `SduiPayloadValidationException` identifies rejected documents before they are rendered or persisted.
+- `SduiSemanticValidator` checks document widget/action types against the current host immediately before rendering. Unsupported widgets require an explicit document fallback; the renderer also shows a safe placeholder as a last resort.
 
 ### Rendering and widgets
 
@@ -75,6 +76,8 @@ Everything else is denied before interceptors and handlers run. This is a baseli
 ## Phase 1 completion
 
 The reference host now consumes `ScreenLoadResult`, closes its `ScreenSource` when the repository leaves composition, and preserves cancellation instead of treating it as a load failure. Existing `ScreenSource` implementations remain compatible through the default `loadScreen` adapter.
+
+Phase 3 semantic validation checks widget and action compatibility against host capabilities before rendering, and unknown widgets now have a deterministic placeholder fallback.
 
 Phase 3 increment 1 adds the backward-compatible `SduiDocument` envelope and `SduiDocumentCodec` validation boundary. The Supabase reference source validates network and disk payloads, normalizing accepted cache entries to the envelope format. Phase 3 increment 2 adds default structural safety limits for untrusted content.
 
