@@ -175,7 +175,12 @@ class ComponentRegistry {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun RenderRoot(node: UiNode, actions: ActionHandler, formState: FormState) {
+    fun RenderRoot(
+        node: UiNode,
+        actions: ActionHandler,
+        formState: FormState,
+        modifier: Modifier = Modifier
+    ) {
         // Enforce root version check
         val minSdk = node.minSdkVersion
         if (minSdk != null && minSdk > CURRENT_SDK_VERSION) {
@@ -183,17 +188,13 @@ class ComponentRegistry {
             return
         }
 
-        val rootStyle = node.style()
-
-        val flattenedNodes = if (node.type in listOf("column", "row", "box")) {
-            node.children.flatMap { UiFlattener.flatten(it) }
-        } else {
-            UiFlattener.flatten(node)
-        }
+        // UiFlattener preserves root rows, boxes, and styled columns as nodes.
+        // LazyColumn remains the only scroll owner at this level.
+        val rootNodes = UiFlattener.flattenRoot(node)
 
         CompositionLocalProvider(LocalIsInsideScrollable provides true) {
-            LazyColumn(Modifier.fillMaxSize().applyStyle(rootStyle)) {
-                flattenedNodes.forEachIndexed { index, itemNode ->
+            LazyColumn(modifier.fillMaxSize()) {
+                rootNodes.forEachIndexed { index, itemNode ->
                     val key = itemNode.id ?: "item_$index"
                     if (itemNode.sticky) {
                         stickyHeader(key = key) {
