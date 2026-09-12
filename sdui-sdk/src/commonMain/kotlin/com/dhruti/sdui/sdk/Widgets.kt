@@ -78,6 +78,14 @@ private fun UiNode.getContentDescription(): String? {
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun ComponentRegistry.registerCoreWidgets() {
+    // Repeaters are normally expanded from typed host data before rendering.
+    // This fallback keeps an unbound/empty repeater safe and schema-valid.
+    register("repeater") { node, actions, formState ->
+        Column(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
+            node.children.forEach { child -> Render(child, actions, formState) }
+        }
+    }
+
 
     register("column") { node, actions, formState ->
         val style = node.style()
