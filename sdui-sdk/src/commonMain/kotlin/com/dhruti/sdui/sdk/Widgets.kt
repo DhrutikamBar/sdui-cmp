@@ -173,7 +173,8 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val style = node.style()
         val focusManager = LocalFocusManager.current
-        val keyboardType = when (node.props["keyboardType"].asString()) {
+        val keyboardTypeName = node.props["keyboardType"].asString()
+        val keyboardType = when (keyboardTypeName) {
             "number" -> KeyboardType.Number
             "email" -> KeyboardType.Email
             "phone" -> KeyboardType.Phone
@@ -183,7 +184,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val errorText = node.props["errorText"].asString()
         OutlinedTextField(
             value = formState.getString(fieldId),
-            onValueChange = { formState.setString(fieldId, it) },
+            onValueChange = { formState.setTextInput(fieldId, it, keyboardTypeName) },
             label = { Text(node.props["label"].asString()) },
             modifier = Modifier.applyStyle(style).applySemantics(node).fillMaxWidth(),
             isError = hasError,

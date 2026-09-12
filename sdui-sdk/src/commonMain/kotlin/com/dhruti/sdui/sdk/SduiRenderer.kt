@@ -13,5 +13,10 @@ fun SduiRenderer(
     registry: ComponentRegistry = ComponentRegistry().apply { registerCoreWidgets() },
     formState: FormState = rememberSaveable(saver = FormState.Saver) { FormState() }
 ) {
-    registry.RenderRoot(screen, actionHandler, formState)
+    registry.RenderRoot(
+        node = screen,
+        actions = actionHandler,
+        formState = formState,
+        modifier = modifier
+    )
 }

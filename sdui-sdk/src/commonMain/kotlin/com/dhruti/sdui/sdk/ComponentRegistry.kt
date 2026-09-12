@@ -34,10 +34,28 @@ class FormState(initialValues: Map<String, SduiValue> = emptyMap()) {
     }
     operator fun get(key: String): SduiValue? = values[key]
 
-    /** Convenience for text inputs. */
-    fun getString(key: String): String = (values[key] as? SduiValue.StringValue)?.value ?: ""
+    /** Returns a display value without discarding an input's underlying type. */
+    fun getString(key: String): String = when (val value = values[key]) {
+        is SduiValue.StringValue -> value.value
+        is SduiValue.NumberValue -> value.value.toString()
+        is SduiValue.BooleanValue -> value.value.toString()
+        else -> ""
+    }
+
     fun setString(key: String, value: String) {
         values[key] = SduiValue.StringValue(value)
+    }
+
+    /**
+     * Stores number keyboard input as a NumberValue whenever it is valid.
+     * Invalid and empty input remains visible as text so the field can be corrected.
+     */
+    fun setTextInput(key: String, value: String, keyboardType: String) {
+        values[key] = if (keyboardType == "number") {
+            value.toDoubleOrNull()?.let(SduiValue::NumberValue) ?: SduiValue.StringValue(value)
+        } else {
+            SduiValue.StringValue(value)
+        }
     }
 
     companion object {
