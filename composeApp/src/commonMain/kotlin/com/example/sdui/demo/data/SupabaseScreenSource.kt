@@ -26,6 +26,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import io.github.jan.supabase.annotations.SupabaseInternal
 import com.example.sdui.demo.data.db.SduiDatabase
+import com.dhruti.sdui.sdk.ScreenLoadResult
+import com.dhruti.sdui.sdk.ScreenLoadSource
+import com.dhruti.sdui.sdk.ScreenRequest
 import com.dhruti.sdui.sdk.ScreenSource
 
 @OptIn(ExperimentalSerializationApi::class, SupabaseInternal::class)
@@ -99,12 +102,29 @@ class SupabaseScreenSource(
         header("Authorization", "Bearer $supabaseKey")
     }
 
-    override suspend fun fetchScreen(path: String, forceRefresh: Boolean): UiNode {
-        if (!forceRefresh && cache.containsKey(path)) {
-            return cache[path]!!
+    override suspend fun fetchScreen(path: String, forceRefresh: Boolean): UiNode =
+        when (val result = loadScreen(ScreenRequest(path, forceRefresh))) {
+            is ScreenLoadResult.Success -> result.screen
+            is ScreenLoadResult.Failure -> throw result.cause
         }
 
-        // Concurrency: Wait for active prefetch if it exists
+    override suspend fun loadScreen(request: ScreenRequest): ScreenLoadResult = try {
+        resolveScreen(request.path, request.forceRefresh)
+    } catch (cancellation: CancellationException) {
+        throw cancellation
+    } catch (cause: Throwable) {
+        ScreenLoadResult.Failure(cause)
+    }
+
+    private suspend fun resolveScreen(
+        path: String,
+        forceRefresh: Boolean
+    ): ScreenLoadResult.Success {
+        if (!forceRefresh) {
+            cache[path]?.let { return ScreenLoadResult.Success(it, ScreenLoadSource.MEMORY) }
+        }
+
+        // Wait for an active prefetch before proceeding with cache resolution.
         try {
             withTimeout(5000) {
                 prefetchJobs[path]?.join()
@@ -115,11 +135,11 @@ class SupabaseScreenSource(
             println("KTOR: Prefetch join timed out for $path")
         }
 
-        if (!forceRefresh && cache.containsKey(path)) {
-            return cache[path]!!
+        if (!forceRefresh) {
+            cache[path]?.let { return ScreenLoadResult.Success(it, ScreenLoadSource.MEMORY) }
         }
 
-        // Tier 2: Check Disk
+        // Tier 2: check persistent cache and validate it when online.
         val persisted = queries.selectByPath(path).executeAsOneOrNull()
         if (!forceRefresh && persisted != null) {
             println("KTOR: [CACHE] Found disk entry for $path. Checking staleness...")
@@ -130,32 +150,29 @@ class SupabaseScreenSource(
                     val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
                     cache[path] = contentNode
                     queries.touchLastAccessed(getNowMillis(), path)
-                    return contentNode
+                    return ScreenLoadResult.Success(contentNode, ScreenLoadSource.DISK)
                 } else {
                     println("KTOR: [CACHE] Disk entry is STALE. Remote: $remoteUpdatedAt, Local: ${persisted.updatedAt}")
                 }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
             } catch (e: Exception) {
                 println("KTOR: [CACHE] Network check failed. Falling back to disk entry for offline mode.")
                 val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
                 cache[path] = contentNode
-                return contentNode
+                return ScreenLoadResult.Success(contentNode, ScreenLoadSource.DISK)
             }
         } else if (persisted == null) {
             println("KTOR: [CACHE] No disk entry for $path. Will fetch from network.")
         }
 
-        return try {
-            val row = fetchInternal(path)
-            val screen = row.content
-            cache[path] = screen
-            
-            // Persist in background
-            scope.launch { persistRow(path, row) }
-            
-            screen
-        } catch (e: Exception) {
-            throw e
-        }
+        val row = fetchInternal(path)
+        val screen = row.content
+        cache[path] = screen
+
+        // Persist asynchronously, as before.
+        scope.launch { persistRow(path, row) }
+        return ScreenLoadResult.Success(screen, ScreenLoadSource.NETWORK)
     }
 
     private suspend fun fetchUpdatedAt(path: String): String {
