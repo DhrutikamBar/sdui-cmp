@@ -246,16 +246,27 @@ private fun SduiScreenContent(
             }
             register("apiCall") { action ->
                 scope.launch {
+                    val stateKey = (action.metadata["stateKey"] as? SduiValue.StringValue)?.value
+                    stateKey?.let { formState[it] = SduiValue.BooleanValue(true) }
                     try {
                         if (apiCallClient.execute(action, formState)) {
+                            reporter.reportEvent("action_result", mapOf("type" to "apiCall", "result" to "success"))
                             action.onSuccess?.let { registryRef.dispatch(it) }
                         } else {
+                            reporter.reportEvent("action_result", mapOf("type" to "apiCall", "result" to "failure"))
                             action.onError?.let { registryRef.dispatch(it) }
                         }
                     } catch (cancellation: CancellationException) {
+                        reporter.reportEvent("action_result", mapOf("type" to "apiCall", "result" to "cancelled"))
                         throw cancellation
                     } catch (e: Exception) {
+                        reporter.reportEvent(
+                            "action_result",
+                            mapOf("type" to "apiCall", "result" to "failure", "error" to (e.message ?: "unknown"))
+                        )
                         action.onError?.let { registryRef.dispatch(it) }
+                    } finally {
+                        stateKey?.let { formState[it] = SduiValue.BooleanValue(false) }
                     }
                 }
             }
