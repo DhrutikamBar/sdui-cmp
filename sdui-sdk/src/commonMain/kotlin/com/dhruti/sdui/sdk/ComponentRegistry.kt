@@ -155,6 +155,9 @@ private fun evaluateExpressionPart(part: String, state: FormState): Any? {
     return raw.toDoubleOrNull()
 }
 
+/** The node set consumed by RenderRoot's single scroll owner. */
+internal fun rootNodesForRendering(node: UiNode): List<UiNode> = UiFlattener.flattenRoot(node)
+
 /** Tells children whether they are inside a scrollable container. */
 val LocalIsInsideScrollable = compositionLocalOf { false }
 
@@ -190,7 +193,7 @@ class ComponentRegistry {
 
         // UiFlattener preserves root rows, boxes, and styled columns as nodes.
         // LazyColumn remains the only scroll owner at this level.
-        val rootNodes = UiFlattener.flattenRoot(node)
+        val rootNodes = rootNodesForRendering(node)
 
         CompositionLocalProvider(LocalIsInsideScrollable provides true) {
             LazyColumn(modifier.fillMaxSize()) {
