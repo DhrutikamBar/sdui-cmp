@@ -33,6 +33,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - `SduiNavigator` lets the host own navigation.
 - `SduiUrlHandler` lets the host validate and open external links.
 - `SduiActionPolicy` lets the host allow or deny server-defined actions. The reference host passes a documented allowlist to `ActionRegistry` by default.
+- `SduiApiCallClient` lets the host execute an allowed `apiCall` using its own transport, credentials, and retry policy.
 - `ReportingService` remains the host-provided analytics/crash-reporting boundary.
 - `ResourceResolver` remains the host-provided string/image resource boundary.
 
@@ -67,4 +68,4 @@ Everything else is denied before interceptors and handlers run. This is a baseli
 
 The reference host now consumes `ScreenLoadResult`, closes its `ScreenSource` when the repository leaves composition, and preserves cancellation instead of treating it as a load failure. Existing `ScreenSource` implementations remain compatible through the default `loadScreen` adapter.
 
-Phase 2 ownership increment: the Supabase source, SQLDelight cache/driver, cache clock, and Supabase configuration now live under `com.example.sdui.demo`. The renderer and wire schema remain unchanged.
+Phase 2 ownership increments: the Supabase source, SQLDelight cache/driver, cache clock, configuration, and `SupabaseApiCallClient` live under `com.example.sdui.demo`. `DemoApp` assembles those demo-only dependencies before calling the injectable reference UI host. The renderer and wire schema remain unchanged.

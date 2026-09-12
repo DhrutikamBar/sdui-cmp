@@ -49,3 +49,15 @@ sealed interface SduiActionDecision {
 object AllowAllSduiActionPolicy : SduiActionPolicy {
     override fun evaluate(action: UiAction): SduiActionDecision = SduiActionDecision.Allow
 }
+
+
+/**
+ * Host-owned executor for an allowed server-defined `apiCall` action.
+ *
+ * The SDK defines no HTTP stack, base URL, credentials, or retry policy. Hosts
+ * validate and execute requests with their own transport, returning `true` only
+ * when the action should dispatch its `onSuccess` follow-up.
+ */
+interface SduiApiCallClient {
+    suspend fun execute(action: UiAction, formState: FormState): Boolean
+}

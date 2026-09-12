@@ -21,35 +21,22 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
-import com.example.sdui.demo.data.DatabaseDriverFactory
-import com.example.sdui.demo.data.SupabaseScreenSource
 import com.example.sdui.shared.Feedback
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
 import com.example.sdui.shared.UiAction
 import com.dhruti.sdui.sdk.*
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.header
-import io.ktor.client.request.request
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.HttpMethod
-import io.ktor.http.contentType
-import io.ktor.http.isSuccess
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Supabase is now the only screen source — no local fallback, no separate Ktor server URL.
- * supabaseUrl / supabaseKey are required, not optional, since there's nowhere else to fall back to.
+ * Reference UI host. Dependencies are supplied by the caller so this UI is not
+ * coupled to Supabase, SQLDelight, or a particular HTTP transport.
  */
 @Composable
 fun App(
-    supabaseUrl: String, 
-    supabaseKey: String,
-    driverFactory: DatabaseDriverFactory,
+    screenSource: ScreenSource,
+    apiCallClient: SduiApiCallClient,
     actionPolicy: SduiActionPolicy = DemoSduiActionPolicy
 ) {
     val registry = remember { 
@@ -79,19 +66,12 @@ fun App(
     val urlHandler = remember(openUrl) {
         SduiUrlHandler { url -> openUrl(url) }
     }
-    val repository = remember(supabaseUrl, supabaseKey) { 
-        SupabaseScreenSource(supabaseUrl, supabaseKey, driverFactory) 
-    }
-    DisposableEffect(repository) {
-        onDispose { repository.close() }
-    }
-    val httpClient = repository.httpClient
     val reporter = remember { ConsoleReportingService() }
     val resourceResolver = rememberResourceResolver()
 
     var designTokens by remember { mutableStateOf(DesignTokens()) }
 
-    LaunchedEffect(supabaseUrl) {
+    LaunchedEffect(Unit) {
         try {
             // In a real app, this would be a specific endpoint/table for tokens
             // designTokens = repository.fetchTokens()
@@ -115,10 +95,8 @@ fun App(
                             val route: SduiScreen = backStackEntry.toRoute()
                             SduiScreenContent(
                                 path = route.path,
-                                repository = repository,
-                                httpClient = httpClient,
-                                supabaseUrl = supabaseUrl,
-                                supabaseKey = supabaseKey,
+                                screenSource = screenSource,
+                                apiCallClient = apiCallClient,
                                 registry = registry,
                                 navigator = navigator,
                                 urlHandler = urlHandler,
@@ -136,10 +114,8 @@ fun App(
 @Composable
 private fun SduiScreenContent(
     path: String,
-    repository: ScreenSource,
-    httpClient: HttpClient,
-    supabaseUrl: String,
-    supabaseKey: String,
+    screenSource: ScreenSource,
+    apiCallClient: SduiApiCallClient,
     registry: ComponentRegistry,
     navigator: SduiNavigator,
     urlHandler: SduiUrlHandler,
@@ -157,7 +133,7 @@ private fun SduiScreenContent(
         loadError = null
         screen = try {
             val fetched = try {
-                when (val result = repository.loadScreen(ScreenRequest(path))) {
+                when (val result = screenSource.loadScreen(ScreenRequest(path))) {
                     is ScreenLoadResult.Success -> result.screen
                     is ScreenLoadResult.Failure -> throw result.cause
                 }
@@ -185,7 +161,7 @@ private fun SduiScreenContent(
             
             // Predictive prefetching: fetch next screens in the background
             UiScanner.findNavigablePaths(fetched).forEach { nextPath ->
-                repository.prefetch(nextPath)
+                screenSource.prefetch(nextPath)
             }
             
             fetched
@@ -199,7 +175,7 @@ private fun SduiScreenContent(
         }
     }
 
-    val actionRegistry = remember(navigator, urlHandler, actionPolicy, reporter, haptics, formState, scope) {
+    val actionRegistry = remember(navigator, urlHandler, apiCallClient, actionPolicy, reporter, haptics, formState, scope) {
         lateinit var registryRef: ActionRegistry
         val registry = ActionRegistry(
             interceptors = listOf(
@@ -218,23 +194,15 @@ private fun SduiScreenContent(
                 }
             }
             register("apiCall") { action ->
-                val url = action.target ?: return@register
                 scope.launch {
                     try {
-                        val response = httpClient.request(supabaseUrl + url) {
-                            method = HttpMethod.parse(action.method ?: "POST")
-                            header("apikey", supabaseKey)
-                            header("Authorization", "Bearer $supabaseKey")
-                            action.body?.let { body ->
-                                contentType(ContentType.Application.Json)
-                                setBody(interpolate(body, formState))
-                            }
-                        }
-                        if (response.status.isSuccess()) {
+                        if (apiCallClient.execute(action, formState)) {
                             action.onSuccess?.let { registryRef.dispatch(it) }
                         } else {
                             action.onError?.let { registryRef.dispatch(it) }
                         }
+                    } catch (cancellation: CancellationException) {
+                        throw cancellation
                     } catch (e: Exception) {
                         action.onError?.let { registryRef.dispatch(it) }
                     }
