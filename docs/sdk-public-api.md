@@ -63,4 +63,8 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 
 Everything else is denied before interceptors and handlers run. This is a baseline policy, not a substitute for server-side authorization, Supabase RLS, or a tenant-aware production policy.
 
-The next Phase 1 increment should formalize the screen-source result and lifecycle contract before moving demo infrastructure.
+## Phase 1 completion
+
+The reference host now consumes `ScreenLoadResult`, closes its `ScreenSource` when the repository leaves composition, and preserves cancellation instead of treating it as a load failure. Existing `ScreenSource` implementations remain compatible through the default `loadScreen` adapter.
+
+Phase 2 can now begin the Supabase/demo separation using these public contracts, without changing the renderer or wire schema.
