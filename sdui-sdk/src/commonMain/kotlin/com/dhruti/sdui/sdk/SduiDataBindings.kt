@@ -54,7 +54,7 @@ private fun SduiValue?.displayValue(): String = when (this) {
     is SduiValue.ListValue, is SduiValue.ObjectValue, null -> ""
 }
 
-private val BINDING = Regex("""\{\{\s*([A-Za-z][A-Za-z0-9_.-]{0,127})\s*}}""")
+private val BINDING = Regex("""\{\{\s*([A-Za-z][A-Za-z0-9_.-]{0,127})\s*\}\}""")
 
 /**
  * Produces a renderer-ready node tree. `repeater` is a lightweight list
