@@ -140,8 +140,8 @@ private fun SduiScreenContent(
             } catch (cancellation: CancellationException) {
                 throw cancellation
             } catch (e: Exception) {
-                // If Supabase fetch fails, try local fallback for better DX
-                println("KTOR: Remote fetch failed for $path, trying local fallback...")
+                // If the configured screen source fails, try local fallback for better DX
+                println("SDUI: Screen source failed for $path, trying local fallback...")
                 val localJsonStr = when (path) {
                     "home" -> LocalScreens.home
                     "welcome" -> LocalScreens.welcome
