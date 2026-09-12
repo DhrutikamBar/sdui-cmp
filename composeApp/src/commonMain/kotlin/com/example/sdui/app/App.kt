@@ -79,6 +79,9 @@ fun App(
     val repository = remember(supabaseUrl, supabaseKey) { 
         SupaBaseUiRepository(supabaseUrl, supabaseKey, driverFactory) 
     }
+    DisposableEffect(repository) {
+        onDispose { repository.close() }
+    }
     val httpClient = repository.httpClient
     val reporter = remember { ConsoleReportingService() }
     val resourceResolver = rememberResourceResolver()
@@ -151,7 +154,10 @@ private fun SduiScreenContent(
         loadError = null
         screen = try {
             val fetched = try {
-                repository.fetchScreen(path)
+                when (val result = repository.loadScreen(ScreenRequest(path))) {
+                    is ScreenLoadResult.Success -> result.screen
+                    is ScreenLoadResult.Failure -> throw result.cause
+                }
             } catch (e: Exception) {
                 // If Supabase fetch fails, try local fallback for better DX
                 println("KTOR: Remote fetch failed for $path, trying local fallback...")

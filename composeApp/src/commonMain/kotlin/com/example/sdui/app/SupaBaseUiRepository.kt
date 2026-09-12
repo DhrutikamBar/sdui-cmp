@@ -226,6 +226,17 @@ class SupaBaseUiRepository(
         prefetchJobs[path] = job
     }
 
+    override fun cancelPrefetch(path: String) {
+        prefetchJobs.remove(path)?.cancel()
+    }
+
+    override fun close() {
+        prefetchJobs.values.forEach { it.cancel() }
+        prefetchJobs.clear()
+        scope.cancel()
+        httpClient.close()
+    }
+
     private fun persistRow(path: String, row: FullScreenRow) {
         try {
             queries.upsert(

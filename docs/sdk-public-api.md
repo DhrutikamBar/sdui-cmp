@@ -23,8 +23,10 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 ### Screen delivery
 
 - `ScreenSource` supplies decoded `UiNode` screens and optional prefetching.
+- `ScreenRequest` and `ScreenLoadResult` provide typed success/failure delivery while preserving coroutine cancellation.
+- `ScreenLoadSource` represents memory, disk, network, or unknown provenance; sources with cache metadata may report a precise origin.
+- `cancelPrefetch` and `close` provide lifecycle hooks for host-owned cleanup.
 - The existing `SupaBaseUiRepository` is a reference-host implementation only. It is not a dependency of `sdui-sdk`.
-- Result metadata, cancellation, cache freshness, and error modelling are intentionally deferred to a later compatibility-preserving phase.
 
 ### Host capabilities
 

@@ -39,6 +39,7 @@ kotlin {
             implementation("io.github.alexzhirkevich:compottie:2.2.4")
             implementation("io.github.alexzhirkevich:compottie-network:2.2.4")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
