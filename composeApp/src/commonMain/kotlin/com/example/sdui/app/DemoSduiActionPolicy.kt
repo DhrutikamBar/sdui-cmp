@@ -15,28 +15,32 @@ object DemoSduiActionPolicy : SduiActionPolicy {
     private val allowedApiMethods = setOf("GET", "POST", "PUT", "PATCH", "DELETE")
     private val stateKeyPattern = Regex("^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 
-    override fun evaluate(action: UiAction): SduiActionDecision = when (action.type) {
-        "navigate" -> allowWhen(
-            isLocalRoute(action.target),
-            "Navigation requires a non-empty local route"
-        )
-        "back" -> allowWhen(
-            action.target == null,
-            "Back actions must not define a target"
-        )
-        "toggleState" -> allowWhen(
-            action.target != null && stateKeyPattern.matches(action.target),
-            "State actions require an identifier-like target"
-        )
-        "openUrl" -> allowWhen(
-            isHttpsUrl(action.target),
-            "Only HTTPS URLs are allowed"
-        )
-        "apiCall" -> allowWhen(
-            isAllowedApiCall(action),
-            "API calls require an allowed method and a relative path"
-        )
-        else -> SduiActionDecision.Deny("Action type is not allowed: ${action.type}")
+    override fun evaluate(action: UiAction): SduiActionDecision {
+        val target = action.target
+
+        return when (action.type) {
+            "navigate" -> allowWhen(
+                isLocalRoute(target),
+                "Navigation requires a non-empty local route"
+            )
+            "back" -> allowWhen(
+                target == null,
+                "Back actions must not define a target"
+            )
+            "toggleState" -> allowWhen(
+                target != null && stateKeyPattern.matches(target),
+                "State actions require an identifier-like target"
+            )
+            "openUrl" -> allowWhen(
+                isHttpsUrl(target),
+                "Only HTTPS URLs are allowed"
+            )
+            "apiCall" -> allowWhen(
+                isAllowedApiCall(action),
+                "API calls require an allowed method and a relative path"
+            )
+            else -> SduiActionDecision.Deny("Action type is not allowed: ${action.type}")
+        }
     }
 
     private fun allowWhen(condition: Boolean, reason: String): SduiActionDecision =
