@@ -21,6 +21,7 @@ import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.serialization.kotlinx.protobuf.protobuf
 import kotlinx.coroutines.*
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -43,6 +44,7 @@ class SupabaseScreenSource(
     private companion object {
         const val CACHE_FORMAT_VERSION: Long = 2L
         const val CACHE_FRESHNESS_MILLIS = 15 * 60 * 1000L
+        const val SCREEN_LOAD_TIMEOUT_MILLIS = 10_000L
     }
 
     private val database = SduiDatabase(driverFactory.createDriver())
@@ -117,7 +119,11 @@ class SupabaseScreenSource(
         }
 
     override suspend fun loadScreen(request: ScreenRequest): ScreenLoadResult = try {
-        resolveScreen(request.path, request.forceRefresh)
+        withTimeoutOrNull(SCREEN_LOAD_TIMEOUT_MILLIS) {
+            resolveScreen(request.path, request.forceRefresh)
+        } ?: ScreenLoadResult.Failure(
+            IllegalStateException("Supabase request timed out after " + SCREEN_LOAD_TIMEOUT_MILLIS + "ms")
+        )
     } catch (cancellation: CancellationException) {
         throw cancellation
     } catch (cause: Throwable) {
