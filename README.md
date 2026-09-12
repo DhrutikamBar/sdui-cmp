@@ -30,6 +30,10 @@ The reference app runs entirely from bundled documents and simulated API success
 - Requires a Mac with Xcode.
 - The repository currently produces iOS frameworks (`shared`, `sdui-sdk`, and `composeApp`) but does not include an `iosApp` Xcode host. Integrate the generated framework into a host app before running on iOS.
 
+## Release readiness
+
+CI runs Android unit tests for all modules. See [the consumer guide](docs/consumer-guide.md) and [changelog](CHANGELOG.md).
+
 ## Build & Test
 
 - **Build all modules**: `./gradlew assemble`
