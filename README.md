@@ -27,7 +27,7 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 
 ### iOS
 - Requires a Mac with Xcode.
-- Run the `iosApp` via the Compose Multiplatform plugin or open the `iosApp` folder in Xcode.
+- The repository currently produces iOS frameworks (`shared`, `sdui-sdk`, and `composeApp`) but does not include an `iosApp` Xcode host. Integrate the generated framework into a host app before running on iOS.
 
 ## Build & Test
 

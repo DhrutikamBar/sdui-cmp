@@ -10,3 +10,4 @@ local.properties
 *.signing/
 signing.properties
 secrets.properties
+.artifacts/
