@@ -23,6 +23,7 @@ import com.dhruti.sdui.sdk.*
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
@@ -159,7 +160,10 @@ private fun SduiScreenContent(
         loadError = null
         screen = try {
             val fetched = try {
-                when (val result = screenSource.loadScreen(ScreenRequest(path))) {
+                val result = withTimeoutOrNull(SCREEN_LOAD_TIMEOUT_MILLIS) {
+                    screenSource.loadScreen(ScreenRequest(path))
+                } ?: throw IllegalStateException("Timed out loading screen: $path")
+                when (result) {
                     is ScreenLoadResult.Success -> result.screen
                     is ScreenLoadResult.Failure -> throw result.cause
                 }
@@ -288,6 +292,8 @@ fun ErrorState(message: String, onRetry: () -> Unit) {
         Button(onClick = onRetry) { Text("Retry") }
     }
 }
+
+private const val SCREEN_LOAD_TIMEOUT_MILLIS = 6_000L
 
 private val demoSupportedActionTypes = setOf(
     "navigate",
