@@ -1,83 +1,40 @@
 # SDUI SDK public API boundary
 
-This document defines the Phase 1 public boundary for the reusable mobile SDK. Its reference-host integration preserves the current default runtime behaviour.
-
 ## Module ownership
 
 | Module | Ownership |
 | --- | --- |
-| `shared` | Wire contract: `UiNode`, `UiAction`, `SduiValue`, conditions, semantics, and serialization. |
-| `sdui-sdk` | Reusable Compose renderer, built-in widgets, form state, action dispatch primitives, host contracts, resources, and reporting. |
-| `composeApp` | Offline reference host application. Bundled screens and local action simulation are the default; Supabase/SQLDelight integrations remain demo-owned and optional. |
+| `shared` | Wire contract: `UiNode`, `UiAction`, `SduiValue`, conditions, semantics, serialization, and document validation. |
+| `sdui-sdk` | Reusable Compose renderer, built-in widgets, form state, action primitives, host contracts, resources, and reporting. It has no Firebase dependency. |
+| `composeApp` | Reference host application. Its Android adapter reads Firestore documents and falls back to bundled screens; iOS currently uses bundled fallback screens. |
 
-The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a particular navigation library.
+The reusable SDK does not require a particular transport, database, navigation library, or backend service.
 
-## Supported integration contracts
+## Rendering and data
 
-### Payload format and validation
-
-- `SduiDocument` is the versioned envelope for a `UiNode` render tree; schema version 1 is currently supported.
-- `SduiDocumentCodec` is the required untrusted-content boundary. It accepts both `SduiDocument` and legacy bare `UiNode` JSON, validates the supported schema version, and normalizes accepted legacy payloads.
-- `SduiPayloadLimits` bounds payload size, node count/depth, action/condition/value depth, strings, maps, and lists. Hosts may use stricter limits.
-- `SduiPayloadValidationException` identifies rejected documents before they are rendered or persisted.
-- `SduiSemanticValidator` checks document widget/action types against the current host immediately before rendering. Unsupported widgets require an explicit document fallback; the renderer also shows a safe placeholder as a last resort.
-
-### Rendering and widgets
-
-- `SduiRenderer` renders a `UiNode` using an `ActionHandler`, `ComponentRegistry`, and `FormState`.
+- `SduiRenderer` renders a `UiNode` using an `ActionHandler`, `ComponentRegistry`, and `FormState`. Its public `modifier` is applied to the root rendering container.
 - `ComponentRegistry` registers host or SDK widget renderers by node `type`.
-- `FormState` is the observable state used by widgets and conditions.
+- `SduiDataContext` supplies typed, host-owned data bindings to a document without granting documents access to the host data model.
 
-### Screen delivery
+## Screen delivery
 
-- `ScreenSource` supplies decoded `UiNode` screens and optional prefetching.
-- `ScreenRequest` and `ScreenLoadResult` provide typed success/failure delivery while preserving coroutine cancellation.
-- `ScreenLoadSource` represents memory, disk, network, or unknown provenance; sources with cache metadata may report a precise origin.
+- `ScreenSource` is host-owned and supplies decoded `UiNode` screens.
+- `ScreenRequest`, `ScreenLoadResult`, and `ScreenLoadSource` provide typed delivery and cache provenance while preserving coroutine cancellation.
 - `cancelPrefetch` and `close` provide lifecycle hooks for host-owned cleanup.
-- `FirebaseFirestoreScreenSource` is the Android reference-host adapter. `LocalDemoScreenSource` supplies bundled fallback screens and is not a dependency of `sdui-sdk`.
+- The Android reference host uses `FirebaseFirestoreScreenSource`. `LocalDemoScreenSource` supplies bundled fallback screens. Neither is a dependency of `sdui-sdk`.
 
-### Host capabilities
+## Host extension points
 
-- `SduiNavigator` lets the host own navigation.
-- `SduiUrlHandler` lets the host validate and open external links.
-- `SduiActionPolicy` lets the host allow or deny server-defined actions. The reference host passes a documented allowlist to `ActionRegistry` by default.
-- `SduiApiCallClient` lets the host execute an allowed `apiCall` using its own transport, credentials, and retry policy.
-- `ReportingService` remains the host-provided analytics/crash-reporting boundary.
-- `ResourceResolver` remains the host-provided string/image resource boundary.
-- `SduiReferenceScreenHost` is the injectable reference-screen composition point: callers provide the path, source, API client, component registry, navigator, URL handler, policy, reporting service, resource resolver, and design tokens.
+- `SduiNavigator` owns navigation.
+- `SduiUrlHandler` validates and opens external links.
+- `SduiActionPolicy` authorizes server-defined actions.
+- `SduiApiCallClient` executes allowed API calls using host transport and credentials.
+- `ReportingService`, `ResourceResolver`, design tokens, custom widgets, and `SduiReferenceScreenHost` allow hosts to integrate platform and product-specific behavior.
 
 ## Compatibility rules
 
-1. Additive fields in the wire contract must have defaults and be accompanied by serialization fixtures.
-2. Removing or renaming public SDK APIs is a breaking change.
-3. Widget type strings and action type strings are protocol values; their support and fallback behaviour must be documented before release.
-4. Server-provided side effects remain host-controlled. The SDK must not silently expand allowed navigation, URL, or network behaviour.
-5. The demo app may evolve independently, provided it consumes the published SDK APIs rather than becoming a requirement of them.
-
-## Deliberate non-goals of this phase
-
-- No Supabase extraction or cache rewrite.
-- No renderer or schema behaviour change.
-- No navigation-library migration.
-- No authentication-aware or tenant-aware policy yet; the reference host uses a static demo allowlist.
-
-### Reference-host action policy
-
-`DemoSduiActionPolicy` allows only the action types handled by the demo host:
-
-- `navigate` to a non-empty local route;
-- `back` without a target;
-- `analytics` with an identifier-like event name;
-- `toggleState` for identifier-like state keys;
-- `openUrl` to HTTPS URLs; and
-- `apiCall` with a relative path and one of `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`.
-
-Everything else is denied before interceptors and handlers run. This is a baseline policy, not a substitute for server-side authorization or a tenant-aware production policy.
-
-## Phase 1 completion
-
-The reference host now consumes `ScreenLoadResult`, closes its `ScreenSource` when the repository leaves composition, and preserves cancellation instead of treating it as a load failure. Existing `ScreenSource` implementations remain compatible through the default `loadScreen` adapter.
-
-Phase 3 semantic validation checks widget and action compatibility against host capabilities before rendering, and unknown widgets now have a deterministic placeholder fallback.
-
-Current reference-host delivery uses the Android Firestore adapter and the bundled local fallback source. Both remain outside the reusable SDK boundary; the renderer and wire schema remain transport-agnostic.
+1. Additive wire-contract fields need defaults and serialization coverage.
+2. Removing or renaming public SDK APIs is breaking.
+3. Widget and action type strings are protocol values; hosts validate them before rendering.
+4. Server-defined side effects remain host-controlled.
+5. The reference host may change independently as long as it continues to consume the reusable SDK boundary.
