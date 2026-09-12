@@ -1,4 +1,4 @@
-package com.example.sdui.app
+package com.example.sdui.demo.data
 
 import com.example.sdui.shared.UiNode
 import io.github.jan.supabase.SupabaseClient
@@ -25,11 +25,11 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
 import io.github.jan.supabase.annotations.SupabaseInternal
-import com.example.sdui.app.db.SduiDatabase
+import com.example.sdui.demo.data.db.SduiDatabase
 import com.dhruti.sdui.sdk.ScreenSource
 
 @OptIn(ExperimentalSerializationApi::class, SupabaseInternal::class)
-class SupaBaseUiRepository(
+class SupabaseScreenSource(
     private val supabaseUrl: String, 
     private val supabaseKey: String,
     driverFactory: DatabaseDriverFactory

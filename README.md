@@ -5,7 +5,8 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 ## Architecture
 
 - **shared** — The wire contract. Defines the `UiNode` tree, `SduiValue system, and `Condition` logic.
-- **composeApp** — The mobile client (Android + iOS). Fetches screens from Supabase, flattens the UI tree for 60fps performance, and handles local logic/state.
+- **sdui-sdk** — The reusable Compose renderer, widgets, action primitives, and host contracts. It has no Supabase or SQLDelight dependency.
+- **composeApp** — The reference host/demo (Android + iOS): Supabase screen source, SQLDelight cache, configuration, navigation wiring, and local screens.
 
 ## Key Features
 

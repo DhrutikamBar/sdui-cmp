@@ -26,7 +26,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - `ScreenRequest` and `ScreenLoadResult` provide typed success/failure delivery while preserving coroutine cancellation.
 - `ScreenLoadSource` represents memory, disk, network, or unknown provenance; sources with cache metadata may report a precise origin.
 - `cancelPrefetch` and `close` provide lifecycle hooks for host-owned cleanup.
-- The existing `SupaBaseUiRepository` is a reference-host implementation only. It is not a dependency of `sdui-sdk`.
+- The existing `SupabaseScreenSource` is a reference-host implementation only. It is not a dependency of `sdui-sdk`.
 
 ### Host capabilities
 
@@ -67,4 +67,4 @@ Everything else is denied before interceptors and handlers run. This is a baseli
 
 The reference host now consumes `ScreenLoadResult`, closes its `ScreenSource` when the repository leaves composition, and preserves cancellation instead of treating it as a load failure. Existing `ScreenSource` implementations remain compatible through the default `loadScreen` adapter.
 
-Phase 2 can now begin the Supabase/demo separation using these public contracts, without changing the renderer or wire schema.
+Phase 2 ownership increment: the Supabase source, SQLDelight cache/driver, cache clock, and Supabase configuration now live under `com.example.sdui.demo`. The renderer and wire schema remain unchanged.

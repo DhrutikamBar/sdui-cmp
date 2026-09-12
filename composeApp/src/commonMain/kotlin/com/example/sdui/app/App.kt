@@ -21,6 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
+import com.example.sdui.demo.data.DatabaseDriverFactory
+import com.example.sdui.demo.data.SupabaseScreenSource
 import com.example.sdui.shared.Feedback
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
@@ -78,7 +80,7 @@ fun App(
         SduiUrlHandler { url -> openUrl(url) }
     }
     val repository = remember(supabaseUrl, supabaseKey) { 
-        SupaBaseUiRepository(supabaseUrl, supabaseKey, driverFactory) 
+        SupabaseScreenSource(supabaseUrl, supabaseKey, driverFactory) 
     }
     DisposableEffect(repository) {
         onDispose { repository.close() }

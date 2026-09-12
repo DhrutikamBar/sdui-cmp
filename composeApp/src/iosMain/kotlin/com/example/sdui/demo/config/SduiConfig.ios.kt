@@ -1,4 +1,4 @@
-package com.example.sdui.app
+package com.example.sdui.demo.config
 
 import platform.Foundation.NSBundle
 

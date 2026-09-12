@@ -1,8 +1,8 @@
-package com.example.sdui.app
+package com.example.sdui.demo.data
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
-import com.example.sdui.app.db.SduiDatabase
+import com.example.sdui.demo.data.db.SduiDatabase
 
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {

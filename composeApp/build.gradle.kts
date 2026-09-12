@@ -88,7 +88,7 @@ android {
 sqldelight {
     databases {
         create("SduiDatabase") {
-            packageName.set("com.example.sdui.app.db")
+            packageName.set("com.example.sdui.demo.data.db")
         }
     }
 }

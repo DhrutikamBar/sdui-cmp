@@ -1,4 +1,4 @@
-package com.example.sdui.app
+package com.example.sdui.demo.data
 
 import app.cash.sqldelight.db.SqlDriver
 
