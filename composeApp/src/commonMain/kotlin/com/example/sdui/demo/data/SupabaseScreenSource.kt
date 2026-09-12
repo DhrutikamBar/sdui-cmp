@@ -121,6 +121,7 @@ class SupabaseScreenSource(
     } catch (cancellation: CancellationException) {
         throw cancellation
     } catch (cause: Throwable) {
+        println("SDUI: Supabase screen load failed for " + request.path + ": " + cause.message)
         ScreenLoadResult.Failure(cause)
     }
 

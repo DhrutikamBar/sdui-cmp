@@ -293,7 +293,7 @@ fun ErrorState(message: String, onRetry: () -> Unit) {
     }
 }
 
-private const val SCREEN_LOAD_TIMEOUT_MILLIS = 6_000L
+private const val SCREEN_LOAD_TIMEOUT_MILLIS = 15_000L
 
 private val demoSupportedActionTypes = setOf(
     "navigate",
