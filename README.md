@@ -6,7 +6,7 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 
 - **shared** — The wire contract. Defines the `UiNode` tree, `SduiValue system, and `Condition` logic.
 - **sdui-sdk** — The reusable Compose renderer, widgets, action primitives, and host contracts. It has no Supabase or SQLDelight dependency.
-- **composeApp** — The reference host/demo (Android + iOS): remote and bundled screen sources, action client, SQLDelight cache, configuration, `DemoApp` assembly, navigation wiring, and local screens.
+- **composeApp** — The reference host/demo (Android + iOS): Supabase screen source, action client, SQLDelight cache, configuration, `DemoApp` assembly, navigation wiring, and bundled fallback screens.
 
 ## Key Features
 
@@ -19,9 +19,18 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 
 ## Running the Project
 
-### Reference demo mode
+### Supabase-controlled reference demo
 
-The Home document is fetched from the configured Mocki endpoint. It must return a versioned `SduiDocument` or legacy `UiNode` JSON payload. The bundled Home screen is used automatically if remote loading or validation fails; the remaining demo screens are bundled.
+The app reads screen documents from the Supabase `screens` table using the `path`, `content`, and `updated_at` fields. The existing table format—where `content` is a JSONB SDUI tree—is supported.
+
+For Android, copy `gradle.properties.example` to an untracked local `gradle.properties` file and set:
+
+```text
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-anon-key
+```
+
+Use the anonymous public key, never a service-role key. When those values are absent, the reference app uses bundled local screens so it remains runnable offline.
 
 ### Android
 - Open in Android Studio.
