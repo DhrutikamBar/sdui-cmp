@@ -7,6 +7,7 @@ import com.dhruti.sdui.sdk.ScreenSource
 import com.example.sdui.shared.SduiDocumentCodec
 import com.example.sdui.shared.UiNode
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
@@ -23,7 +24,7 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 class MockApiScreenSource(
     private val localSource: ScreenSource = LocalDemoScreenSource(),
-    private val httpClient: HttpClient = HttpClient(),
+    private val httpClient: HttpClient = createHttpClient(),
     private val fetchHomePayload: suspend () -> String = {
         httpClient.get(HOME_SCREEN_URL).bodyAsText()
     }
@@ -46,7 +47,8 @@ class MockApiScreenSource(
             )
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (_: Throwable) {
+        } catch (cause: Throwable) {
+            println("SDUI: Mocki Home load failed; using bundled fallback. ${cause.message}")
             localSource.loadScreen(request)
         }
     }
@@ -74,5 +76,13 @@ class MockApiScreenSource(
         const val HOME_SCREEN_PATH = "home"
         const val HOME_SCREEN_URL =
             "https://mocki.io/v1/491022fe-aff8-4a6e-9768-8220a1f97894"
+
+        fun createHttpClient(): HttpClient = HttpClient {
+            install(HttpTimeout) {
+                connectTimeoutMillis = 5_000
+                requestTimeoutMillis = 5_000
+                socketTimeoutMillis = 5_000
+            }
+        }
     }
 }
