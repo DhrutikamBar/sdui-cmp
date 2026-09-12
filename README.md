@@ -19,9 +19,8 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 
 ## Running the Project
 
-### Supabase Setup
-1. Create a table named `screens` in Supabase with columns: `path` (TEXT, PK), `content` (JSONB), and `updated_at` (TIMESTAMPTZ).
-2. Configure your `SUPABASE_URL` and `SUPABASE_KEY` in `gradle.properties`.
+### Local demo mode
+The reference app runs entirely from bundled documents and simulated API success responses. No Supabase configuration or network connection is required. The retained Supabase source is available for a later remote-host integration.
 
 ### Android
 - Open in Android Studio.

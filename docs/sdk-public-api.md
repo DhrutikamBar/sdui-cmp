@@ -8,7 +8,7 @@ This document defines the Phase 1 public boundary for the reusable mobile SDK. I
 | --- | --- |
 | `shared` | Wire contract: `UiNode`, `UiAction`, `SduiValue`, conditions, semantics, and serialization. |
 | `sdui-sdk` | Reusable Compose renderer, built-in widgets, form state, action dispatch primitives, host contracts, resources, and reporting. |
-| `composeApp` | Reference host application. Supabase, SQLDelight cache, Android/iOS entry points, navigation wiring, and local screens remain demo-owned. |
+| `composeApp` | Offline reference host application. Bundled screens and local action simulation are the default; Supabase/SQLDelight integrations remain demo-owned and optional. |
 
 The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a particular navigation library.
 
@@ -34,7 +34,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - `ScreenRequest` and `ScreenLoadResult` provide typed success/failure delivery while preserving coroutine cancellation.
 - `ScreenLoadSource` represents memory, disk, network, or unknown provenance; sources with cache metadata may report a precise origin.
 - `cancelPrefetch` and `close` provide lifecycle hooks for host-owned cleanup.
-- The existing `SupabaseScreenSource` is a reference-host implementation only. It is not a dependency of `sdui-sdk`.
+- `LocalDemoScreenSource` is the offline default. `SupabaseScreenSource` remains an optional reference-host implementation and is not a dependency of `sdui-sdk`.
 
 ### Host capabilities
 

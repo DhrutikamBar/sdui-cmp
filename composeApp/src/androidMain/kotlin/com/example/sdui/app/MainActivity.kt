@@ -3,19 +3,11 @@ package com.example.sdui.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.sdui.demo.config.SduiConfig
 import com.example.sdui.demo.DemoApp
-import com.example.sdui.demo.data.DatabaseDriverFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            DemoApp(
-                supabaseUrl = SduiConfig.supabaseUrl, 
-                supabaseKey = SduiConfig.supabaseKey,
-                driverFactory = DatabaseDriverFactory(this)
-            )
-        }
+        setContent { DemoApp() }
     }
 }
