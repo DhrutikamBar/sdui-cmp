@@ -73,6 +73,9 @@ object SduiDocumentCodec {
         element: JsonElement,
         limits: SduiPayloadLimits = SduiPayloadLimits()
     ): SduiDocument {
+        if (element.toString().length > limits.maxPayloadChars) {
+            fail("Payload exceeds ${limits.maxPayloadChars} characters")
+        }
         val document = if (element is JsonObject && "root" in element) {
             json.decodeFromJsonElement<SduiDocument>(element)
         } else {
