@@ -72,7 +72,10 @@ fun App(
             }
         }
     }
-    val urlHandler = rememberUrlOpener()
+    val openUrl = rememberUrlOpener()
+    val urlHandler = remember(openUrl) {
+        SduiUrlHandler { url -> openUrl(url) }
+    }
     val repository = remember(supabaseUrl, supabaseKey) { 
         SupaBaseUiRepository(supabaseUrl, supabaseKey, driverFactory) 
     }
