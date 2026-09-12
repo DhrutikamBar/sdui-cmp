@@ -1,16 +1,23 @@
 # SDK consumer guide
 
-The reusable artifacts are the `shared` wire-contract module and `sdui-sdk` Compose renderer module. The `composeApp` module is an offline reference host, not a required runtime dependency.
+The reusable artifacts are the `shared` wire-contract module and `sdui-sdk` Compose renderer module. The `composeApp` module is a reference host, not a required runtime dependency.
 
 ## Host responsibilities
 
-A production host supplies:
+A host supplies:
 
-- a `ScreenSource` that retrieves a `UiNode`;
-- an API client, navigation implementation, URL handler, action policy, reporting service, resources, and component registry;
-- a list of action types it implements for semantic validation.
+- a `ScreenSource` that retrieves decoded `UiNode` documents;
+- an API client, navigation implementation, URL handler, action policy, reporting service, resources, design tokens, and component registry;
+- a list of action types it implements for semantic validation;
+- optionally, an `SduiDataContext` for typed host-owned live values.
 
 Validate externally supplied documents with `SduiDocumentCodec` before caching or rendering them. Keep the action policy restrictive: it is the host's authorization boundary.
+
+## Reference host
+
+The Android reference host uses `FirebaseFirestoreScreenSource` to load `sduiScreens/{route}` documents from Cloud Firestore. It accepts a `content` map or JSON string and benefits from Firestore offline persistence. If a source is unavailable, the reference host uses its bundled local fallback screens.
+
+The iOS reference host currently uses the bundled fallback source. Firebase configuration is deliberately an Android-demo concern, not an SDK dependency.
 
 ## Integration checklist
 
@@ -28,4 +35,4 @@ Run Android unit tests with:
 ./gradlew :shared:testDebugUnitTest :sdui-sdk:testDebugUnitTest :composeApp:testDebugUnitTest
 ```
 
-The reference host is deliberately offline. Add remote transport, authentication-aware caching, and signature verification only when a remote document service is selected.
+The SDK does not require Firestore. A production host can provide any `ScreenSource` and decide its own transport, authentication, cache, and authorization strategy.
