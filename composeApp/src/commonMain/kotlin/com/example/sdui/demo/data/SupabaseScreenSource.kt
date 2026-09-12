@@ -121,9 +121,13 @@ class SupabaseScreenSource(
     override suspend fun loadScreen(request: ScreenRequest): ScreenLoadResult = try {
         withTimeoutOrNull(SCREEN_LOAD_TIMEOUT_MILLIS) {
             resolveScreen(request.path, request.forceRefresh)
-        } ?: ScreenLoadResult.Failure(
-            IllegalStateException("Supabase request timed out after " + SCREEN_LOAD_TIMEOUT_MILLIS + "ms")
-        )
+        } ?: run {
+            val cause = IllegalStateException(
+                "Supabase request timed out after " + SCREEN_LOAD_TIMEOUT_MILLIS + "ms"
+            )
+            println("SDUI: Supabase screen load failed for " + request.path + ": " + cause.message)
+            ScreenLoadResult.Failure(cause)
+        }
     } catch (cancellation: CancellationException) {
         throw cancellation
     } catch (cause: Throwable) {
