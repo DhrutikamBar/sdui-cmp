@@ -117,7 +117,8 @@ fun SduiReferenceScreenHost(
     reportingService: ReportingService,
     resourceResolver: ResourceResolver,
     designTokens: DesignTokens = DesignTokens(),
-    supportedActionTypes: Set<String> = emptySet()
+    supportedActionTypes: Set<String> = emptySet(),
+    dataContext: SduiDataContext = SduiDataContext()
 ) {
     CompositionLocalProvider(
         LocalReportingService provides reportingService,
@@ -132,7 +133,8 @@ fun SduiReferenceScreenHost(
             navigator = navigator,
             urlHandler = urlHandler,
             actionPolicy = actionPolicy,
-            supportedActionTypes = supportedActionTypes
+            supportedActionTypes = supportedActionTypes,
+            dataContext = dataContext
         )
     }
 }
@@ -146,7 +148,8 @@ private fun SduiScreenContent(
     navigator: SduiNavigator,
     urlHandler: SduiUrlHandler,
     actionPolicy: SduiActionPolicy,
-    supportedActionTypes: Set<String>
+    supportedActionTypes: Set<String>,
+    dataContext: SduiDataContext
 ) {
     val formState = rememberSaveable(saver = FormState.Saver) { FormState() }
     var screen by remember { mutableStateOf<UiNode?>(null) }
@@ -263,7 +266,7 @@ private fun SduiScreenContent(
     val actions = ActionHandler { action -> actionRegistry.dispatch(action) }
 
     when {
-        screen != null -> SduiRenderer(screen!!, actions, formState = formState, registry = registry)
+        screen != null -> SduiRenderer(screen!!, actions, formState = formState, registry = registry, dataContext = dataContext)
         loadError != null -> ErrorState(message = loadError!!, onRetry = { retryTrigger++ })
         else -> LoadingSkeleton()
     }
