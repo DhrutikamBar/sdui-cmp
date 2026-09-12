@@ -2,7 +2,25 @@
 
 Android reads documents from the sduiScreens Firestore collection. The document ID is the SDUI route, such as home or wallet.
 
-Each document has one map field named content. It holds a versioned document with schemaVersion and root fields.
+Each document has one field named content. It can be either:
+
+- a Firestore map containing a versioned SDUI document; or
+- a String containing the complete versioned SDUI JSON document.
+
+The String form is convenient for pasting JSON from the Firebase console. Example content value:
+
+{
+  "schemaVersion": 1,
+  "root": {
+    "type": "column",
+    "children": [
+      {
+        "type": "text",
+        "props": { "value": "Hello from Firestore" }
+      }
+    ]
+  }
+}
 
 Development rule:
 

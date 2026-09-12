@@ -53,7 +53,11 @@ class FirebaseFirestoreScreenSource(
                 ?: throw IllegalStateException(
                     "Firestore SDUI screen is missing the " + CONTENT_FIELD + " field"
                 )
-            val screen = SduiDocumentCodec.decode(content.toJsonElement()).root
+            val screen = if (content is String) {
+                SduiDocumentCodec.decode(content).root
+            } else {
+                SduiDocumentCodec.decode(content.toJsonElement()).root
+            }
             memory[request.path] = screen
             ScreenLoadResult.Success(
                 screen = screen,
