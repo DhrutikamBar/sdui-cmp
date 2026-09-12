@@ -25,6 +25,7 @@ import com.example.sdui.shared.UiNode
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.TimeSource
 
 /**
  * Demo navigation shell for the reference application.
@@ -161,6 +162,8 @@ private fun SduiScreenContent(
 
     LaunchedEffect(path, retryTrigger) {
         loadError = null
+        val startedAt = TimeSource.Monotonic.markNow()
+        var loadSource = ScreenLoadSource.UNKNOWN
         screen = try {
             val fetched = try {
                 val result = withTimeoutOrNull(SCREEN_LOAD_TIMEOUT_MILLIS) {
@@ -169,7 +172,10 @@ private fun SduiScreenContent(
                     )
                 } ?: throw IllegalStateException("Timed out loading screen: $path")
                 when (result) {
-                    is ScreenLoadResult.Success -> result.screen
+                    is ScreenLoadResult.Success -> {
+                        loadSource = result.source
+                        result.screen
+                    }
                     is ScreenLoadResult.Failure -> throw result.cause
                 }
             } catch (cancellation: CancellationException) {
@@ -205,7 +211,14 @@ private fun SduiScreenContent(
                 }
             )
 
-            reporter.reportEvent("screen_view", mapOf("path" to path))
+            reporter.reportEvent(
+                "screen_view",
+                mapOf(
+                    "path" to path,
+                    "source" to loadSource.name.lowercase(),
+                    "load_ms" to startedAt.elapsedNow().inWholeMilliseconds.toString()
+                )
+            )
             
             // Predictive prefetching: fetch next screens in the background
             UiScanner.findNavigablePaths(fetched).forEach { nextPath ->
