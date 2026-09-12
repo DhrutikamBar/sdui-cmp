@@ -1,4 +1,0 @@
-# Copy these values into your untracked local gradle.properties file.
-# Never commit a real service-role key. The mobile app uses the Supabase anon key.
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your-anon-key
