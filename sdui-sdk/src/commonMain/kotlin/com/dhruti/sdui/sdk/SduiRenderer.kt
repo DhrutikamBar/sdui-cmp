@@ -17,6 +17,7 @@ fun SduiRenderer(
     registry.RenderRoot(
         node = screen.resolveBindings(dataContext),
         actions = actionHandler,
-        formState = formState
+        formState = formState,
+        modifier = modifier
     )
 }
