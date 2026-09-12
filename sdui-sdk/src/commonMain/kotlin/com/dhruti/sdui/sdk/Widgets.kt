@@ -25,9 +25,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
@@ -61,6 +63,13 @@ fun Modifier.applySemantics(node: UiNode): Modifier {
                 "radioButton" -> role = Role.RadioButton
                 "tab" -> role = Role.Tab
                 "header" -> heading()
+            }
+        }
+        s.liveRegion?.let {
+            liveRegion = when (it) {
+                "polite" -> LiveRegionMode.Polite
+                "assertive" -> LiveRegionMode.Assertive
+                else -> LiveRegionMode.Polite
             }
         }
     }
