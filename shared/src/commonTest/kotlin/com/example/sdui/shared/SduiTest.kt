@@ -11,7 +11,7 @@ class SduiTest {
     @Test
     fun testSduiValueSerialization() {
         val stringVal = SduiValue.StringValue("hello")
-        assertEquals("\"hello\"", Json.encodeToString<SduiValue>(stringVal))
+        assertEquals(""hello"", Json.encodeToString<SduiValue>(stringVal))
 
         val numberVal = SduiValue.NumberValue(42.0)
         assertEquals("42.0", Json.encodeToString<SduiValue>(numberVal))
@@ -20,12 +20,12 @@ class SduiTest {
         assertEquals("true", Json.encodeToString<SduiValue>(booleanVal))
 
         val objVal = SduiValue.ObjectValue(mapOf("key" to SduiValue.StringValue("value")))
-        assertEquals("{\"key\":\"value\"}", Json.encodeToString<SduiValue>(objVal))
+        assertEquals("{"key":"value"}", Json.encodeToString<SduiValue>(objVal))
     }
 
     @Test
     fun decodesLegacyNodeAsCurrentDocument() {
-        val document = SduiDocumentCodec.decode("""{\"type\":\"text\"}""")
+        val document = SduiDocumentCodec.decode("""{"type":"text"}""")
 
         assertEquals(CURRENT_SDUI_SCHEMA_VERSION, document.schemaVersion)
         assertEquals("text", document.root.type)
@@ -34,7 +34,7 @@ class SduiTest {
     @Test
     fun decodesVersionedDocument() {
         val document = SduiDocumentCodec.decode(
-            """{\"schemaVersion\":1,\"root\":{\"type\":\"text\"}}"""
+            """{"schemaVersion":1,"root":{"type":"text"}}"""
         )
 
         assertEquals("text", document.root.type)
@@ -43,7 +43,7 @@ class SduiTest {
     @Test
     fun rejectsUnsupportedDocumentVersion() {
         val error = kotlin.test.assertFailsWith<SduiPayloadValidationException> {
-            SduiDocumentCodec.decode("""{\"schemaVersion\":2,\"root\":{\"type\":\"text\"}}""")
+            SduiDocumentCodec.decode("""{"schemaVersion":2,"root":{"type":"text"}}""")
         }
 
         assertTrue(error.message.orEmpty().contains("Unsupported SDUI schema version"))
@@ -56,7 +56,7 @@ class SduiTest {
             props = mapOf("value" to SduiValue.StringValue("Hello"))
         )
         val json = Json.encodeToString(node)
-        assertTrue(json.contains("\"type\":\"text\""))
-        assertTrue(json.contains("\"props\":{\"value\":\"Hello\"}"))
+        assertTrue(json.contains(""type":"text""))
+        assertTrue(json.contains(""props":{"value":"Hello"}"))
     }
 }
