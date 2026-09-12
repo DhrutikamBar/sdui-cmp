@@ -47,6 +47,6 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - No Supabase extraction or cache rewrite.
 - No renderer or schema behaviour change.
 - No navigation-library migration.
-- No automatic action-policy enforcement yet.
+- No restrictive production action allowlist yet; the reference host retains an explicit allow-all compatibility policy.
 
-The next Phase 1 increment should wire these host contracts into the reference host behind compatibility-preserving defaults, then test the policy boundary before moving demo infrastructure.
+The next Phase 1 increment should replace the reference host's allow-all compatibility policy with a documented allowlist, then test the policy boundary before moving demo infrastructure.

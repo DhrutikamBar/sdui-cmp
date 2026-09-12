@@ -27,8 +27,8 @@ fun interface SduiUrlHandler {
  * Evaluates whether the host permits a server-defined action to run.
  *
  * This contract is intentionally separate from [ActionRegistry]. It introduces no
- * behaviour by itself; hosts can adopt it while existing action dispatch remains
- * unchanged. A later integration phase will apply this decision before dispatch.
+ * behaviour by itself. The reference host passes this policy to [ActionRegistry];
+ * other hosts must do the same to enforce their decisions before dispatch.
  */
 fun interface SduiActionPolicy {
     fun evaluate(action: UiAction): SduiActionDecision
