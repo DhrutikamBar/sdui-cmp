@@ -24,6 +24,32 @@ class SduiTest {
     }
 
     @Test
+    fun decodesLegacyNodeAsCurrentDocument() {
+        val document = SduiDocumentCodec.decode("""{\"type\":\"text\"}""")
+
+        assertEquals(CURRENT_SDUI_SCHEMA_VERSION, document.schemaVersion)
+        assertEquals("text", document.root.type)
+    }
+
+    @Test
+    fun decodesVersionedDocument() {
+        val document = SduiDocumentCodec.decode(
+            """{\"schemaVersion\":1,\"root\":{\"type\":\"text\"}}"""
+        )
+
+        assertEquals("text", document.root.type)
+    }
+
+    @Test
+    fun rejectsUnsupportedDocumentVersion() {
+        val error = kotlin.test.assertFailsWith<SduiPayloadValidationException> {
+            SduiDocumentCodec.decode("""{\"schemaVersion\":2,\"root\":{\"type\":\"text\"}}""")
+        }
+
+        assertTrue(error.message.orEmpty().contains("Unsupported SDUI schema version"))
+    }
+
+    @Test
     fun testUiNodeSerialization() {
         val node = UiNode(
             type = "text",

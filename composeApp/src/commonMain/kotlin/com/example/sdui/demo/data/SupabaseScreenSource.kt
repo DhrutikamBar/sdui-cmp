@@ -1,5 +1,6 @@
 package com.example.sdui.demo.data
 
+import com.example.sdui.shared.SduiDocumentCodec
 import com.example.sdui.shared.UiNode
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -23,6 +24,8 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.protobuf.ProtoBuf
 import io.github.jan.supabase.annotations.SupabaseInternal
 import com.example.sdui.demo.data.db.SduiDatabase
@@ -147,7 +150,7 @@ class SupabaseScreenSource(
                 val remoteUpdatedAt = fetchUpdatedAt(path)
                 if (remoteUpdatedAt == persisted.updatedAt) {
                     println("KTOR: [CACHE] Disk entry is fresh. Loading from local DB.")
-                    val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
+                    val contentNode = SduiDocumentCodec.decode(persisted.content).root
                     cache[path] = contentNode
                     queries.touchLastAccessed(getNowMillis(), path)
                     return ScreenLoadResult.Success(contentNode, ScreenLoadSource.DISK)
@@ -158,7 +161,7 @@ class SupabaseScreenSource(
                 throw cancellation
             } catch (e: Exception) {
                 println("KTOR: [CACHE] Network check failed. Falling back to disk entry for offline mode.")
-                val contentNode = Json.decodeFromString(UiNode.serializer(), persisted.content)
+                val contentNode = SduiDocumentCodec.decode(persisted.content).root
                 cache[path] = contentNode
                 return ScreenLoadResult.Success(contentNode, ScreenLoadSource.DISK)
             }
@@ -167,7 +170,7 @@ class SupabaseScreenSource(
         }
 
         val row = fetchInternal(path)
-        val screen = row.content
+        val screen = SduiDocumentCodec.decode(row.content).root
         cache[path] = screen
 
         // Persist asynchronously, as before.
@@ -186,7 +189,7 @@ class SupabaseScreenSource(
 
     private suspend fun fetchInternal(path: String): FullScreenRow {
         if (useBinaryTransport) {
-            tryFetchBinary(path)?.let { return FullScreenRow(it, "edge-function") }
+            tryFetchBinary(path)?.let { return FullScreenRow(Json.encodeToJsonElement(UiNode.serializer(), it), "edge-function") }
         }
         return fetchFullRow(path)
     }
@@ -236,7 +239,7 @@ class SupabaseScreenSource(
         val job = scope.launch {
             try {
                 val row = fetchInternal(path)
-                cache[path] = row.content
+                cache[path] = SduiDocumentCodec.decode(row.content).root
                 persistRow(path, row)
             } catch (e: Exception) {
                 // Best-effort
@@ -262,7 +265,7 @@ class SupabaseScreenSource(
         try {
             queries.upsert(
                 path = path,
-                content = Json.encodeToString(UiNode.serializer(), row.content),
+                content = SduiDocumentCodec.encode(SduiDocumentCodec.decode(row.content)),
                 updatedAt = row.updated_at,
                 lastAccessedAt = getNowMillis()
             )
@@ -295,4 +298,4 @@ private fun io.ktor.client.request.HttpRequestBuilder.parameter(key: String, val
 data class UpdatedAtRow(val updated_at: String)
 
 @Serializable
-data class FullScreenRow(val content: UiNode, val updated_at: String)
+data class FullScreenRow(val content: JsonElement, val updated_at: String)
