@@ -9,29 +9,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.Color
-import com.example.sdui.shared.Feedback
+import com.dhruti.sdui.sdk.*
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiNode
-import com.example.sdui.shared.UiAction
-import com.dhruti.sdui.sdk.*
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Reference UI host. Dependencies are supplied by the caller so this UI is not
- * coupled to Supabase, SQLDelight, or a particular HTTP transport.
+ * Demo navigation shell for the reference application.
+ *
+ * It preserves the existing sample navigation while delegating screen rendering
+ * to [SduiReferenceScreenHost], whose dependencies are fully host-provided.
  */
 @Composable
 fun App(
@@ -39,15 +37,15 @@ fun App(
     apiCallClient: SduiApiCallClient,
     actionPolicy: SduiActionPolicy = DemoSduiActionPolicy
 ) {
-    val registry = remember { 
-        ComponentRegistry().apply { 
-            registerCoreWidgets() 
+    val componentRegistry = remember {
+        ComponentRegistry().apply {
+            registerCoreWidgets()
             register("nativeSlot") { node, _, _ ->
                 if (node.props["id"].asString() == "balanceToggle") {
                     BalanceToggle(node)
                 }
             }
-        } 
+        }
     }
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
@@ -63,51 +61,75 @@ fun App(
         }
     }
     val openUrl = rememberUrlOpener()
-    val urlHandler = remember(openUrl) {
-        SduiUrlHandler { url -> openUrl(url) }
-    }
-    val reporter = remember { ConsoleReportingService() }
+    val urlHandler = remember(openUrl) { SduiUrlHandler(openUrl) }
+    val reportingService = remember { ConsoleReportingService() }
     val resourceResolver = rememberResourceResolver()
-
-    var designTokens by remember { mutableStateOf(DesignTokens()) }
-
-    LaunchedEffect(Unit) {
-        try {
-            // In a real app, this would be a specific endpoint/table for tokens
-            // designTokens = repository.fetchTokens()
-        } catch (e: Exception) { }
-    }
+    val designTokens = remember { DesignTokens() }
 
     MaterialTheme {
-        CompositionLocalProvider(
-            LocalReportingService provides reporter,
-            LocalResourceResolver provides resourceResolver,
-            LocalDesignTokens provides designTokens
-        ) {
+        CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
             Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
                 Surface(
                     modifier = Modifier.padding(padding),
                     color = resolveColor("brand-primary") ?: MaterialTheme.colorScheme.surface
                 ) {
-                    CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
                     NavHost(navController = navController, startDestination = SduiScreen("home")) {
                         composable<SduiScreen> { backStackEntry ->
                             val route: SduiScreen = backStackEntry.toRoute()
-                            SduiScreenContent(
+                            SduiReferenceScreenHost(
                                 path = route.path,
                                 screenSource = screenSource,
                                 apiCallClient = apiCallClient,
-                                registry = registry,
+                                componentRegistry = componentRegistry,
                                 navigator = navigator,
                                 urlHandler = urlHandler,
-                                actionPolicy = actionPolicy
+                                actionPolicy = actionPolicy,
+                                reportingService = reportingService,
+                                resourceResolver = resourceResolver,
+                                designTokens = designTokens
                             )
                         }
-                    }
                     }
                 }
             }
         }
+    }
+}
+
+/**
+ * Injectable reference screen host.
+ *
+ * Hosts own navigation, URL handling, component registration, screen delivery,
+ * API execution, action policy, reporting, resources, and design tokens. This
+ * composable deliberately does not select a navigation library or HTTP client.
+ */
+@Composable
+fun SduiReferenceScreenHost(
+    path: String,
+    screenSource: ScreenSource,
+    apiCallClient: SduiApiCallClient,
+    componentRegistry: ComponentRegistry,
+    navigator: SduiNavigator,
+    urlHandler: SduiUrlHandler,
+    actionPolicy: SduiActionPolicy,
+    reportingService: ReportingService,
+    resourceResolver: ResourceResolver,
+    designTokens: DesignTokens = DesignTokens()
+) {
+    CompositionLocalProvider(
+        LocalReportingService provides reportingService,
+        LocalResourceResolver provides resourceResolver,
+        LocalDesignTokens provides designTokens
+    ) {
+        SduiScreenContent(
+            path = path,
+            screenSource = screenSource,
+            apiCallClient = apiCallClient,
+            registry = componentRegistry,
+            navigator = navigator,
+            urlHandler = urlHandler,
+            actionPolicy = actionPolicy
+        )
     }
 }
 
