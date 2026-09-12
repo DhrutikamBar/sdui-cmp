@@ -27,6 +27,10 @@ object DemoSduiActionPolicy : SduiActionPolicy {
                 target == null,
                 "Back actions must not define a target"
             )
+            "analytics" -> allowWhen(
+                target != null && stateKeyPattern.matches(target),
+                "Analytics actions require an identifier-like event name"
+            )
             "toggleState" -> allowWhen(
                 target != null && stateKeyPattern.matches(target),
                 "State actions require an identifier-like target"

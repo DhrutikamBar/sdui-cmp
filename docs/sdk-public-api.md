@@ -67,6 +67,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 
 - `navigate` to a non-empty local route;
 - `back` without a target;
+- `analytics` with an identifier-like event name;
 - `toggleState` for identifier-like state keys;
 - `openUrl` to HTTPS URLs; and
 - `apiCall` with a relative path and one of `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`.

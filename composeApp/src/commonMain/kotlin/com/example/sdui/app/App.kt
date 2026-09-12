@@ -220,6 +220,9 @@ private fun SduiScreenContent(
         ).apply {
             register("navigate") { action -> action.target?.let(navigator::navigate) }
             register("back") { navigator.goBack() }
+            register("analytics") { action ->
+                action.target?.let { eventName -> reporter.reportEvent(eventName) }
+            }
             register("openUrl") { action -> action.target?.let(urlHandler::open) }
             register("toggleState") { action ->
                 action.target?.let { key ->
@@ -289,6 +292,7 @@ fun ErrorState(message: String, onRetry: () -> Unit) {
 private val demoSupportedActionTypes = setOf(
     "navigate",
     "back",
+    "analytics",
     "openUrl",
     "toggleState",
     "apiCall"

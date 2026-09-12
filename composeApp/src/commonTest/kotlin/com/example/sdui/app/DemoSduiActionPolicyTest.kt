@@ -21,6 +21,10 @@ class DemoSduiActionPolicyTest {
             SduiActionDecision.Allow,
             DemoSduiActionPolicy.evaluate(UiAction(type = "openUrl", target = "https://example.com"))
         )
+        assertEquals(
+            SduiActionDecision.Allow,
+            DemoSduiActionPolicy.evaluate(UiAction(type = "analytics", target = "sign_up_header_impression"))
+        )
     }
 
     @Test
