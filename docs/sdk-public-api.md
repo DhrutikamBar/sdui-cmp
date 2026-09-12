@@ -1,6 +1,6 @@
 # SDUI SDK public API boundary
 
-This document defines the Phase 1 public boundary for the reusable mobile SDK. It does not alter the current demo application's runtime behaviour.
+This document defines the Phase 1 public boundary for the reusable mobile SDK. Its reference-host integration preserves the current default runtime behaviour.
 
 ## Module ownership
 
@@ -30,7 +30,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 
 - `SduiNavigator` lets the host own navigation.
 - `SduiUrlHandler` lets the host validate and open external links.
-- `SduiActionPolicy` lets the host allow or deny server-defined actions before a future dispatch integration.
+- `SduiActionPolicy` lets the host allow or deny server-defined actions. The reference host passes it to `ActionRegistry`; its default remains explicit allow-all compatibility.
 - `ReportingService` remains the host-provided analytics/crash-reporting boundary.
 - `ResourceResolver` remains the host-provided string/image resource boundary.
 
