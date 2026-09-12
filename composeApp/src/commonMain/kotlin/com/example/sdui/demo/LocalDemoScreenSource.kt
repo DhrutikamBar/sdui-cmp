@@ -6,7 +6,9 @@ import com.dhruti.sdui.sdk.ScreenRequest
 import com.dhruti.sdui.sdk.ScreenSource
 import com.example.sdui.app.LocalScreens
 import com.example.sdui.app.decodeLocalScreen
+import com.example.sdui.shared.SduiDocumentCodec
 import com.example.sdui.shared.UiNode
+import kotlin.coroutines.cancellation.CancellationException
 
 /** Bundled, offline-only source for the reference application. */
 class LocalDemoScreenSource : ScreenSource {
@@ -19,6 +21,8 @@ class LocalDemoScreenSource : ScreenSource {
         try {
             val result = load(request.path, request.forceRefresh)
             ScreenLoadResult.Success(result.screen, result.source)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (cause: Throwable) {
             ScreenLoadResult.Failure(cause)
         }
@@ -38,15 +42,17 @@ class LocalDemoScreenSource : ScreenSource {
         return LocalResult(screen, ScreenLoadSource.UNKNOWN)
     }
 
-    private fun decode(path: String): UiNode = decodeLocalScreen(
-        when (path) {
+    private fun decode(path: String): UiNode = SduiDocumentCodec.fromLegacy(
+        decodeLocalScreen(
+            when (path) {
             "home" -> LocalScreens.home
             "welcome" -> LocalScreens.welcome
             "wallet" -> LocalScreens.wallet
             "checkout" -> LocalScreens.checkout
-            else -> throw NoSuchElementException("No bundled SDUI screen for path: $path")
-        }
-    )
+                else -> throw NoSuchElementException("No bundled SDUI screen for path: $path")
+            }
+        )
+    ).root
 
     private data class LocalResult(val screen: UiNode, val source: ScreenLoadSource)
 }
