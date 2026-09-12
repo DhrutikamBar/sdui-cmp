@@ -14,7 +14,7 @@ A production-grade Server-Driven UI (SDUI) framework with high-performance rende
 - **Elite Scripting**: Device-side expression evaluation supporting arithmetic and multi-variable logic (e.g., `price * qty > 100`).
 - **Multi-Tier Cache**: Memory -> Persistent SQLDelight Disk Cache -> Remote Fetch (with smart `updated_at` invalidation).
 - **Transport Efficiency**: Dual support for JSON and binary Protocol Buffers.
-- **Protocol Evolution**: Versioned `SduiDocument` payloads with legacy `UiNode` compatibility at the validation boundary.
+- **Protocol Evolution**: Versioned `SduiDocument` payloads with legacy `UiNode` compatibility and bounded structural validation at the trust boundary.
 - **Observability**: Pluggable `ReportingService` for automated screen tracking, action analytics, and component-level crash guards.
 
 ## Running the Project
