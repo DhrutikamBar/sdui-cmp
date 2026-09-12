@@ -153,7 +153,7 @@ class SupabaseScreenSource(
             println("KTOR: [CACHE] Found disk entry for $path. Checking staleness...")
             try {
                 val remoteUpdatedAt = fetchUpdatedAt(path)
-                if (remoteUpdatedAt == persisted.updatedAt || getNowMillis() - persisted.cachedAt <= CACHE_FRESHNESS_MILLIS) {
+                if (remoteUpdatedAt == persisted.updatedAt) {
                     println("KTOR: [CACHE] Disk entry is fresh. Loading from local DB.")
                     val contentNode = SduiDocumentCodec.decode(persisted.content).root
                     cache[path] = contentNode
