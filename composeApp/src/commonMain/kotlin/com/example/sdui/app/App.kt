@@ -161,7 +161,9 @@ private fun SduiScreenContent(
         screen = try {
             val fetched = try {
                 val result = withTimeoutOrNull(SCREEN_LOAD_TIMEOUT_MILLIS) {
-                    screenSource.loadScreen(ScreenRequest(path))
+                    screenSource.loadScreen(
+                        ScreenRequest(path, forceRefresh = retryTrigger > 0)
+                    )
                 } ?: throw IllegalStateException("Timed out loading screen: $path")
                 when (result) {
                     is ScreenLoadResult.Success -> result.screen

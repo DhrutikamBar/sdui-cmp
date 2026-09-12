@@ -4,27 +4,25 @@ import com.dhruti.sdui.sdk.ScreenLoadResult
 import com.dhruti.sdui.sdk.ScreenLoadSource
 import com.dhruti.sdui.sdk.ScreenRequest
 import com.dhruti.sdui.sdk.ScreenSource
-import com.example.sdui.shared.SduiDocumentCodec
 import com.example.sdui.shared.UiNode
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonNull
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
 
 actual fun createFirebaseScreenSource(): ScreenSource = FirebaseFirestoreScreenSource()
 
 /**
  * Android reference source for documents stored in the sduiScreens collection.
- * Each document ID is an SDUI route and has a map field named content.
+ *
+ * Document IDs are routes. The content field holds the SDUI document. Revision
+ * and updatedAt are optional metadata fields used for authoring and diagnostics.
  */
 class FirebaseFirestoreScreenSource(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val nowMillis: () -> Long = { System.currentTimeMillis() }
 ) : ScreenSource {
-    private val memory = mutableMapOf<String, UiNode>()
+    private val memory = mutableMapOf<String, CachedScreen>()
 
     override suspend fun fetchScreen(path: String, forceRefresh: Boolean): UiNode =
         when (val result = loadScreen(ScreenRequest(path, forceRefresh))) {
@@ -33,17 +31,22 @@ class FirebaseFirestoreScreenSource(
         }
 
     override suspend fun loadScreen(request: ScreenRequest): ScreenLoadResult {
+        val now = nowMillis()
         if (!request.forceRefresh) {
-            memory[request.path]?.let {
-                return ScreenLoadResult.Success(it, ScreenLoadSource.MEMORY)
+            memory[request.path]?.takeIf { now - it.cachedAtMillis < MEMORY_FRESHNESS_MILLIS }?.let {
+                return ScreenLoadResult.Success(it.screen, ScreenLoadSource.MEMORY)
             }
         }
 
         return try {
-            val snapshot = firestore.collection(SCREENS_COLLECTION)
-                .document(request.path)
-                .get()
-                .await()
+            val snapshot = withTimeoutOrNull(REQUEST_TIMEOUT_MILLIS) {
+                firestore.collection(SCREENS_COLLECTION)
+                    .document(request.path)
+                    .get()
+                    .await()
+            } ?: throw IllegalStateException(
+                "Firestore request timed out after " + REQUEST_TIMEOUT_MILLIS + "ms"
+            )
 
             if (!snapshot.exists()) {
                 throw NoSuchElementException("Firestore SDUI screen not found: " + request.path)
@@ -53,14 +56,20 @@ class FirebaseFirestoreScreenSource(
                 ?: throw IllegalStateException(
                     "Firestore SDUI screen is missing the " + CONTENT_FIELD + " field"
                 )
-            val screen = if (content is String) {
-                SduiDocumentCodec.decode(content).root
-            } else {
-                SduiDocumentCodec.decode(content.toJsonElement()).root
-            }
-            memory[request.path] = screen
+            val cached = CachedScreen(
+                screen = FirestoreScreenContentCodec.decode(content),
+                revision = snapshot.getLong(REVISION_FIELD),
+                updatedAt = snapshot.getString(UPDATED_AT_FIELD),
+                cachedAtMillis = nowMillis()
+            )
+            memory[request.path] = cached
+            println(
+                "SDUI: Firestore screen loaded for " + request.path +
+                    ", revision=" + (cached.revision ?: "unspecified") +
+                    ", updatedAt=" + (cached.updatedAt ?: "unspecified")
+            )
             ScreenLoadResult.Success(
-                screen = screen,
+                screen = cached.screen,
                 source = if (snapshot.metadata.isFromCache) {
                     ScreenLoadSource.DISK
                 } else {
@@ -83,27 +92,19 @@ class FirebaseFirestoreScreenSource(
         memory.clear()
     }
 
+    private data class CachedScreen(
+        val screen: UiNode,
+        val revision: Long?,
+        val updatedAt: String?,
+        val cachedAtMillis: Long
+    )
+
     private companion object {
         const val SCREENS_COLLECTION = "sduiScreens"
         const val CONTENT_FIELD = "content"
+        const val REVISION_FIELD = "revision"
+        const val UPDATED_AT_FIELD = "updatedAt"
+        const val REQUEST_TIMEOUT_MILLIS = 10_000L
+        const val MEMORY_FRESHNESS_MILLIS = 5 * 60 * 1000L
     }
-}
-
-private fun Any.toJsonElement(): JsonElement = when (this) {
-    is String -> JsonPrimitive(this)
-    is Boolean -> JsonPrimitive(this)
-    is Int -> JsonPrimitive(this)
-    is Long -> JsonPrimitive(this)
-    is Float -> JsonPrimitive(this)
-    is Double -> JsonPrimitive(this)
-    is Map<*, *> -> JsonObject(
-        entries.associate { (key, value) ->
-            require(key is String) { "Firestore SDUI object keys must be strings" }
-            key to (value?.toJsonElement() ?: JsonNull)
-        }
-    )
-    is List<*> -> JsonArray(map { it?.toJsonElement() ?: JsonNull })
-    else -> throw IllegalArgumentException(
-        "Unsupported Firestore SDUI value: " + this::class.simpleName
-    )
 }
