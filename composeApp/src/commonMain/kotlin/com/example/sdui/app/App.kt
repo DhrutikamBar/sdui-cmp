@@ -37,6 +37,7 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Supabase is now the only screen source — no local fallback, no separate Ktor server URL.
@@ -158,6 +159,8 @@ private fun SduiScreenContent(
                     is ScreenLoadResult.Success -> result.screen
                     is ScreenLoadResult.Failure -> throw result.cause
                 }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
             } catch (e: Exception) {
                 // If Supabase fetch fails, try local fallback for better DX
                 println("KTOR: Remote fetch failed for $path, trying local fallback...")
@@ -184,6 +187,8 @@ private fun SduiScreenContent(
             }
             
             fetched
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (e: Exception) {
             val context = mapOf("path" to path, "error" to (e.message ?: "unknown"))
             reporter.reportCrash(e, context)

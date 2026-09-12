@@ -109,6 +109,8 @@ class SupaBaseUiRepository(
             withTimeout(5000) {
                 prefetchJobs[path]?.join()
             }
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (e: Exception) {
             println("KTOR: Prefetch join timed out for $path")
         }
@@ -203,6 +205,8 @@ class SupaBaseUiRepository(
             }
 
             ProtoBuf.decodeFromByteArray(UiNode.serializer(), bytes)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (e: Exception) {
             println("KTOR: Binary fetch error: ${e.message}")
             null
