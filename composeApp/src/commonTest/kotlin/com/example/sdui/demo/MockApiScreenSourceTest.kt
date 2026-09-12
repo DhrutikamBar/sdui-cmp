@@ -25,6 +25,23 @@ class MockApiScreenSourceTest {
     }
 
     @Test
+    fun acceptsAMockServiceRecordWithAContentField() = runBlocking {
+        val source = MockApiScreenSource(
+            fetchHomePayload = {
+                """{"path":"home","content":{"schemaVersion":1,"root":{"type":"text"}}}"""
+            }
+        )
+
+        val result = assertIs<ScreenLoadResult.Success>(
+            source.loadScreen(ScreenRequest(path = "home"))
+        )
+
+        assertEquals(ScreenLoadSource.NETWORK, result.source)
+        assertEquals("text", result.screen.type)
+        source.close()
+    }
+
+    @Test
     fun fallsBackToTheBundledHomeDocumentWhenRemoteLoadingFails() = runBlocking {
         val source = MockApiScreenSource(
             fetchHomePayload = { error("Mock endpoint unavailable") }

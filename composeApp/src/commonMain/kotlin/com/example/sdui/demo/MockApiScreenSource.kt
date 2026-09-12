@@ -9,14 +9,18 @@ import com.example.sdui.shared.UiNode
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.content
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Reference remote source for the Home document hosted by Mocki.
  *
- * The endpoint must return either a versioned [com.example.sdui.shared.SduiDocument]
- * or a legacy bare [UiNode] JSON payload. A bundled document remains the fallback
- * whenever remote delivery is unavailable or invalid.
+ * The endpoint may return a versioned document, a legacy bare UI node, or a
+ * mock-service record with its document in a content field. A bundled document
+ * remains the fallback whenever remote delivery is unavailable or invalid.
  */
 class MockApiScreenSource(
     private val localSource: ScreenSource = LocalDemoScreenSource(),
@@ -38,7 +42,7 @@ class MockApiScreenSource(
 
         return try {
             ScreenLoadResult.Success(
-                screen = SduiDocumentCodec.decode(fetchHomePayload()).root,
+                screen = decodeHomePayload(fetchHomePayload()),
                 source = ScreenLoadSource.NETWORK
             )
         } catch (cancellation: CancellationException) {
@@ -59,6 +63,16 @@ class MockApiScreenSource(
     override fun close() {
         localSource.close()
         httpClient.close()
+    }
+
+    private fun decodeHomePayload(payload: String): UiNode {
+        val parsed = Json.parseToJsonElement(payload)
+        val document = (parsed as? JsonObject)?.get("content") ?: parsed
+        return if (document is JsonPrimitive && document.isString) {
+            SduiDocumentCodec.decode(document.content).root
+        } else {
+            SduiDocumentCodec.decode(document).root
+        }
     }
 
     private companion object {
