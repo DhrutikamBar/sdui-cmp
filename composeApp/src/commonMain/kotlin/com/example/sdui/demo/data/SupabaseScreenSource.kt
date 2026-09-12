@@ -41,7 +41,7 @@ class SupabaseScreenSource(
     driverFactory: DatabaseDriverFactory
 ) : ScreenSource {
     private companion object {
-        const val CACHE_FORMAT_VERSION = 2
+        const val CACHE_FORMAT_VERSION: Long = 2L
         const val CACHE_FRESHNESS_MILLIS = 15 * 60 * 1000L
     }
 
