@@ -30,7 +30,7 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 
 - `SduiNavigator` lets the host own navigation.
 - `SduiUrlHandler` lets the host validate and open external links.
-- `SduiActionPolicy` lets the host allow or deny server-defined actions. The reference host passes it to `ActionRegistry`; its default remains explicit allow-all compatibility.
+- `SduiActionPolicy` lets the host allow or deny server-defined actions. The reference host passes a documented allowlist to `ActionRegistry` by default.
 - `ReportingService` remains the host-provided analytics/crash-reporting boundary.
 - `ResourceResolver` remains the host-provided string/image resource boundary.
 
@@ -47,6 +47,18 @@ The reusable SDK must not require Supabase, BuildConfig values, SQLDelight, or a
 - No Supabase extraction or cache rewrite.
 - No renderer or schema behaviour change.
 - No navigation-library migration.
-- No restrictive production action allowlist yet; the reference host retains an explicit allow-all compatibility policy.
+- No authentication-aware or tenant-aware policy yet; the reference host uses a static demo allowlist.
 
-The next Phase 1 increment should replace the reference host's allow-all compatibility policy with a documented allowlist, then test the policy boundary before moving demo infrastructure.
+### Reference-host action policy
+
+`DemoSduiActionPolicy` allows only the action types handled by the demo host:
+
+- `navigate` to a non-empty local route;
+- `back` without a target;
+- `toggleState` for identifier-like state keys;
+- `openUrl` to HTTPS URLs; and
+- `apiCall` with a relative path and one of `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`.
+
+Everything else is denied before interceptors and handlers run. This is a baseline policy, not a substitute for server-side authorization, Supabase RLS, or a tenant-aware production policy.
+
+The next Phase 1 increment should formalize the screen-source result and lifecycle contract before moving demo infrastructure.

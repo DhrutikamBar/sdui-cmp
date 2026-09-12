@@ -47,7 +47,7 @@ fun App(
     supabaseUrl: String, 
     supabaseKey: String,
     driverFactory: DatabaseDriverFactory,
-    actionPolicy: SduiActionPolicy = AllowAllSduiActionPolicy
+    actionPolicy: SduiActionPolicy = DemoSduiActionPolicy
 ) {
     val registry = remember { 
         ComponentRegistry().apply { 
