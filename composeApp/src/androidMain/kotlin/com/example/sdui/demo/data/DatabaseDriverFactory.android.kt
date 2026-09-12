@@ -7,6 +7,6 @@ import com.example.sdui.demo.data.db.SduiDatabase
 
 actual class DatabaseDriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(SduiDatabase.Schema, context, "sdui_cache.db")
+        return AndroidSqliteDriver(SduiDatabase.Schema, context, "sdui_cache_v2.db")
     }
 }

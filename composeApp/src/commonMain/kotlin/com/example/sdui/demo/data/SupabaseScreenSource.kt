@@ -40,6 +40,11 @@ class SupabaseScreenSource(
     private val supabaseKey: String,
     driverFactory: DatabaseDriverFactory
 ) : ScreenSource {
+    private companion object {
+        const val CACHE_FORMAT_VERSION = 2
+        const val CACHE_FRESHNESS_MILLIS = 15 * 60 * 1000L
+    }
+
     private val database = SduiDatabase(driverFactory.createDriver())
     private val queries = database.cachedScreenQueries
 
@@ -144,11 +149,11 @@ class SupabaseScreenSource(
 
         // Tier 2: check persistent cache and validate it when online.
         val persisted = queries.selectByPath(path).executeAsOneOrNull()
-        if (!forceRefresh && persisted != null) {
+        if (!forceRefresh && persisted != null && persisted.formatVersion == CACHE_FORMAT_VERSION) {
             println("KTOR: [CACHE] Found disk entry for $path. Checking staleness...")
             try {
                 val remoteUpdatedAt = fetchUpdatedAt(path)
-                if (remoteUpdatedAt == persisted.updatedAt) {
+                if (remoteUpdatedAt == persisted.updatedAt || getNowMillis() - persisted.cachedAt <= CACHE_FRESHNESS_MILLIS) {
                     println("KTOR: [CACHE] Disk entry is fresh. Loading from local DB.")
                     val contentNode = SduiDocumentCodec.decode(persisted.content).root
                     cache[path] = contentNode
@@ -267,7 +272,9 @@ class SupabaseScreenSource(
                 path = path,
                 content = SduiDocumentCodec.encode(SduiDocumentCodec.decode(row.content)),
                 updatedAt = row.updated_at,
-                lastAccessedAt = getNowMillis()
+                lastAccessedAt = getNowMillis(),
+                formatVersion = CACHE_FORMAT_VERSION,
+                cachedAt = getNowMillis()
             )
             enforceEvictionLimit()
         } catch (e: Exception) {
