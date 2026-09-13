@@ -1,5 +1,8 @@
 package com.example.sdui.app
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -75,7 +78,14 @@ fun App(
                     modifier = Modifier.padding(padding),
                     color = resolveColor("brand-primary") ?: MaterialTheme.colorScheme.surface
                 ) {
-                    NavHost(navController = navController, startDestination = SduiScreen("home")) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = SduiScreen("home"),
+                        enterTransition = { fadeIn(tween(220)) },
+                        exitTransition = { fadeOut(tween(160)) },
+                        popEnterTransition = { fadeIn(tween(220)) },
+                        popExitTransition = { fadeOut(tween(160)) }
+                    ) {
                         composable<SduiScreen> { backStackEntry ->
                             val route: SduiScreen = backStackEntry.toRoute()
                             SduiReferenceScreenHost(
