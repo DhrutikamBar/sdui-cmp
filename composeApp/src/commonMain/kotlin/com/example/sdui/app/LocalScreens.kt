@@ -219,6 +219,61 @@ object LocalScreens {
         }
     """.trimIndent()
 
+
+    val uiCertification = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md", "width": "fill" } },
+          "semantics": { "contentDescription": "UI certification screen", "liveRegion": "polite" },
+          "children": [
+            {
+              "type": "box",
+              "props": { "style": { "background": "brand-primary", "cornerRadius": 16, "padding": "md", "width": "fill" } },
+              "children": [
+                { "type": "column", "children": [
+                  { "type": "text", "props": { "value": "Everyday account", "style": { "color": "#FFFFFF", "fontSize": 14 } } },
+                  { "type": "text", "props": { "value": "$32,149.00", "style": { "color": "#FFFFFF", "fontSize": 30, "fontWeight": "bold" } },
+                    "semantics": { "stateDescription": "Available balance thirty two thousand one hundred forty nine dollars" } }
+                ]}
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
+            { "type": "text", "props": { "value": "Quick actions", "style": { "fontSize": 20, "fontWeight": "bold" } } },
+            {
+              "type": "grid", "props": { "columns": 2, "height": 136 },
+              "children": [
+                { "type": "button", "props": { "label": "Send" }, "action": { "type": "navigate", "target": "send" } },
+                { "type": "button", "props": { "label": "Shop" }, "action": { "type": "navigate", "target": "checkout" } },
+                { "type": "button", "props": { "label": "Settings" }, "action": { "type": "navigate", "target": "settings" } },
+                { "type": "button", "props": { "label": "Help" }, "action": { "type": "analytics", "target": "ui_certification_help" } }
+              ]
+            },
+            { "type": "text", "props": { "value": "Recent transactions", "style": { "fontSize": 20, "fontWeight": "bold" } } },
+            {
+              "type": "list", "props": { "height": 180 },
+              "children": [
+                { "type": "row", "props": { "style": { "arrangement": "spaceBetween", "width": "fill", "padding": "sm" } }, "children": [
+                  { "type": "text", "props": { "value": "Coffee shop" } },
+                  { "type": "text", "props": { "value": "- $4.50", "style": { "color": "#B3261E" } } }
+                ]},
+                { "type": "row", "props": { "style": { "arrangement": "spaceBetween", "width": "fill", "padding": "sm" } }, "children": [
+                  { "type": "text", "props": { "value": "Salary" } },
+                  { "type": "text", "props": { "value": "+ $2,500.00", "style": { "color": "#2E7D32" } } }
+                ]},
+                { "type": "row", "props": { "style": { "arrangement": "spaceBetween", "width": "fill", "padding": "sm" } }, "children": [
+                  { "type": "text", "props": { "value": "Streaming subscription" } },
+                  { "type": "text", "props": { "value": "- $12.99", "style": { "color": "#B3261E" } } }
+                ]}
+              ]
+            },
+            { "id": "certificationNotifications", "type": "switch", "props": { "label": "Transaction notifications" },
+              "semantics": { "stateDescription": "Transaction notifications preference" } },
+            { "id": "certificationUnsupported", "type": "futureWidget",
+              "fallback": { "type": "text", "props": { "value": "Optional feature is unavailable on this app version." } } }
+          ]
+        }
+    """.trimIndent()
+
 }
 
 private val localJson = Json { ignoreUnknownKeys = true }
