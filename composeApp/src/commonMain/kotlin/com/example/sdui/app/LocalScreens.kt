@@ -228,9 +228,9 @@ object LocalScreens {
           "children": [
             {
               "type": "box",
-              "props": { "style": { "background": "brand-primary", "cornerRadius": 16, "padding": "md", "width": "fill" } },
+              "props": { "style": { "background": "brand-primary", "cornerRadius": 16, "width": "fill" } },
               "children": [
-                { "type": "column", "children": [
+                { "type": "column", "props": { "style": { "padding": "md" } }, "children": [
                   { "type": "text", "props": { "value": "Everyday account", "style": { "color": "#FFFFFF", "fontSize": 14 } } },
                   { "type": "text", "props": { "value": "$32,149.00", "style": { "color": "#FFFFFF", "fontSize": 30, "fontWeight": "bold" } },
                     "semantics": { "stateDescription": "Available balance thirty two thousand one hundred forty nine dollars" } }
