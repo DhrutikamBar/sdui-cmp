@@ -257,7 +257,7 @@ private fun SduiScreenContent(
         }
     }
 
-    val actionRegistry = remember(navigator, urlHandler, apiCallClient, actionPolicy, reporter, haptics, formState, scope) {
+    val actionRegistry = remember(navigator, urlHandler, apiCallClient, dataProvider, path, actionPolicy, reporter, haptics, formState, scope) {
         lateinit var registryRef: ActionRegistry
         val registry = ActionRegistry(
             interceptors = listOf(
@@ -270,6 +270,9 @@ private fun SduiScreenContent(
             register("back") { navigator.goBack() }
             register("analytics") { action ->
                 action.target?.let { eventName -> reporter.reportEvent(eventName) }
+            }
+            register("refreshData") {
+                scope.launch { dataProvider.refresh(path) }
             }
             register("openUrl") { action -> action.target?.let(urlHandler::open) }
             register("toggleState") { action ->
@@ -393,6 +396,7 @@ private val demoSupportedActionTypes = setOf(
     "navigate",
     "back",
     "analytics",
+    "refreshData",
     "openUrl",
     "toggleState",
     "apiCall"
