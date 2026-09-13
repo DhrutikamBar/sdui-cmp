@@ -206,8 +206,8 @@ class ComponentRegistry {
         val visible = node.visibleWhen.all { it.evaluate(formState) }
         AnimatedVisibility(
             visible = visible,
-            enter = enterAnimation(style.animation),
-            exit = exitAnimation(style.animation)
+            enter = enterAnimation(style.animation, style.animationDurationMs, style.animationEasing),
+            exit = exitAnimation(style.animation, style.animationDurationMs, style.animationEasing)
         ) {
             content()
         }
