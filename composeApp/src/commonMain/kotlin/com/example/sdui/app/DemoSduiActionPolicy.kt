@@ -31,6 +31,10 @@ object DemoSduiActionPolicy : SduiActionPolicy {
                 target != null && stateKeyPattern.matches(target),
                 "Analytics actions require an identifier-like event name"
             )
+            "refreshData" -> allowWhen(
+                target == null,
+                "Refresh actions must not define a target"
+            )
             "toggleState" -> allowWhen(
                 target != null && stateKeyPattern.matches(target),
                 "State actions require an identifier-like target"
