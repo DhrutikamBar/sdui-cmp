@@ -42,15 +42,15 @@ class LocalDemoScreenDataProvider : SduiScreenDataProvider {
                 mapOf(
                     "accountName" to SduiValue.StringValue("Everyday account"),
                     "balance" to SduiValue.NumberValue(32149.0),
-                    "balanceDisplay" to SduiValue.StringValue("$32,149.00"),
+                    "balanceDisplay" to SduiValue.StringValue("\$32,149.00"),
                     "currency" to SduiValue.StringValue("USD")
                 )
             ),
             "transactions" to SduiValue.ListValue(
                 listOf(
-                    transaction("Coffee shop", "- $4.50", "#B3261E"),
-                    transaction("Salary", "+ $2,500.00", "#2E7D32"),
-                    transaction("Streaming subscription", "- $12.99", "#B3261E")
+                    transaction("Coffee shop", "- \$4.50", "#B3261E"),
+                    transaction("Salary", "+ \$2,500.00", "#2E7D32"),
+                    transaction("Streaming subscription", "- \$12.99", "#B3261E")
                 )
             )
         )
