@@ -26,9 +26,9 @@ class LocalDemoScreenDataProviderTest {
         val resolved = decodeLocalScreen(LocalScreens.wallet).resolveBindings(context)
         val textValues = resolved.allTextValues()
 
-        assertEquals(true, textValues.contains("$32,149.00"))
+        assertEquals(true, textValues.contains("\$32,149.00"))
         assertEquals(true, textValues.contains("Coffee shop"))
-        assertEquals(true, textValues.contains("+ $2,500.00"))
+        assertEquals(true, textValues.contains("+ \$2,500.00"))
     }
 
     private fun UiNode.allTextValues(): List<String> =
