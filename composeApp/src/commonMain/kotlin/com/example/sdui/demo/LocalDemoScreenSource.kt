@@ -54,6 +54,7 @@ class LocalDemoScreenSource : ScreenSource {
             "settings" -> LocalScreens.settings
             "order-confirmed" -> LocalScreens.orderConfirmed
             "lottie-test" -> LocalScreens.lottieTest
+            "ui-certification" -> LocalScreens.uiCertification
                 else -> throw NoSuchElementException("No bundled SDUI screen for path: $path")
             }
         )
