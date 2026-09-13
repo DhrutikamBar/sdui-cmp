@@ -41,7 +41,8 @@ import kotlin.time.TimeSource
 fun App(
     screenSource: ScreenSource,
     apiCallClient: SduiApiCallClient,
-    actionPolicy: SduiActionPolicy = DemoSduiActionPolicy
+    actionPolicy: SduiActionPolicy = DemoSduiActionPolicy,
+    dataProvider: SduiScreenDataProvider = EmptySduiScreenDataProvider
 ) {
     val componentRegistry = remember {
         ComponentRegistry().apply {
@@ -96,6 +97,7 @@ fun App(
                                 path = route.path,
                                 screenSource = screenSource,
                                 apiCallClient = apiCallClient,
+                                dataProvider = dataProvider,
                                 componentRegistry = componentRegistry,
                                 navigator = navigator,
                                 urlHandler = urlHandler,
@@ -125,6 +127,7 @@ fun SduiReferenceScreenHost(
     path: String,
     screenSource: ScreenSource,
     apiCallClient: SduiApiCallClient,
+    dataProvider: SduiScreenDataProvider = EmptySduiScreenDataProvider,
     componentRegistry: ComponentRegistry,
     navigator: SduiNavigator,
     urlHandler: SduiUrlHandler,
@@ -144,6 +147,7 @@ fun SduiReferenceScreenHost(
             path = path,
             screenSource = screenSource,
             apiCallClient = apiCallClient,
+            dataProvider = dataProvider,
             registry = componentRegistry,
             navigator = navigator,
             urlHandler = urlHandler,
@@ -159,6 +163,7 @@ private fun SduiScreenContent(
     path: String,
     screenSource: ScreenSource,
     apiCallClient: SduiApiCallClient,
+    dataProvider: SduiScreenDataProvider,
     registry: ComponentRegistry,
     navigator: SduiNavigator,
     urlHandler: SduiUrlHandler,
@@ -173,6 +178,7 @@ private fun SduiScreenContent(
     val haptics = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
     val reporter = LocalReportingService.current
+    val dataState by dataProvider.stateFor(path).collectAsState()
 
     LaunchedEffect(path, retryTrigger) {
         loadError = null
@@ -305,9 +311,48 @@ private fun SduiScreenContent(
     val actions = ActionHandler { action -> actionRegistry.dispatch(action) }
 
     when {
-        screen != null -> SduiRenderer(screen!!, actions, formState = formState, registry = registry, dataContext = dataContext)
         loadError != null -> ErrorState(message = loadError!!, onRetry = { retryTrigger++ })
-        else -> LoadingSkeleton()
+        screen == null -> LoadingSkeleton()
+        dataState is SduiDataState.Loading -> LoadingSkeleton()
+        dataState is SduiDataState.Empty -> EmptyDataState()
+        dataState is SduiDataState.Failure -> {
+            val failure = dataState as SduiDataState.Failure
+            ErrorState(
+                message = failure.message,
+                onRetry = {
+                    if (failure.retryable) {
+                        scope.launch { dataProvider.refresh(path) }
+                    }
+                }
+            )
+        }
+        dataState is SduiDataState.Content<*> -> {
+            val liveContext = (dataState as SduiDataState.Content<SduiDataContext>).value
+            SduiRenderer(
+                screen!!,
+                actions,
+                formState = formState,
+                registry = registry,
+                dataContext = dataContext.withValues(liveContext.values)
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyDataState() {
+    Column(
+        Modifier.fillMaxSize().padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Nothing to show yet", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Text(
+            "This screen has no available data.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
