@@ -40,25 +40,28 @@ fun enterAnimation(kind: String?, durationMs: Int? = null, easingName: String? =
     if (LocalSduiMotionPolicy.current.reduceMotion) return EnterTransition.None
     val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
     val easing = animationEasing(easingName)
+    val spec = tween<Float>(durationMillis = duration, easing = easing)
     return when (kind) {
         "none" -> EnterTransition.None
-        "slide" -> slideInVertically(tween(duration, easing)) { it } + fadeIn(tween(duration, easing))
-        "scale" -> scaleIn(tween(duration, easing)) + fadeIn(tween(duration, easing))
-        "fade" -> fadeIn(tween(duration, easing))
-        else -> fadeIn(tween(duration, easing)) + expandVertically(tween(duration, easing))
+        "slide" -> slideInVertically(spec) { it } + fadeIn(spec)
+        "scale" -> scaleIn(spec) + fadeIn(spec)
+        "fade" -> fadeIn(spec)
+        else -> fadeIn(spec) + expandVertically(spec)
     }
 }
 
 @Composable
 fun exitAnimation(kind: String?, durationMs: Int? = null, easingName: String? = null): ExitTransition {
     if (LocalSduiMotionPolicy.current.reduceMotion) return ExitTransition.None
-    val spec = tween<Float>(durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS, easing = animationEasing(easingName))
+    val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
+    val easing = animationEasing(easingName)
+    val spec = tween<Float>(durationMillis = duration, easing = easing)
     return when (kind) {
         "none" -> ExitTransition.None
-        "slide" -> slideOutVertically(tween(duration, easing)) { it } + fadeOut(tween(duration, easing))
-        "scale" -> scaleOut(tween(duration, easing)) + fadeOut(tween(duration, easing))
-        "fade" -> fadeOut(tween(duration, easing))
-        else -> fadeOut(tween(duration, easing)) + shrinkVertically(tween(duration, easing))
+        "slide" -> slideOutVertically(spec) { it } + fadeOut(spec)
+        "scale" -> scaleOut(spec) + fadeOut(spec)
+        "fade" -> fadeOut(spec)
+        else -> fadeOut(spec) + shrinkVertically(spec)
     }
 }
 
