@@ -3,7 +3,10 @@ package com.dhruti.sdui.sdk
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.align
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,7 +15,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.Saver
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.sdui.shared.Condition
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiAction
@@ -148,18 +153,35 @@ class ComponentRegistry {
         // LazyColumn remains the only scroll owner at this level.
         val rootNodes = rootNodesForRendering(node)
 
+        // A root-level bottom navigation is rendered outside LazyColumn so it
+        // remains pinned while all other SDUI content scrolls.
+        val bottomNavigation = rootNodes.lastOrNull { it.type == "bottomNavigation" }
+        val scrollNodes = rootNodes.filterNot { it === bottomNavigation }
+
         CompositionLocalProvider(LocalIsInsideScrollable provides true) {
-            LazyColumn(modifier.fillMaxSize()) {
-                rootNodes.forEachIndexed { index, itemNode ->
-                    val key = itemNode.id ?: "item_$index"
-                    if (itemNode.sticky) {
-                        stickyHeader(key = key) {
-                            Render(itemNode, actions, formState)
+            Box(modifier.fillMaxSize()) {
+                LazyColumn(Modifier.fillMaxSize()) {
+                    scrollNodes.forEachIndexed { index, itemNode ->
+                        val key = itemNode.id ?: "item_$index"
+                        if (itemNode.sticky) {
+                            stickyHeader(key = key) {
+                                Render(itemNode, actions, formState)
+                            }
+                        } else {
+                            item(key = key) {
+                                Render(itemNode, actions, formState)
+                            }
                         }
-                    } else {
-                        item(key = key) {
-                            Render(itemNode, actions, formState)
+                    }
+                    if (bottomNavigation != null) {
+                        item(key = "__sdui_bottom_navigation_spacer") {
+                            Spacer(Modifier.height(88.dp))
                         }
+                    }
+                }
+                bottomNavigation?.let { navigation ->
+                    Box(Modifier.align(Alignment.BottomCenter)) {
+                        Render(navigation, actions, formState)
                     }
                 }
             }
