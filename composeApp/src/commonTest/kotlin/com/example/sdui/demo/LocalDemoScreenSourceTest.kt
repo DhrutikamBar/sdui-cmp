@@ -49,11 +49,30 @@ class LocalDemoScreenSourceTest {
     fun loadsAllImportantBundledFallbackRoutes() = runBlocking {
         val source = LocalDemoScreenSource()
 
-        listOf("send", "send-success", "settings", "order-confirmed", "lottie-test").forEach { path ->
+        listOf("send", "send-success", "settings", "order-confirmed", "lottie-test", "ui-certification").forEach { path ->
             val result = assertIs<ScreenLoadResult.Success>(
                 source.loadScreen(ScreenRequest(path = path))
             )
             assertEquals("column", result.screen.type)
+        }
+    }
+
+    @Test
+    fun certificationFixtureContainsComplexLayoutAndFallbackCoverage() = runBlocking {
+        val result = assertIs<ScreenLoadResult.Success>(
+            LocalDemoScreenSource().loadScreen(ScreenRequest(path = "ui-certification"))
+        )
+
+        val types = mutableListOf<String>()
+        fun visit(node: com.example.sdui.shared.UiNode) {
+            types += node.type
+            node.children.forEach(::visit)
+            node.fallback?.let(::visit)
+        }
+        visit(result.screen)
+
+        listOf("box", "grid", "list", "row", "switch", "futureWidget").forEach {
+            kotlin.test.assertTrue(it in types, "Expected $it in certification fixture")
         }
     }
 }
