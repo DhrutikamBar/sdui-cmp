@@ -15,6 +15,7 @@ import com.example.sdui.app.DemoSduiActionPolicy
 @Composable
 fun DemoApp() {
     val screenSource = remember { createFirebaseScreenSource() }
+    val dataProvider = remember { LocalDemoScreenDataProvider() }
     DisposableEffect(screenSource) {
         onDispose(screenSource::close)
     }
@@ -22,6 +23,7 @@ fun DemoApp() {
     App(
         screenSource = screenSource,
         apiCallClient = LocalDemoApiCallClient,
-        actionPolicy = DemoSduiActionPolicy
+        actionPolicy = DemoSduiActionPolicy,
+        dataProvider = dataProvider
     )
 }
