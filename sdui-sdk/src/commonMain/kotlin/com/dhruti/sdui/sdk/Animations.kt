@@ -26,6 +26,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
 private const val DEFAULT_DURATION_MS = 250
@@ -41,13 +43,14 @@ fun enterAnimation(kind: String?, durationMs: Int? = null, easingName: String? =
     val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
     val easing = animationEasing(easingName)
     val floatSpec = tween<Float>(durationMillis = duration, easing = easing)
-    val intSpec = tween<Int>(durationMillis = duration, easing = easing)
+    val offsetSpec = tween<IntOffset>(durationMillis = duration, easing = easing)
+    val sizeSpec = tween<IntSize>(durationMillis = duration, easing = easing)
     return when (kind) {
         "none" -> EnterTransition.None
-        "slide" -> slideInVertically(intSpec) { it } + fadeIn(floatSpec)
+        "slide" -> slideInVertically(offsetSpec) { it } + fadeIn(floatSpec)
         "scale" -> scaleIn(floatSpec) + fadeIn(floatSpec)
         "fade" -> fadeIn(floatSpec)
-        else -> fadeIn(floatSpec) + expandVertically(intSpec)
+        else -> fadeIn(floatSpec) + expandVertically(sizeSpec)
     }
 }
 
@@ -57,13 +60,14 @@ fun exitAnimation(kind: String?, durationMs: Int? = null, easingName: String? = 
     val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
     val easing = animationEasing(easingName)
     val floatSpec = tween<Float>(durationMillis = duration, easing = easing)
-    val intSpec = tween<Int>(durationMillis = duration, easing = easing)
+    val offsetSpec = tween<IntOffset>(durationMillis = duration, easing = easing)
+    val sizeSpec = tween<IntSize>(durationMillis = duration, easing = easing)
     return when (kind) {
         "none" -> ExitTransition.None
-        "slide" -> slideOutVertically(intSpec) { it } + fadeOut(floatSpec)
+        "slide" -> slideOutVertically(offsetSpec) { it } + fadeOut(floatSpec)
         "scale" -> scaleOut(floatSpec) + fadeOut(floatSpec)
         "fade" -> fadeOut(floatSpec)
-        else -> fadeOut(floatSpec) + shrinkVertically(intSpec)
+        else -> fadeOut(floatSpec) + shrinkVertically(sizeSpec)
     }
 }
 
