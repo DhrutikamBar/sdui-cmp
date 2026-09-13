@@ -531,17 +531,20 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("searchBar") { node, _, formState ->
         val fieldId = node.id ?: ""
         val query = formState.getString(fieldId)
-        var expanded by remember { mutableStateOf(false) }
         val placeholder = node.props["placeholder"].asString().takeIf { it.isNotEmpty() } ?: "Search"
-        SearchBar(
-            query = query,
-            onQueryChange = { formState.setString(fieldId, it) },
-            onSearch = { expanded = false },
-            active = expanded,
-            onActiveChange = { expanded = it },
-            placeholder = { Text(placeholder) },
-            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
-        ) {}
+        // The expanding Material SearchBar cannot safely measure inside the
+        // renderer's LazyColumn. Keep SDUI search inline and scroll-safe.
+        OutlinedTextField(
+            value = query,
+            onValueChange = { formState.setString(fieldId, it) },
+            singleLine = true,
+            label = { Text(placeholder) },
+            modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
+            )
+        )
     }
 
     register("skeleton") { node, _, _ ->
