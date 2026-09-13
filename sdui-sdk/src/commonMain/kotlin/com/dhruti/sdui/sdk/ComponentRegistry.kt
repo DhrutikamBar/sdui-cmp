@@ -99,60 +99,8 @@ fun Condition.evaluate(state: FormState): Boolean {
         is Condition.Not -> !condition.evaluate(state)
         is Condition.And -> conditions.all { it.evaluate(state) }
         is Condition.Or -> conditions.any { it.evaluate(state) }
-        is Condition.Script -> evaluateScript(expression, state)
+        is Condition.Script -> SduiExpressionEvaluator.evaluate(expression, state)
     }
-}
-
-/** 
- * A robust expression evaluator for SDUI.
- * Supports multiple variables from FormState, literals, and basic arithmetic.
- */
-private fun evaluateScript(expression: String, state: FormState): Boolean {
-    val ops = listOf(">=", "<=", "==", ">", "<")
-    val op = ops.find { expression.contains(it) } ?: return false
-    val parts = expression.split(op, limit = 2)
-    if (parts.size != 2) return false
-
-    val left = evaluateExpressionPart(parts[0], state)
-    val right = evaluateExpressionPart(parts[1], state)
-
-    if (left == null || right == null) return false
-
-    return when (op) {
-        "==" -> left == right
-        ">" -> if (left is Double && right is Double) left > right else false
-        "<" -> if (left is Double && right is Double) left < right else false
-        ">=" -> if (left is Double && right is Double) left >= right else false
-        "<=" -> if (left is Double && right is Double) left <= right else false
-        else -> false
-    }
-}
-
-private fun evaluateExpressionPart(part: String, state: FormState): Any? {
-    val raw = part.trim()
-    
-    if (raw.contains("*")) {
-        val subParts = raw.split("*")
-        return subParts.map { evaluateExpressionPart(it, state) as? Double ?: 0.0 }
-            .reduce { acc, d -> acc * d }
-    }
-
-    // 1. Resolve from FormState
-    state[raw]?.let { sduiVal ->
-        return when (sduiVal) {
-            is SduiValue.StringValue -> sduiVal.value
-            is SduiValue.NumberValue -> sduiVal.value
-            is SduiValue.BooleanValue -> sduiVal.value
-            else -> null
-        }
-    }
-    
-    // 2. Literals
-    if (raw.startsWith("'") && raw.endsWith("'")) return raw.removeSurrounding("'")
-    if (raw == "true") return true
-    if (raw == "false") return false
-    
-    return raw.toDoubleOrNull()
 }
 
 /** The node set consumed by RenderRoot's single scroll owner. */
