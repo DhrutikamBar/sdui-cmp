@@ -62,3 +62,25 @@ For a node controlled by `visibleWhen`, put the following in `props.style`:
 ```
 
 Supported transitions are `fade`, `slide`, `scale`, and `none`. Durations are bounded to 0–2000ms. Hosts can disable renderer and Lottie motion by providing `LocalSduiMotionPolicy` with `reduceMotion = true`. The reference application uses fade transitions between routes. Remote Lottie URLs remain subject to the host `SduiResourcePolicy`.
+
+## Navigation chrome
+
+Use `tabs` for an in-content tab strip. Use a root-level `bottomNavigation` for persistent app navigation: it is rendered outside the renderer's scroll container and reserves space so the final content is not obscured.
+
+```json
+{
+  "id": "mainNavigation",
+  "type": "bottomNavigation",
+  "props": {
+    "selectedIndex": 0,
+    "items": [
+      { "label": "Games", "icon": "🎮", "route": "home" },
+      { "label": "Apps", "icon": "▦", "route": "apps", "badge": "2" },
+      { "label": "Search", "icon": "⌕", "route": "search" },
+      { "label": "You", "icon": "♙", "route": "profile" }
+    ]
+  }
+}
+```
+
+Each selection updates the node's form state, and an item with a `route` dispatches the normal host-owned `navigate` action. The host remains responsible for deciding whether that route is allowed.
