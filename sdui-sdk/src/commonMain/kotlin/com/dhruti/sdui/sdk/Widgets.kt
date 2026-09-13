@@ -150,6 +150,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("image") { node, actions, _ ->
         val style = node.style()
         val resolver = LocalResourceResolver.current
+        val resourcePolicy = LocalResourcePolicy.current
         val url = node.props["url"].asString().takeIf { it.isNotEmpty() }
         val emoji = node.props["icon"].asString().takeIf { it.isNotEmpty() }
         val base = Modifier.applyStyle(style).applySemantics(node)
@@ -158,13 +159,19 @@ fun ComponentRegistry.registerCoreWidgets() {
         } else base
         when {
             url != null -> {
-                val finalModel = if (url.isResource()) resolver?.resolveImage(url) ?: url else url
-                AsyncImage(
-                    model = finalModel,
-                    contentDescription = node.getContentDescription(),
-                    modifier = clickableModifier,
-                    contentScale = ContentScale.Crop
-                )
+                val finalModel = when {
+                    url.isResource() -> resolver?.resolveImage(url)
+                    resourcePolicy.allows(SduiRemoteResourceType.IMAGE, url) -> url
+                    else -> null
+                }
+                if (finalModel != null) {
+                    AsyncImage(
+                        model = finalModel,
+                        contentDescription = node.getContentDescription(),
+                        modifier = clickableModifier,
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
             emoji != null -> Box(modifier = clickableModifier, contentAlignment = Alignment.Center) {
                 Text(emoji, fontSize = (style.fontSize ?: 20).sp, textAlign = TextAlign.Center)
@@ -546,9 +553,15 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("lottieAnimation") { node, _, _ ->
         val url = node.props["url"].asString()
         val loop = node.props["loop"].asBoolean()
-        
+        val allowed = LocalResourcePolicy.current.allows(SduiRemoteResourceType.LOTTIE, url)
+
+        if (!allowed) {
+            Box(Modifier.applyStyle(node.style()))
+            return@register
+        }
+
         val result = rememberLottieComposition(spec = LottieCompositionSpec.Url(url))
-        
+
         when {
             result.isLoading -> {
                 ShimmerBox(Modifier.applyStyle(node.style()))
