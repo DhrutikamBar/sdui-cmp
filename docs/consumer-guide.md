@@ -46,3 +46,9 @@ The SDK does not require Firestore. A production host can provide any `ScreenSou
 - The SDK publication coordinates are `com.dhruti.sdui:sdui-sdk:0.1.0-SNAPSHOT` by default. Publishing destinations and credentials are intentionally not configured.
 
 Continuous integration verifies Android unit tests/assembly and compiles the iOS simulator SDK framework. This validates the iOS SDK surface without introducing an iOS application integration.
+
+## Condition expressions and accessibility
+
+Legacy `Condition.Script` rules use a bounded parser, not arbitrary code evaluation. Supported expressions contain values, multiplication, and one comparison, such as `amount * quantity >= 100` or `status == 'active'`. Unknown identifiers and function-like syntax are rejected.
+
+Interactive custom containers enforce a minimum 48dp touch target. Documents can provide `Semantics.contentDescription`, `role`, `liveRegion`, and `stateDescription`; use these for stateful or dynamically updated content.
