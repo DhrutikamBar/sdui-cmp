@@ -36,3 +36,13 @@ Run Android unit tests with:
 ```
 
 The SDK does not require Firestore. A production host can provide any `ScreenSource` and decide its own transport, authentication, cache, and authorization strategy.
+
+
+## Production-ready SDK contracts
+
+- Use `ComponentRegistry.capabilities(actionTypes)` to provide the SDK version plus supported widget/action types to a document service.
+- Model host data with `SduiDataState` and return `SduiActionResult` from host workflows to keep loading, empty, failure, retryable, cancelled, and validation cases structured.
+- Provide `HostAllowlistResourcePolicy` through `LocalResourcePolicy` to restrict remote image and Lottie hosts. The default remains permissive for compatibility; production hosts should opt into an explicit allowlist.
+- The SDK publication coordinates are `com.dhruti.sdui:sdui-sdk:0.1.0-SNAPSHOT` by default. Publishing destinations and credentials are intentionally not configured.
+
+Continuous integration verifies Android unit tests/assembly and compiles the iOS simulator SDK framework. This validates the iOS SDK surface without introducing an iOS application integration.
