@@ -3,9 +3,10 @@ package com.dhruti.sdui.sdk
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -159,7 +160,18 @@ class ComponentRegistry {
 
         CompositionLocalProvider(LocalIsInsideScrollable provides true) {
             Box(modifier.fillMaxSize()) {
-                LazyColumn(Modifier.fillMaxSize()) {
+                val systemBottomInset =
+                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                val bottomPadding = if (bottomNavigation == null) {
+                    systemBottomInset
+                } else {
+                    80.dp + systemBottomInset
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = bottomPadding)
+                ) {
                     scrollNodes.forEachIndexed { index, itemNode ->
                         val key = itemNode.id ?: "item_$index"
                         if (itemNode.sticky) {
@@ -170,11 +182,6 @@ class ComponentRegistry {
                             item(key = key) {
                                 Render(itemNode, actions, formState)
                             }
-                        }
-                    }
-                    if (bottomNavigation != null) {
-                        item(key = "__sdui_bottom_navigation_spacer") {
-                            Spacer(Modifier.height(88.dp))
                         }
                     }
                 }
