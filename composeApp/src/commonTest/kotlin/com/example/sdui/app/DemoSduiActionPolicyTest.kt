@@ -25,6 +25,10 @@ class DemoSduiActionPolicyTest {
             SduiActionDecision.Allow,
             DemoSduiActionPolicy.evaluate(UiAction(type = "analytics", target = "sign_up_header_impression"))
         )
+        assertEquals(
+            SduiActionDecision.Allow,
+            DemoSduiActionPolicy.evaluate(UiAction(type = "refreshData"))
+        )
     }
 
     @Test
