@@ -223,7 +223,7 @@ object LocalScreens {
     val uiCertification = """
         {
           "type": "column",
-          "props": { "style": { "padding": "md", "width": "fill" } },
+          "props": { "style": { "padding": "md", "width": "fill", "background": "#F7F7F7" } },
           "semantics": { "contentDescription": "UI certification screen", "liveRegion": "polite" },
           "children": [
             {
