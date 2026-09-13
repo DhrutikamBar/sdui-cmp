@@ -1,6 +1,5 @@
 package com.dhruti.sdui.sdk
 
-import com.example.sdui.shared.SduiAction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
