@@ -13,6 +13,38 @@ A host supplies:
 
 Validate externally supplied documents with `SduiDocumentCodec` before caching or rendering them. Keep the action policy restrictive: it is the host's authorization boundary.
 
+## Live API data binding
+
+Firestore or another `ScreenSource` supplies layout documents. Your authenticated business API supplies live values through a host-owned `SduiScreenDataProvider`. The host maps each response model into neutral `SduiValue` data; the SDK never receives backend model classes, credentials, or endpoints.
+
+A provider exposes `Loading`, `Empty`, `Failure`, or `Content(SduiDataContext)` for the active route. The reference host renders loading, empty, and retry states automatically. On content, bindings are resolved before rendering.
+
+Use scalar bindings in JSON:
+
+```json
+{ "type": "text", "props": { "value": "Hello, {{user.firstName}}" } }
+```
+
+Use a repeater for API arrays:
+
+```json
+{
+  "type": "repeater",
+  "props": { "items": "{{transactions}}" },
+  "children": [
+    {
+      "type": "row",
+      "children": [
+        { "type": "text", "props": { "value": "{{item.title}}" } },
+        { "type": "text", "props": { "value": "{{item.amountDisplay}}" } }
+      ]
+    }
+  ]
+}
+```
+
+Whole-value bindings preserve type: `{{wallet.balance}}` remains a number, while embedded values such as `Balance: {{wallet.balance}}` are text. The demo's Wallet fallback shows this pattern and provides a bounded `refreshData` action. Production hosts should allow that action only where route refresh is permitted.
+
 ## Reference host
 
 The Android reference host uses `FirebaseFirestoreScreenSource` to load `sduiScreens/{route}` documents from Cloud Firestore. It accepts a `content` map or JSON string and benefits from Firestore offline persistence. If a source is unavailable, the reference host uses its bundled local fallback screens.
