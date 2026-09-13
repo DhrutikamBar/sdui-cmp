@@ -95,17 +95,46 @@ object LocalScreens {
           "props": { "style": { "padding": "md", "background": "brand-primary", "width": "fill" } },
           "children": [
             {
-              "type": "row",
-              "props": { "style": { "arrangement": "spaceBetween", "width": "fill" } },
+              "type": "box",
+              "props": { "style": { "background": "#10265D", "cornerRadius": 16, "width": "fill", "padding": "md" } },
               "children": [
-                { "type": "column", "children": [
-                  { "type": "text", "props": { "value": "Welcome back,", "style": { "fontSize": 13, "color": "#B0BEC5" } } },
-                  { "type": "text", "props": { "value": "Tanjiro Kamado", "style": { "fontSize": 17, "fontWeight": "bold", "color": "#FFFFFF" } } }
-                ]}
+                {
+                  "type": "column",
+                  "children": [
+                    { "type": "text", "props": { "value": "Welcome back, {{user.firstName}}", "style": { "fontSize": 14, "color": "#D5E3FF" } } },
+                    { "type": "spacer", "props": { "style": { "size": "sm" } } },
+                    { "type": "text", "props": { "value": "{{wallet.accountName}}", "style": { "fontSize": 16, "color": "#FFFFFF" } } },
+                    { "type": "text", "props": { "value": "{{wallet.balanceDisplay}}", "style": { "fontSize": 30, "fontWeight": "bold", "color": "#FFFFFF" } } },
+                    { "type": "text", "props": { "value": "{{wallet.currency}} available balance", "style": { "fontSize": 12, "color": "#D5E3FF" } } }
+                  ]
+                }
               ]
             },
-            { "type": "spacer", "props": { "style": { "size": "spacing-xl" } } },
-            { "type": "nativeSlot", "props": { "id": "balanceToggle", "amount": "${'$'}32,149.00" } }
+            { "type": "spacer", "props": { "style": { "size": "lg" } } },
+            {
+              "type": "row",
+              "props": { "style": { "width": "fill", "arrangement": "spaceBetween" } },
+              "children": [
+                { "type": "text", "props": { "value": "Recent transactions", "style": { "fontSize": 20, "fontWeight": "bold", "color": "#FFFFFF" } } },
+                { "type": "text", "props": { "value": "Refresh", "style": { "color": "#D5E3FF", "padding": "sm" } }, "action": { "type": "analytics", "target": "wallet_refresh_tapped" } }
+              ]
+            },
+            {
+              "type": "repeater",
+              "props": { "items": "{{transactions}}" },
+              "children": [
+                {
+                  "type": "row",
+                  "props": { "style": { "width": "fill", "arrangement": "spaceBetween", "padding": "sm" } },
+                  "children": [
+                    { "type": "text", "props": { "value": "{{item.title}}", "style": { "color": "#FFFFFF", "fontSize": 16 } } },
+                    { "type": "text", "props": { "value": "{{item.amountDisplay}}", "style": { "color": "{{item.amountColor}}", "fontSize": 16, "fontWeight": "medium" } } }
+                  ]
+                }
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
+            { "type": "button", "props": { "label": "Send money" }, "action": { "type": "navigate", "target": "send" } }
           ]
         }
     """.trimIndent()
