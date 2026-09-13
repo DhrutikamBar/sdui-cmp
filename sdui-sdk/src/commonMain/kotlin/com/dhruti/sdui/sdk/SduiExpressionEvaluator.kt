@@ -21,13 +21,17 @@ internal object SduiExpressionEvaluator {
         false
     }
 
-    private fun compare(left: Any, operator: String, right: Any): Boolean = when (operator) {
-        "==" -> left == right
-        ">" -> left as? Double != null && right as? Double != null && left > right
-        "<" -> left as? Double != null && right as? Double != null && left < right
-        ">=" -> left as? Double != null && right as? Double != null && left >= right
-        "<=" -> left as? Double != null && right as? Double != null && left <= right
-        else -> false
+    private fun compare(left: Any, operator: String, right: Any): Boolean {
+        if (operator == "==") return left == right
+        val leftNumber = left as? Double ?: return false
+        val rightNumber = right as? Double ?: return false
+        return when (operator) {
+            ">" -> leftNumber > rightNumber
+            "<" -> leftNumber < rightNumber
+            ">=" -> leftNumber >= rightNumber
+            "<=" -> leftNumber <= rightNumber
+            else -> false
+        }
     }
 
     private class Parser(private val input: String, private val state: FormState) {
