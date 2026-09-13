@@ -128,6 +128,7 @@ object SduiDocumentCodec {
                 it.contentDescription?.let { value -> validateString(value, "content description", limits) }
                 it.role?.let { value -> validateString(value, "semantics role", limits) }
                 it.liveRegion?.let { value -> validateString(value, "live region", limits) }
+                it.stateDescription?.let { value -> validateString(value, "state description", limits) }
             }
 
             if (node.children.size > limits.maxListItems) {
