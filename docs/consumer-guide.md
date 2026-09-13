@@ -52,3 +52,13 @@ Continuous integration verifies Android unit tests/assembly and compiles the iOS
 Legacy `Condition.Script` rules use a bounded parser, not arbitrary code evaluation. Supported expressions contain values, multiplication, and one comparison, such as `amount * quantity >= 100` or `status == 'active'`. Unknown identifiers and function-like syntax are rejected.
 
 Interactive custom containers enforce a minimum 48dp touch target. Documents can provide `Semantics.contentDescription`, `role`, `liveRegion`, and `stateDescription`; use these for stateful or dynamically updated content.
+
+## Animation
+
+For a node controlled by `visibleWhen`, put the following in `props.style`:
+
+```json
+{ "animation": "slide", "animationDurationMs": 300, "animationEasing": "linear" }
+```
+
+Supported transitions are `fade`, `slide`, `scale`, and `none`. Durations are bounded to 0–2000ms. Hosts can disable renderer and Lottie motion by providing `LocalSduiMotionPolicy` with `reduceMotion = true`. The reference application uses fade transitions between routes. Remote Lottie URLs remain subject to the host `SduiResourcePolicy`.
