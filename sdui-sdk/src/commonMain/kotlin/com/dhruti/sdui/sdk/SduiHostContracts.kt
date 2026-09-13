@@ -1,6 +1,8 @@
 package com.dhruti.sdui.sdk
 
 import com.example.sdui.shared.UiAction
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Host-owned navigation capability exposed to server-driven actions.
@@ -60,4 +62,25 @@ object AllowAllSduiActionPolicy : SduiActionPolicy {
  */
 interface SduiApiCallClient {
     suspend fun execute(action: UiAction, formState: FormState): Boolean
+}
+
+
+/**
+ * Host-owned, observable data for an SDUI route. The host maps its own API
+ * models into [SduiDataContext]; the SDK never sees backend-specific types.
+ */
+interface SduiScreenDataProvider {
+    fun stateFor(path: String): StateFlow<SduiDataState<SduiDataContext>>
+
+    /** Refreshes the values for a route when the host supports refresh. */
+    suspend fun refresh(path: String) = Unit
+}
+
+/** Default provider preserves static SDUI behaviour for hosts without live data. */
+object EmptySduiScreenDataProvider : SduiScreenDataProvider {
+    private val state = MutableStateFlow<SduiDataState<SduiDataContext>>(
+        SduiDataState.Content(SduiDataContext())
+    )
+
+    override fun stateFor(path: String): StateFlow<SduiDataState<SduiDataContext>> = state
 }
