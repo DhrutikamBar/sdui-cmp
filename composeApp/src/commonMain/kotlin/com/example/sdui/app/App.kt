@@ -193,6 +193,7 @@ private fun SduiScreenContent(
                     "settings" -> LocalScreens.settings
                     "order-confirmed" -> LocalScreens.orderConfirmed
                     "lottie-test" -> LocalScreens.lottieTest
+            "ui-certification" -> LocalScreens.uiCertification
                     else -> null
                 }
                 if (localJsonStr != null) {
