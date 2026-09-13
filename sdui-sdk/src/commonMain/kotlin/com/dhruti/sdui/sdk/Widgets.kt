@@ -575,7 +575,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                 val composition = result.value
                 val progress by animateLottieCompositionAsState(
                     composition = composition,
-                    iterations = if (loop) Compottie.IterateForever else 1
+                    iterations = if (loop && !LocalSduiMotionPolicy.current.reduceMotion) Compottie.IterateForever else 1
                 )
                 Image(
                     painter = rememberLottiePainter(
