@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import io.github.alexzhirkevich.compottie.*
 import com.example.sdui.shared.SduiValue
+import com.example.sdui.shared.UiAction
 import com.example.sdui.shared.UiNode
 
 val LocalSnackBarHostState = compositionLocalOf<SnackbarHostState?> { null }
@@ -82,6 +83,7 @@ private fun SduiValue?.asFloat() = (this as? SduiValue.NumberValue)?.value?.toFl
 private fun SduiValue?.asInt() = (this as? SduiValue.NumberValue)?.value?.toInt()
 private fun SduiValue?.asBoolean() = (this as? SduiValue.BooleanValue)?.value ?: false
 private fun SduiValue?.asList() = (this as? SduiValue.ListValue)?.value ?: emptyList()
+private fun SduiValue?.asObject() = (this as? SduiValue.ObjectValue)?.value ?: emptyMap()
 
 private fun UiNode.getContentDescription(): String? {
     return semantics?.contentDescription ?: props["contentDescription"].asString().takeIf { it.isNotEmpty() }
@@ -409,6 +411,42 @@ fun ComponentRegistry.registerCoreWidgets() {
                         tint = if (index < value.toInt()) Color(0xFFFFC107) else Color(0xFFE0E0E0)
                     )
                 }
+            }
+        }
+    }
+
+    register("bottomNavigation") { node, actions, formState ->
+        val fieldId = node.id ?: "bottomNavigation"
+        val items = node.props["items"].asList().map { it.asObject() }
+        val selected = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toInt()
+            ?: node.props["selectedIndex"].asInt().coerceAtLeast(0)
+
+        NavigationBar(
+            modifier = Modifier.fillMaxWidth().applyStyle(node.style()).applySemantics(node)
+        ) {
+            items.forEachIndexed { index, item ->
+                val label = item["label"].asString().ifEmpty { "Item ${index + 1}" }
+                val icon = item["icon"].asString().ifEmpty { "•" }
+                val route = item["route"].asString()
+                val badge = item["badge"].asString().takeIf { it.isNotEmpty() }
+                NavigationBarItem(
+                    selected = selected == index,
+                    onClick = {
+                        formState[fieldId] = SduiValue.NumberValue(index.toDouble())
+                        if (route.isNotEmpty()) {
+                            actions.handle(UiAction(type = "navigate", target = route))
+                        }
+                    },
+                    icon = {
+                        BadgedBox(badge = {
+                            badge?.let { Badge { Text(it) } }
+                        }) {
+                            Text(icon)
+                        }
+                    },
+                    label = { Text(label) },
+                    alwaysShowLabel = true
+                )
             }
         }
     }
