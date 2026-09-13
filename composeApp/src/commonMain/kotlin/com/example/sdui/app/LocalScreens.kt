@@ -116,7 +116,7 @@ object LocalScreens {
               "props": { "style": { "width": "fill", "arrangement": "spaceBetween" } },
               "children": [
                 { "type": "text", "props": { "value": "Recent transactions", "style": { "fontSize": 20, "fontWeight": "bold", "color": "#FFFFFF" } } },
-                { "type": "text", "props": { "value": "Refresh", "style": { "color": "#D5E3FF", "padding": "sm" } }, "action": { "type": "analytics", "target": "wallet_refresh_tapped" } }
+                { "type": "text", "props": { "value": "Refresh", "style": { "color": "#D5E3FF", "padding": "sm" } }, "action": { "type": "refreshData" } }
               ]
             },
             {
