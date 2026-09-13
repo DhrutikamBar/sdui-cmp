@@ -3,6 +3,7 @@ package com.dhruti.sdui.sdk
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -421,10 +422,19 @@ fun ComponentRegistry.registerCoreWidgets() {
         val selected = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toInt()
             ?: (node.props["selectedIndex"].asInt() ?: 0).coerceAtLeast(0)
 
-        NavigationBar(
-            modifier = Modifier.fillMaxWidth().applyStyle(node.style()).applySemantics(node)
+        val style = node.style()
+        val containerColor = resolveColor(style.background) ?: NavigationBarDefaults.containerColor
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(containerColor)
+                .navigationBarsPadding()
         ) {
-            items.forEachIndexed { index, item ->
+            NavigationBar(
+                modifier = Modifier.fillMaxWidth().applySemantics(node),
+                containerColor = containerColor
+            ) {
+                items.forEachIndexed { index, item ->
                 val label = item["label"].asString().ifEmpty { "Item ${index + 1}" }
                 val icon = item["icon"].asString().ifEmpty { "•" }
                 val route = item["route"].asString()
@@ -447,6 +457,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                     label = { Text(label) },
                     alwaysShowLabel = true
                 )
+                }
             }
         }
     }
