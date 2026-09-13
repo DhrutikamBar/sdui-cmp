@@ -161,8 +161,6 @@ internal fun rootNodesForRendering(node: UiNode): List<UiNode> = UiFlattener.fla
 /** Tells children whether they are inside a scrollable container. */
 val LocalIsInsideScrollable = compositionLocalOf { false }
 
-private const val CURRENT_SDK_VERSION = 5
-
 /**
  * Maps a node's `type` string to the Composable that renders it.
  */
@@ -176,6 +174,13 @@ class ComponentRegistry {
 
     fun supports(type: String): Boolean = type in renderers
 
+    /** Snapshot of renderer types available to the current host. */
+    fun supportedTypes(): Set<String> = renderers.keys.toSet()
+
+    /** Capability payload for backend document selection or host validation. */
+    fun capabilities(actionTypes: Set<String>): SduiCapabilities =
+        SduiCapabilities(widgetTypes = supportedTypes(), actionTypes = actionTypes)
+
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun RenderRoot(
@@ -186,7 +191,7 @@ class ComponentRegistry {
     ) {
         // Enforce root version check
         val minSdk = node.minSdkVersion
-        if (minSdk != null && minSdk > CURRENT_SDK_VERSION) {
+        if (minSdk != null && minSdk > SDK_VERSION) {
             Text("App update required to view this content")
             return
         }
@@ -217,7 +222,7 @@ class ComponentRegistry {
     fun Render(node: UiNode, actions: ActionHandler, formState: FormState) {
         // Version enforcement
         val minSdk = node.minSdkVersion
-        if (minSdk != null && minSdk > CURRENT_SDK_VERSION) {
+        if (minSdk != null && minSdk > SDK_VERSION) {
             node.fallback?.let { Render(it, actions, formState) }
             return
         }
