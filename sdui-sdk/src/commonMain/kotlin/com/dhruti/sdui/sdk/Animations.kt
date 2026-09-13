@@ -40,13 +40,14 @@ fun enterAnimation(kind: String?, durationMs: Int? = null, easingName: String? =
     if (LocalSduiMotionPolicy.current.reduceMotion) return EnterTransition.None
     val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
     val easing = animationEasing(easingName)
-    val spec = tween<Float>(durationMillis = duration, easing = easing)
+    val floatSpec = tween<Float>(durationMillis = duration, easing = easing)
+    val intSpec = tween<Int>(durationMillis = duration, easing = easing)
     return when (kind) {
         "none" -> EnterTransition.None
-        "slide" -> slideInVertically(spec) { it } + fadeIn(spec)
-        "scale" -> scaleIn(spec) + fadeIn(spec)
-        "fade" -> fadeIn(spec)
-        else -> fadeIn(spec) + expandVertically(spec)
+        "slide" -> slideInVertically(intSpec) { it } + fadeIn(floatSpec)
+        "scale" -> scaleIn(floatSpec) + fadeIn(floatSpec)
+        "fade" -> fadeIn(floatSpec)
+        else -> fadeIn(floatSpec) + expandVertically(intSpec)
     }
 }
 
@@ -55,13 +56,14 @@ fun exitAnimation(kind: String?, durationMs: Int? = null, easingName: String? = 
     if (LocalSduiMotionPolicy.current.reduceMotion) return ExitTransition.None
     val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
     val easing = animationEasing(easingName)
-    val spec = tween<Float>(durationMillis = duration, easing = easing)
+    val floatSpec = tween<Float>(durationMillis = duration, easing = easing)
+    val intSpec = tween<Int>(durationMillis = duration, easing = easing)
     return when (kind) {
         "none" -> ExitTransition.None
-        "slide" -> slideOutVertically(spec) { it } + fadeOut(spec)
-        "scale" -> scaleOut(spec) + fadeOut(spec)
-        "fade" -> fadeOut(spec)
-        else -> fadeOut(spec) + shrinkVertically(spec)
+        "slide" -> slideOutVertically(intSpec) { it } + fadeOut(floatSpec)
+        "scale" -> scaleOut(floatSpec) + fadeOut(floatSpec)
+        "fade" -> fadeOut(floatSpec)
+        else -> fadeOut(floatSpec) + shrinkVertically(intSpec)
     }
 }
 
