@@ -104,7 +104,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
         if (style.scrollable == true && !isInsideScrollable) modifier = modifier.verticalScroll(rememberScrollState())
-        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
+        if (node.action != null) modifier = modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         Column(modifier = modifier, horizontalAlignment = parseColumnAlignment(style.alignment)) {
             node.children.forEach { child -> Render(child, actions, formState) }
         }
@@ -116,7 +116,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
         if (style.scrollable == true && !isInsideScrollable) modifier = modifier.horizontalScroll(rememberScrollState())
-        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
+        if (node.action != null) modifier = modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         Row(
             modifier = modifier,
             horizontalArrangement = parseArrangement(style.arrangement),
@@ -131,7 +131,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var base = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) base = base.animateContentSize()
         val clickableModifier = if (node.action != null) {
-            base.clickable { node.action?.let(actions::handle) }
+            base.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         } else base
         Box(modifier = clickableModifier, contentAlignment = parseBoxAlignment(style.alignment)) {
             node.children.forEach { child -> Render(child, actions, formState) }
@@ -141,7 +141,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("text") { node, actions, _ ->
         val style = node.style()
         var modifier = Modifier.applyStyle(style).applySemantics(node)
-        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
+        if (node.action != null) modifier = modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         StyledText(
             value = node.props["value"].asString(),
             style = style,
@@ -157,7 +157,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val emoji = node.props["icon"].asString().takeIf { it.isNotEmpty() }
         val base = Modifier.applyStyle(style).applySemantics(node)
         val clickableModifier = if (node.action != null) {
-            base.clickable { node.action?.let(actions::handle) }
+            base.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         } else base
         when {
             url != null -> {
@@ -437,7 +437,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val chevron = materialIcon(if (expanded) "arrowUp" else "arrowDown")
         Column(modifier = Modifier.applyStyle(node.style()).animateContentSize().applySemantics(node)) {
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { formState[fieldId] = SduiValue.BooleanValue(!expanded) },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable { formState[fieldId] = SduiValue.BooleanValue(!expanded) },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
