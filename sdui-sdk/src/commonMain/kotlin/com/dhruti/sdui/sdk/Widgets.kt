@@ -32,6 +32,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -54,6 +55,7 @@ fun Modifier.applySemantics(node: UiNode): Modifier {
     val s = node.semantics ?: return this
     return this.semantics {
         s.contentDescription?.let { contentDescription = it }
+        s.stateDescription?.let { stateDescription = it }
         s.role?.let {
             when (it) {
                 "button" -> role = Role.Button
