@@ -7,6 +7,9 @@ plugins {
     `maven-publish`
 }
 
+group = "com.dhruti.sdui"
+version = providers.gradleProperty("SDK_VERSION").getOrElse("0.1.0-SNAPSHOT")
+
 kotlin {
     jvmToolchain(21)
     androidTarget {
