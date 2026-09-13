@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -73,7 +74,10 @@ fun App(
 
     MaterialTheme {
         CompositionLocalProvider(LocalSnackBarHostState provides snackbarHostState) {
-            Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
+            Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            ) { padding ->
                 Surface(
                     modifier = Modifier.padding(padding),
                     color = resolveColor("brand-primary") ?: MaterialTheme.colorScheme.surface
