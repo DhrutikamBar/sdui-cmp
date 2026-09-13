@@ -419,7 +419,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: "bottomNavigation"
         val items = node.props["items"].asList().map { it.asObject() }
         val selected = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toInt()
-            ?: node.props["selectedIndex"].asInt().coerceAtLeast(0)
+            ?: (node.props["selectedIndex"].asInt() ?: 0).coerceAtLeast(0)
 
         NavigationBar(
             modifier = Modifier.fillMaxWidth().applyStyle(node.style()).applySemantics(node)
