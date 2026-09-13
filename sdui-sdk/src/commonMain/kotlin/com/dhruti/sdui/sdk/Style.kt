@@ -52,6 +52,8 @@ data class Style(
     val size: SduiValue? = null,
     val scrollable: Boolean? = null,
     val animation: String? = null,
+    val animationDurationMs: Int? = null,
+    val animationEasing: String? = null,
     val animateSize: Boolean? = null
 )
 
@@ -75,6 +77,8 @@ fun UiNode.style(): Style {
         size = obj["size"],
         scrollable = obj["scrollable"].asBoolean(),
         animation = obj["animation"].asString(),
+        animationDurationMs = obj["animationDurationMs"].asInt(),
+        animationEasing = obj["animationEasing"].asString(),
         animateSize = obj["animateSize"].asBoolean()
     )
 }
