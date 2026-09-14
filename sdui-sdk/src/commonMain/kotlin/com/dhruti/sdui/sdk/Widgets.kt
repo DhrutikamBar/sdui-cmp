@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -510,9 +511,43 @@ fun ComponentRegistry.registerCoreWidgets() {
         }
     }
 
+    // "list" remains the original schema name. "lazyColumn" is the
+    // explicit Compose-style alias used by Studio and newer documents.
     register("list") { node, actions, formState ->
         val heightDp = node.props["height"].asInt() ?: 300
         LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
+            items(node.children) { child -> Render(child, actions, formState) }
+        }
+    }
+
+    register("lazyColumn") { node, actions, formState ->
+        val heightDp = node.props["height"].asInt() ?: 300
+        LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
+            items(node.children) { child -> Render(child, actions, formState) }
+        }
+    }
+
+    // Lazy rows have a bounded height and item width so they remain safe as
+    // nested scrolling content inside the renderer's root LazyColumn.
+    register("lazyRow") { node, actions, formState ->
+        val heightDp = node.props["height"].asInt() ?: 180
+        val itemWidthDp = node.props["itemWidth"].asInt() ?: 180
+        LazyRow(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
+            items(node.children) { child ->
+                Box(Modifier.width(itemWidthDp.dp)) {
+                    Render(child, actions, formState)
+                }
+            }
+        }
+    }
+
+    register("lazyGrid") { node, actions, formState ->
+        val columnsCount = node.props["columns"].asInt() ?: 2
+        val heightDp = node.props["height"].asInt() ?: 300
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columnsCount),
+            modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)
+        ) {
             items(node.children) { child -> Render(child, actions, formState) }
         }
     }
