@@ -56,6 +56,8 @@ private fun SduiValue?.displayValue(): String = when (this) {
 
 private val BINDING = Regex("""\{\{\s*([A-Za-z][A-Za-z0-9_.-]{0,127})\s*\}\}""")
 
+private val COLLECTION_TEMPLATE_TYPES = setOf("repeater", "lazyColumn", "lazyRow", "lazyGrid")
+
 /**
  * Produces a renderer-ready node tree. `repeater` is a lightweight list
  * primitive: put an `items: "{{transactions}}"` prop on the repeater and one
@@ -68,7 +70,10 @@ fun UiNode.resolveBindings(context: SduiDataContext): UiNode {
     val resolvedAppear = onAppear?.resolveBindings(context)
     val resolvedDisappear = onDisappear?.resolveBindings(context)
 
-    if (type == "repeater") {
+    // Collection templates bind a host-owned list to one child template.
+    // repeater keeps its historical column output; explicit lazy collections
+    // retain their type so their renderer owns scrolling.
+    if (type in COLLECTION_TEMPLATE_TYPES) {
         val items = (resolvedProps["items"] as? SduiValue.ListValue)?.value.orEmpty()
         val template = children.firstOrNull()
         val renderedChildren = if (template == null) emptyList() else items.mapIndexed { index, item ->
@@ -81,7 +86,7 @@ fun UiNode.resolveBindings(context: SduiDataContext): UiNode {
             )
         }
         return copy(
-            type = "column",
+            type = if (type == "repeater") "column" else type,
             props = resolvedProps - "items",
             children = renderedChildren,
             action = resolvedAction,
