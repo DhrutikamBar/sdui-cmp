@@ -48,4 +48,36 @@ class SduiDataBindingsTest {
         assertEquals("0.0. Coffee", (resolved.children[0].props["value"] as SduiValue.StringValue).value)
         assertEquals("1.0. Book", (resolved.children[1].props["value"] as SduiValue.StringValue).value)
     }
+
+
+    @Test
+    fun expandsBoundLazyCollectionWithoutChangingItsLayoutType() {
+        val context = SduiDataContext(
+            mapOf(
+                "offers" to SduiValue.ListValue(
+                    listOf(
+                        SduiValue.ObjectValue(mapOf("title" to SduiValue.StringValue("Cashback"))),
+                        SduiValue.ObjectValue(mapOf("title" to SduiValue.StringValue("Rewards")))
+                    )
+                )
+            )
+        )
+        val node = UiNode(
+            type = "lazyRow",
+            props = mapOf(
+                "items" to SduiValue.StringValue("{{offers}}"),
+                "height" to SduiValue.NumberValue(160.0)
+            ),
+            children = listOf(UiNode(type = "text", props = mapOf("value" to SduiValue.StringValue("{{item.title}}"))))
+        )
+
+        val resolved = node.resolveBindings(context)
+
+        assertEquals("lazyRow", resolved.type)
+        assertEquals(2, resolved.children.size)
+        assertEquals("Cashback", (resolved.children[0].props["value"] as SduiValue.StringValue).value)
+        assertEquals("Rewards", (resolved.children[1].props["value"] as SduiValue.StringValue).value)
+        assertEquals(160.0, (resolved.props["height"] as SduiValue.NumberValue).value)
+        assertEquals(null, resolved.props["items"])
+    }
 }
