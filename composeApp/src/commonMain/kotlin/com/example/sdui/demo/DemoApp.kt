@@ -7,14 +7,14 @@ import com.example.sdui.app.App
 import com.example.sdui.app.DemoSduiActionPolicy
 
 /**
- * Reference host controlled by Firestore screen documents on Android.
+ * Reference host controlled by published screen documents on Android.
  *
- * The renderer SDK remains independent of Firebase. On iOS, bundled documents
- * remain active until a Firebase iOS host configuration is supplied.
+ * The renderer SDK remains independent of the delivery service. On iOS, bundled
+ * documents remain active until a remote source is supplied.
  */
 @Composable
 fun DemoApp() {
-    val screenSource = remember { createFirebaseScreenSource() }
+    val screenSource = remember { createPublishedScreenSource() }
     val dataProvider = remember { LocalDemoScreenDataProvider() }
     DisposableEffect(screenSource) {
         onDispose(screenSource::close)
@@ -27,3 +27,4 @@ fun DemoApp() {
         dataProvider = dataProvider
     )
 }
+

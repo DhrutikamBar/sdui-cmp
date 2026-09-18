@@ -21,7 +21,7 @@ The reusable SDK does not require a particular transport, database, navigation l
 - `ScreenSource` is host-owned and supplies decoded `UiNode` screens.
 - `ScreenRequest`, `ScreenLoadResult`, and `ScreenLoadSource` provide typed delivery and cache provenance while preserving coroutine cancellation.
 - `cancelPrefetch` and `close` provide lifecycle hooks for host-owned cleanup.
-- The Android reference host uses `FirebaseFirestoreScreenSource`. `LocalDemoScreenSource` supplies bundled fallback screens. Neither is a dependency of `sdui-sdk`.
+- The Android reference host uses `PublishedScreenSource`. `LocalDemoScreenSource` supplies bundled fallback screens. Neither is a dependency of `sdui-sdk`.
 
 ## Host extension points
 
@@ -38,3 +38,4 @@ The reusable SDK does not require a particular transport, database, navigation l
 3. Widget and action type strings are protocol values; hosts validate them before rendering.
 4. Server-defined side effects remain host-controlled.
 5. The reference host may change independently as long as it continues to consume the reusable SDK boundary.
+

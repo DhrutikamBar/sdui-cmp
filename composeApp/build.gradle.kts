@@ -2,7 +2,6 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.android.application")
-    id("com.google.gms.google-services")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
 }
@@ -47,9 +46,6 @@ kotlin {
         androidMain.dependencies {
             implementation("androidx.activity:activity-compose:1.9.3")
             implementation("io.ktor:ktor-client-okhttp:3.0.0")
-            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:34.19.0"))
-            implementation("com.google.firebase:firebase-firestore")
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")
@@ -76,3 +72,4 @@ android {
         checkReleaseBuilds = false
     }
 }
+
