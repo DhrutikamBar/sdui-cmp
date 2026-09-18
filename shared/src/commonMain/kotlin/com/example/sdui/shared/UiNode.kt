@@ -110,7 +110,8 @@ sealed class Feedback {
 data class Semantics(
     val contentDescription: String? = null,
     val role: String? = null, // "button", "image", "header"
-    val liveRegion: String? = null // "none", "polite", "assertive"
+    val liveRegion: String? = null, // "none", "polite", "assertive"
+    val stateDescription: String? = null
 )
 
 /**

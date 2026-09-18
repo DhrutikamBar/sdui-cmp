@@ -3,10 +3,12 @@ package com.dhruti.sdui.sdk
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -25,11 +27,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -38,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import io.github.alexzhirkevich.compottie.*
 import com.example.sdui.shared.SduiValue
+import com.example.sdui.shared.UiAction
 import com.example.sdui.shared.UiNode
 
 val LocalSnackBarHostState = compositionLocalOf<SnackbarHostState?> { null }
@@ -52,6 +58,7 @@ fun Modifier.applySemantics(node: UiNode): Modifier {
     val s = node.semantics ?: return this
     return this.semantics {
         s.contentDescription?.let { contentDescription = it }
+        s.stateDescription?.let { stateDescription = it }
         s.role?.let {
             when (it) {
                 "button" -> role = Role.Button
@@ -63,6 +70,13 @@ fun Modifier.applySemantics(node: UiNode): Modifier {
                 "header" -> heading()
             }
         }
+        s.liveRegion?.let {
+            liveRegion = when (it) {
+                "polite" -> LiveRegionMode.Polite
+                "assertive" -> LiveRegionMode.Assertive
+                else -> LiveRegionMode.Polite
+            }
+        }
     }
 }
 
@@ -71,6 +85,7 @@ private fun SduiValue?.asFloat() = (this as? SduiValue.NumberValue)?.value?.toFl
 private fun SduiValue?.asInt() = (this as? SduiValue.NumberValue)?.value?.toInt()
 private fun SduiValue?.asBoolean() = (this as? SduiValue.BooleanValue)?.value ?: false
 private fun SduiValue?.asList() = (this as? SduiValue.ListValue)?.value ?: emptyList()
+private fun SduiValue?.asObject() = (this as? SduiValue.ObjectValue)?.value ?: emptyMap()
 
 private fun UiNode.getContentDescription(): String? {
     return semantics?.contentDescription ?: props["contentDescription"].asString().takeIf { it.isNotEmpty() }
@@ -78,6 +93,14 @@ private fun UiNode.getContentDescription(): String? {
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun ComponentRegistry.registerCoreWidgets() {
+    // Repeaters are normally expanded from typed host data before rendering.
+    // This fallback keeps an unbound/empty repeater safe and schema-valid.
+    register("repeater") { node, actions, formState ->
+        Column(modifier = Modifier.applyStyle(node.style()).applySemantics(node)) {
+            node.children.forEach { child -> Render(child, actions, formState) }
+        }
+    }
+
 
     register("column") { node, actions, formState ->
         val style = node.style()
@@ -85,7 +108,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
         if (style.scrollable == true && !isInsideScrollable) modifier = modifier.verticalScroll(rememberScrollState())
-        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
+        if (node.action != null) modifier = modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         Column(modifier = modifier, horizontalAlignment = parseColumnAlignment(style.alignment)) {
             node.children.forEach { child -> Render(child, actions, formState) }
         }
@@ -97,7 +120,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var modifier = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) modifier = modifier.animateContentSize()
         if (style.scrollable == true && !isInsideScrollable) modifier = modifier.horizontalScroll(rememberScrollState())
-        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
+        if (node.action != null) modifier = modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         Row(
             modifier = modifier,
             horizontalArrangement = parseArrangement(style.arrangement),
@@ -112,7 +135,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         var base = Modifier.applyStyle(style).applySemantics(node)
         if (style.animateSize == true) base = base.animateContentSize()
         val clickableModifier = if (node.action != null) {
-            base.clickable { node.action?.let(actions::handle) }
+            base.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         } else base
         Box(modifier = clickableModifier, contentAlignment = parseBoxAlignment(style.alignment)) {
             node.children.forEach { child -> Render(child, actions, formState) }
@@ -122,7 +145,7 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("text") { node, actions, _ ->
         val style = node.style()
         var modifier = Modifier.applyStyle(style).applySemantics(node)
-        if (node.action != null) modifier = modifier.clickable { node.action?.let(actions::handle) }
+        if (node.action != null) modifier = modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         StyledText(
             value = node.props["value"].asString(),
             style = style,
@@ -133,21 +156,28 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("image") { node, actions, _ ->
         val style = node.style()
         val resolver = LocalResourceResolver.current
+        val resourcePolicy = LocalResourcePolicy.current
         val url = node.props["url"].asString().takeIf { it.isNotEmpty() }
         val emoji = node.props["icon"].asString().takeIf { it.isNotEmpty() }
         val base = Modifier.applyStyle(style).applySemantics(node)
         val clickableModifier = if (node.action != null) {
-            base.clickable { node.action?.let(actions::handle) }
+            base.sizeIn(minWidth = 48.dp, minHeight = 48.dp).clickable { node.action?.let(actions::handle) }
         } else base
         when {
             url != null -> {
-                val finalModel = if (url.isResource()) resolver?.resolveImage(url) ?: url else url
-                AsyncImage(
-                    model = finalModel,
-                    contentDescription = node.getContentDescription(),
-                    modifier = clickableModifier,
-                    contentScale = ContentScale.Crop
-                )
+                val finalModel = when {
+                    url.isResource() -> resolver?.resolveImage(url)
+                    resourcePolicy.allows(SduiRemoteResourceType.IMAGE, url) -> url
+                    else -> null
+                }
+                if (finalModel != null) {
+                    AsyncImage(
+                        model = finalModel,
+                        contentDescription = node.getContentDescription(),
+                        modifier = clickableModifier,
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
             emoji != null -> Box(modifier = clickableModifier, contentAlignment = Alignment.Center) {
                 Text(emoji, fontSize = (style.fontSize ?: 20).sp, textAlign = TextAlign.Center)
@@ -173,7 +203,8 @@ fun ComponentRegistry.registerCoreWidgets() {
         val fieldId = node.id ?: ""
         val style = node.style()
         val focusManager = LocalFocusManager.current
-        val keyboardType = when (node.props["keyboardType"].asString()) {
+        val keyboardTypeName = node.props["keyboardType"].asString()
+        val keyboardType = when (keyboardTypeName) {
             "number" -> KeyboardType.Number
             "email" -> KeyboardType.Email
             "phone" -> KeyboardType.Phone
@@ -183,7 +214,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val errorText = node.props["errorText"].asString()
         OutlinedTextField(
             value = formState.getString(fieldId),
-            onValueChange = { formState.setString(fieldId, it) },
+            onValueChange = { formState.setTextInput(fieldId, it, keyboardTypeName) },
             label = { Text(node.props["label"].asString()) },
             modifier = Modifier.applyStyle(style).applySemantics(node).fillMaxWidth(),
             isError = hasError,
@@ -197,13 +228,29 @@ fun ComponentRegistry.registerCoreWidgets() {
     }
 
     register("button") { node, actions, formState ->
-        val enabled = node.rules.all { it.evaluate(formState) }
+        val enabledByRules = node.rules.all { it.evaluate(formState) }
+        val loadingKey = node.props["loadingKey"].asString()
+        val isLoading = loadingKey.isNotEmpty() &&
+            ((formState[loadingKey] as? SduiValue.BooleanValue)?.value == true)
+        val label = if (isLoading) {
+            node.props["loadingLabel"].asString().ifEmpty { "Loading…" }
+        } else {
+            node.props["label"].asString()
+        }
         Button(
             onClick = { node.action?.let(actions::handle) },
-            enabled = enabled,
+            enabled = enabledByRules && !isLoading,
             modifier = Modifier.applyStyle(node.style()).applySemantics(node)
         ) {
-            Text(node.props["label"].asString())
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                Spacer(Modifier.width(8.dp))
+            }
+            Text(label)
         }
     }
 
@@ -370,6 +417,52 @@ fun ComponentRegistry.registerCoreWidgets() {
         }
     }
 
+    register("bottomNavigation") { node, actions, formState ->
+        val fieldId = node.id ?: "bottomNavigation"
+        val items = node.props["items"].asList().map { it.asObject() }
+        val selected = (formState[fieldId] as? SduiValue.NumberValue)?.value?.toInt()
+            ?: (node.props["selectedIndex"].asInt() ?: 0).coerceAtLeast(0)
+
+        val style = node.style()
+        val containerColor = resolveColor(style.background) ?: NavigationBarDefaults.containerColor
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(containerColor)
+                .navigationBarsPadding()
+        ) {
+            NavigationBar(
+                modifier = Modifier.fillMaxWidth().applySemantics(node),
+                containerColor = containerColor
+            ) {
+                items.forEachIndexed { index, item ->
+                val label = item["label"].asString().ifEmpty { "Item ${index + 1}" }
+                val icon = item["icon"].asString().ifEmpty { "•" }
+                val route = item["route"].asString()
+                val badge = item["badge"].asString().takeIf { it.isNotEmpty() }
+                NavigationBarItem(
+                    selected = selected == index,
+                    onClick = {
+                        formState[fieldId] = SduiValue.NumberValue(index.toDouble())
+                        if (route.isNotEmpty()) {
+                            actions.handle(UiAction(type = "navigate", target = route))
+                        }
+                    },
+                    icon = {
+                        BadgedBox(badge = {
+                            badge?.let { Badge { Text(it) } }
+                        }) {
+                            Text(icon)
+                        }
+                    },
+                    label = { Text(label) },
+                    alwaysShowLabel = true
+                )
+                }
+            }
+        }
+    }
+
     register("tabs") { node, actions, formState ->
         val fieldId = node.id ?: ""
         val labels = node.props["labels"].asList().map { it.asString() }
@@ -394,7 +487,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val chevron = materialIcon(if (expanded) "arrowUp" else "arrowDown")
         Column(modifier = Modifier.applyStyle(node.style()).animateContentSize().applySemantics(node)) {
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { formState[fieldId] = SduiValue.BooleanValue(!expanded) },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).clickable { formState[fieldId] = SduiValue.BooleanValue(!expanded) },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -418,9 +511,43 @@ fun ComponentRegistry.registerCoreWidgets() {
         }
     }
 
+    // "list" remains the original schema name. "lazyColumn" is the
+    // explicit Compose-style alias used by Studio and newer documents.
     register("list") { node, actions, formState ->
         val heightDp = node.props["height"].asInt() ?: 300
         LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
+            items(node.children) { child -> Render(child, actions, formState) }
+        }
+    }
+
+    register("lazyColumn") { node, actions, formState ->
+        val heightDp = node.props["height"].asInt() ?: 300
+        LazyColumn(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
+            items(node.children) { child -> Render(child, actions, formState) }
+        }
+    }
+
+    // Lazy rows have a bounded height and item width so they remain safe as
+    // nested scrolling content inside the renderer's root LazyColumn.
+    register("lazyRow") { node, actions, formState ->
+        val heightDp = node.props["height"].asInt() ?: 180
+        val itemWidthDp = node.props["itemWidth"].asInt() ?: 180
+        LazyRow(modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)) {
+            items(node.children) { child ->
+                Box(Modifier.width(itemWidthDp.dp)) {
+                    Render(child, actions, formState)
+                }
+            }
+        }
+    }
+
+    register("lazyGrid") { node, actions, formState ->
+        val columnsCount = node.props["columns"].asInt() ?: 2
+        val heightDp = node.props["height"].asInt() ?: 300
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columnsCount),
+            modifier = Modifier.applyStyle(node.style()).height(heightDp.dp).applySemantics(node)
+        ) {
             items(node.children) { child -> Render(child, actions, formState) }
         }
     }
@@ -488,17 +615,20 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("searchBar") { node, _, formState ->
         val fieldId = node.id ?: ""
         val query = formState.getString(fieldId)
-        var expanded by remember { mutableStateOf(false) }
         val placeholder = node.props["placeholder"].asString().takeIf { it.isNotEmpty() } ?: "Search"
-        SearchBar(
-            query = query,
-            onQueryChange = { formState.setString(fieldId, it) },
-            onSearch = { expanded = false },
-            active = expanded,
-            onActiveChange = { expanded = it },
-            placeholder = { Text(placeholder) },
-            modifier = Modifier.applyStyle(node.style()).applySemantics(node)
-        ) {}
+        // The expanding Material SearchBar cannot safely measure inside the
+        // renderer's LazyColumn. Keep SDUI search inline and scroll-safe.
+        OutlinedTextField(
+            value = query,
+            onValueChange = { formState.setString(fieldId, it) },
+            singleLine = true,
+            label = { Text(placeholder) },
+            modifier = Modifier.applyStyle(node.style()).fillMaxWidth().applySemantics(node),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
+            )
+        )
     }
 
     register("skeleton") { node, _, _ ->
@@ -512,9 +642,15 @@ fun ComponentRegistry.registerCoreWidgets() {
     register("lottieAnimation") { node, _, _ ->
         val url = node.props["url"].asString()
         val loop = node.props["loop"].asBoolean()
-        
+        val allowed = LocalResourcePolicy.current.allows(SduiRemoteResourceType.LOTTIE, url)
+
+        if (!allowed) {
+            Box(Modifier.applyStyle(node.style()))
+            return@register
+        }
+
         val result = rememberLottieComposition(spec = LottieCompositionSpec.Url(url))
-        
+
         when {
             result.isLoading -> {
                 ShimmerBox(Modifier.applyStyle(node.style()))
@@ -523,7 +659,7 @@ fun ComponentRegistry.registerCoreWidgets() {
                 val composition = result.value
                 val progress by animateLottieCompositionAsState(
                     composition = composition,
-                    iterations = if (loop) Compottie.IterateForever else 1
+                    iterations = if (loop && !LocalSduiMotionPolicy.current.reduceMotion) Compottie.IterateForever else 1
                 )
                 Image(
                     painter = rememberLottiePainter(

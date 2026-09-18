@@ -1,6 +1,0 @@
-- [x] **Step 1: Build Scoping**
-    - [x] Create `jitpack.yml` at the repo root
-- [x] **Step 2: Toolchain Resolution**
-    - [x] Add Foojay resolver to `settings.gradle.kts`
-- [x] **Step 3: Verification**
-    - [x] Run local publish task

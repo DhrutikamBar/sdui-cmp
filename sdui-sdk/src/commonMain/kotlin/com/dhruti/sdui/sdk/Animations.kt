@@ -2,6 +2,8 @@ package com.dhruti.sdui.sdk
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -19,24 +21,59 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
 private const val DEFAULT_DURATION_MS = 250
 
-fun enterAnimation(kind: String?): EnterTransition = when (kind) {
-    "slide" -> slideInVertically(tween(DEFAULT_DURATION_MS)) { it } + fadeIn(tween(DEFAULT_DURATION_MS))
-    "scale" -> scaleIn(tween(DEFAULT_DURATION_MS)) + fadeIn(tween(DEFAULT_DURATION_MS))
-    else -> fadeIn(tween(DEFAULT_DURATION_MS)) + expandVertically(tween(DEFAULT_DURATION_MS))
+/** Host-controlled accessibility preference for SDUI motion. */
+data class SduiMotionPolicy(val reduceMotion: Boolean = false)
+
+val LocalSduiMotionPolicy = compositionLocalOf { SduiMotionPolicy() }
+
+@Composable
+fun enterAnimation(kind: String?, durationMs: Int? = null, easingName: String? = null): EnterTransition {
+    if (LocalSduiMotionPolicy.current.reduceMotion) return EnterTransition.None
+    val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
+    val easing = animationEasing(easingName)
+    val floatSpec = tween<Float>(durationMillis = duration, easing = easing)
+    val offsetSpec = tween<IntOffset>(durationMillis = duration, easing = easing)
+    val sizeSpec = tween<IntSize>(durationMillis = duration, easing = easing)
+    return when (kind) {
+        "none" -> EnterTransition.None
+        "slide" -> slideInVertically(offsetSpec) { it } + fadeIn(floatSpec)
+        "scale" -> scaleIn(floatSpec) + fadeIn(floatSpec)
+        "fade" -> fadeIn(floatSpec)
+        else -> fadeIn(floatSpec) + expandVertically(sizeSpec)
+    }
 }
 
-fun exitAnimation(kind: String?): ExitTransition = when (kind) {
-    "slide" -> slideOutVertically(tween(DEFAULT_DURATION_MS)) { it } + fadeOut(tween(DEFAULT_DURATION_MS))
-    "scale" -> scaleOut(tween(DEFAULT_DURATION_MS)) + fadeOut(tween(DEFAULT_DURATION_MS))
-    else -> fadeOut(tween(DEFAULT_DURATION_MS)) + shrinkVertically(tween(DEFAULT_DURATION_MS))
+@Composable
+fun exitAnimation(kind: String?, durationMs: Int? = null, easingName: String? = null): ExitTransition {
+    if (LocalSduiMotionPolicy.current.reduceMotion) return ExitTransition.None
+    val duration = durationMs?.coerceIn(0, 2_000) ?: DEFAULT_DURATION_MS
+    val easing = animationEasing(easingName)
+    val floatSpec = tween<Float>(durationMillis = duration, easing = easing)
+    val offsetSpec = tween<IntOffset>(durationMillis = duration, easing = easing)
+    val sizeSpec = tween<IntSize>(durationMillis = duration, easing = easing)
+    return when (kind) {
+        "none" -> ExitTransition.None
+        "slide" -> slideOutVertically(offsetSpec) { it } + fadeOut(floatSpec)
+        "scale" -> scaleOut(floatSpec) + fadeOut(floatSpec)
+        "fade" -> fadeOut(floatSpec)
+        else -> fadeOut(floatSpec) + shrinkVertically(sizeSpec)
+    }
+}
+
+private fun animationEasing(name: String?) = when (name) {
+    "linear" -> LinearEasing
+    else -> FastOutSlowInEasing
 }
 
 @Composable

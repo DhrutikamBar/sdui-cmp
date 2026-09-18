@@ -7,7 +7,11 @@ plugins {
     `maven-publish`
 }
 
+group = "com.dhruti.sdui"
+version = providers.gradleProperty("SDK_VERSION").getOrElse("0.1.0-SNAPSHOT")
+
 kotlin {
+    jvmToolchain(21)
     androidTarget {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
@@ -35,9 +39,10 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation("io.coil-kt.coil3:coil-compose:3.0.4")
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.0.4")
-            implementation("io.github.alexzhirkevich:compottie:2.2.4")
-            implementation("io.github.alexzhirkevich:compottie-network:2.2.4")
+            implementation("io.github.alexzhirkevich:compottie:2.0.0-rc02")
+            implementation("io.github.alexzhirkevich:compottie-network:2.0.0-rc02")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

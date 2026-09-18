@@ -2,12 +2,13 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.android.application")
+    id("com.google.gms.google-services")
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("app.cash.sqldelight")
 }
 
 kotlin {
+    jvmToolchain(21)
     androidTarget {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
@@ -37,11 +38,8 @@ kotlin {
             implementation("io.coil-kt.coil3:coil-compose:3.0.4")
             implementation("io.coil-kt.coil3:coil-network-ktor3:3.0.4")
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.2")
-            implementation("io.github.jan-tennert.supabase:postgrest-kt:3.1.0")
-            implementation("app.cash.sqldelight:runtime:2.3.2")
-            implementation("app.cash.sqldelight:coroutines-extensions:2.3.2")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
-
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -49,11 +47,12 @@ kotlin {
         androidMain.dependencies {
             implementation("androidx.activity:activity-compose:1.9.3")
             implementation("io.ktor:ktor-client-okhttp:3.0.0")
-            implementation("app.cash.sqldelight:android-driver:2.3.2")
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:34.19.0"))
+            implementation("com.google.firebase:firebase-firestore")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
         }
         iosMain.dependencies {
             implementation("io.ktor:ktor-client-darwin:3.0.0")
-            implementation("app.cash.sqldelight:native-driver:2.3.2")
         }
     }
 }
@@ -67,12 +66,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        
-        buildConfigField("String", "SUPABASE_URL", "\"${project.findProperty("SUPABASE_URL")}\"")
-        buildConfigField("String", "SUPABASE_KEY", "\"${project.findProperty("SUPABASE_KEY")}\"")
-    }
-    buildFeatures {
-        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -81,13 +74,5 @@ android {
     lint {
         abortOnError = false
         checkReleaseBuilds = false
-    }
-}
-
-sqldelight {
-    databases {
-        create("SduiDatabase") {
-            packageName.set("com.example.sdui.app.db")
-        }
     }
 }

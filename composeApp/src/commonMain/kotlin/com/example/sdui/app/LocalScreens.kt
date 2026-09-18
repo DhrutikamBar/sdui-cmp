@@ -95,17 +95,46 @@ object LocalScreens {
           "props": { "style": { "padding": "md", "background": "brand-primary", "width": "fill" } },
           "children": [
             {
-              "type": "row",
-              "props": { "style": { "arrangement": "spaceBetween", "width": "fill" } },
+              "type": "box",
+              "props": { "style": { "background": "#10265D", "cornerRadius": 16, "width": "fill", "padding": "md" } },
               "children": [
-                { "type": "column", "children": [
-                  { "type": "text", "props": { "value": "Welcome back,", "style": { "fontSize": 13, "color": "#B0BEC5" } } },
-                  { "type": "text", "props": { "value": "Tanjiro Kamado", "style": { "fontSize": 17, "fontWeight": "bold", "color": "#FFFFFF" } } }
-                ]}
+                {
+                  "type": "column",
+                  "children": [
+                    { "type": "text", "props": { "value": "Welcome back, {{user.firstName}}", "style": { "fontSize": 14, "color": "#D5E3FF" } } },
+                    { "type": "spacer", "props": { "style": { "size": "sm" } } },
+                    { "type": "text", "props": { "value": "{{wallet.accountName}}", "style": { "fontSize": 16, "color": "#FFFFFF" } } },
+                    { "type": "text", "props": { "value": "{{wallet.balanceDisplay}}", "style": { "fontSize": 30, "fontWeight": "bold", "color": "#FFFFFF" } } },
+                    { "type": "text", "props": { "value": "{{wallet.currency}} available balance", "style": { "fontSize": 12, "color": "#D5E3FF" } } }
+                  ]
+                }
               ]
             },
-            { "type": "spacer", "props": { "style": { "size": "spacing-xl" } } },
-            { "type": "nativeSlot", "props": { "id": "balanceToggle", "amount": "${'$'}32,149.00" } }
+            { "type": "spacer", "props": { "style": { "size": "lg" } } },
+            {
+              "type": "row",
+              "props": { "style": { "width": "fill", "arrangement": "spaceBetween" } },
+              "children": [
+                { "type": "text", "props": { "value": "Recent transactions", "style": { "fontSize": 20, "fontWeight": "bold", "color": "#FFFFFF" } } },
+                { "type": "text", "props": { "value": "Refresh", "style": { "color": "#D5E3FF", "padding": "sm" } }, "action": { "type": "refreshData" } }
+              ]
+            },
+            {
+              "type": "repeater",
+              "props": { "items": "{{transactions}}" },
+              "children": [
+                {
+                  "type": "row",
+                  "props": { "style": { "width": "fill", "arrangement": "spaceBetween", "padding": "sm" } },
+                  "children": [
+                    { "type": "text", "props": { "value": "{{item.title}}", "style": { "color": "#FFFFFF", "fontSize": 16 } } },
+                    { "type": "text", "props": { "value": "{{item.amountDisplay}}", "style": { "color": "{{item.amountColor}}", "fontSize": 16, "fontWeight": "medium" } } }
+                  ]
+                }
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
+            { "type": "button", "props": { "label": "Send money" }, "action": { "type": "navigate", "target": "send" } }
           ]
         }
     """.trimIndent()
@@ -157,6 +186,123 @@ object LocalScreens {
           ]
         }
     """.trimIndent()
+
+    val send = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md" } },
+          "children": [
+            { "type": "text", "props": { "value": "Send money", "style": { "fontSize": 24, "fontWeight": "bold" } } },
+            { "id": "recipient", "type": "textInput", "props": { "label": "Recipient" } },
+            { "id": "amount", "type": "textInput", "props": { "label": "Amount", "keyboardType": "number" } },
+            { "type": "button", "props": { "label": "Continue" }, "rules": [
+              { "type": "notEmpty", "field": "recipient" },
+              { "type": "notEmpty", "field": "amount" }
+            ], "action": { "type": "navigate", "target": "send-success" } }
+          ]
+        }
+    """.trimIndent()
+
+    val sendSuccess = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "xl", "alignment": "center" } },
+          "children": [
+            { "type": "text", "props": { "value": "Payment successful", "style": { "fontSize": 26, "fontWeight": "bold", "color": "#2E7D32" } } },
+            { "type": "button", "props": { "label": "Back home" }, "action": { "type": "navigate", "target": "home" } }
+          ]
+        }
+    """.trimIndent()
+
+    val settings = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md" } },
+          "children": [
+            { "type": "text", "props": { "value": "Settings", "style": { "fontSize": 24, "fontWeight": "bold" } } },
+            { "id": "notificationsEnabled", "type": "checkbox", "props": { "label": "Enable notifications" } },
+            { "type": "button", "props": { "label": "Save" }, "action": { "type": "analytics", "target": "settings_saved" } }
+          ]
+        }
+    """.trimIndent()
+
+    val orderConfirmed = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "xl", "alignment": "center" } },
+          "children": [
+            { "type": "text", "props": { "value": "Order confirmed", "style": { "fontSize": 26, "fontWeight": "bold", "color": "#2E7D32" } } },
+            { "type": "button", "props": { "label": "Back home" }, "action": { "type": "navigate", "target": "home" } }
+          ]
+        }
+    """.trimIndent()
+
+    val lottieTest = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md" } },
+          "children": [
+            { "type": "text", "props": { "value": "Animation demo", "style": { "fontSize": 24, "fontWeight": "bold" } } },
+            { "type": "text", "props": { "value": "Offline fallback screen" } }
+          ]
+        }
+    """.trimIndent()
+
+
+    val uiCertification = """
+        {
+          "type": "column",
+          "props": { "style": { "padding": "md", "width": "fill", "background": "#F7F7F7" } },
+          "semantics": { "contentDescription": "UI certification screen", "liveRegion": "polite" },
+          "children": [
+            {
+              "type": "box",
+              "props": { "style": { "background": "brand-primary", "cornerRadius": 16, "width": "fill" } },
+              "children": [
+                { "type": "column", "props": { "style": { "padding": "md" } }, "children": [
+                  { "type": "text", "props": { "value": "Everyday account", "style": { "color": "#FFFFFF", "fontSize": 14 } } },
+                  { "type": "text", "props": { "value": "$32,149.00", "style": { "color": "#FFFFFF", "fontSize": 30, "fontWeight": "bold" } },
+                    "semantics": { "stateDescription": "Available balance thirty two thousand one hundred forty nine dollars" } }
+                ]}
+              ]
+            },
+            { "type": "spacer", "props": { "style": { "size": "md" } } },
+            { "type": "text", "props": { "value": "Quick actions", "style": { "fontSize": 20, "fontWeight": "bold" } } },
+            {
+              "type": "grid", "props": { "columns": 2, "height": 136 },
+              "children": [
+                { "type": "button", "props": { "label": "Send" }, "action": { "type": "navigate", "target": "send" } },
+                { "type": "button", "props": { "label": "Shop" }, "action": { "type": "navigate", "target": "checkout" } },
+                { "type": "button", "props": { "label": "Settings" }, "action": { "type": "navigate", "target": "settings" } },
+                { "type": "button", "props": { "label": "Help" }, "action": { "type": "analytics", "target": "ui_certification_help" } }
+              ]
+            },
+            { "type": "text", "props": { "value": "Recent transactions", "style": { "fontSize": 20, "fontWeight": "bold" } } },
+            {
+              "type": "list", "props": { "height": 180 },
+              "children": [
+                { "type": "row", "props": { "style": { "arrangement": "spaceBetween", "width": "fill", "padding": "sm" } }, "children": [
+                  { "type": "text", "props": { "value": "Coffee shop" } },
+                  { "type": "text", "props": { "value": "- $4.50", "style": { "color": "#B3261E" } } }
+                ]},
+                { "type": "row", "props": { "style": { "arrangement": "spaceBetween", "width": "fill", "padding": "sm" } }, "children": [
+                  { "type": "text", "props": { "value": "Salary" } },
+                  { "type": "text", "props": { "value": "+ $2,500.00", "style": { "color": "#2E7D32" } } }
+                ]},
+                { "type": "row", "props": { "style": { "arrangement": "spaceBetween", "width": "fill", "padding": "sm" } }, "children": [
+                  { "type": "text", "props": { "value": "Streaming subscription" } },
+                  { "type": "text", "props": { "value": "- $12.99", "style": { "color": "#B3261E" } } }
+                ]}
+              ]
+            },
+            { "id": "certificationNotifications", "type": "switch", "props": { "label": "Transaction notifications" },
+              "semantics": { "stateDescription": "Transaction notifications preference" } },
+            { "id": "certificationUnsupported", "type": "futureWidget",
+              "fallback": { "type": "text", "props": { "value": "Optional feature is unavailable on this app version." } } }
+          ]
+        }
+    """.trimIndent()
+
 }
 
 private val localJson = Json { ignoreUnknownKeys = true }

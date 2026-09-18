@@ -3,7 +3,11 @@ package com.dhruti.sdui.sdk
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,7 +16,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.saveable.Saver
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.sdui.shared.Condition
 import com.example.sdui.shared.SduiValue
 import com.example.sdui.shared.UiAction
@@ -34,10 +40,28 @@ class FormState(initialValues: Map<String, SduiValue> = emptyMap()) {
     }
     operator fun get(key: String): SduiValue? = values[key]
 
-    /** Convenience for text inputs. */
-    fun getString(key: String): String = (values[key] as? SduiValue.StringValue)?.value ?: ""
+    /** Returns a display value without discarding an input's underlying type. */
+    fun getString(key: String): String = when (val value = values[key]) {
+        is SduiValue.StringValue -> value.value
+        is SduiValue.NumberValue -> value.value.toString()
+        is SduiValue.BooleanValue -> value.value.toString()
+        else -> ""
+    }
+
     fun setString(key: String, value: String) {
         values[key] = SduiValue.StringValue(value)
+    }
+
+    /**
+     * Stores number keyboard input as a NumberValue whenever it is valid.
+     * Invalid and empty input remains visible as text so the field can be corrected.
+     */
+    fun setTextInput(key: String, value: String, keyboardType: String) {
+        values[key] = if (keyboardType == "number") {
+            value.toDoubleOrNull()?.let(SduiValue::NumberValue) ?: SduiValue.StringValue(value)
+        } else {
+            SduiValue.StringValue(value)
+        }
     }
 
     companion object {
@@ -81,66 +105,15 @@ fun Condition.evaluate(state: FormState): Boolean {
         is Condition.Not -> !condition.evaluate(state)
         is Condition.And -> conditions.all { it.evaluate(state) }
         is Condition.Or -> conditions.any { it.evaluate(state) }
-        is Condition.Script -> evaluateScript(expression, state)
+        is Condition.Script -> SduiExpressionEvaluator.evaluate(expression, state)
     }
 }
 
-/** 
- * A robust expression evaluator for SDUI.
- * Supports multiple variables from FormState, literals, and basic arithmetic.
- */
-private fun evaluateScript(expression: String, state: FormState): Boolean {
-    val ops = listOf(">=", "<=", "==", ">", "<")
-    val op = ops.find { expression.contains(it) } ?: return false
-    val parts = expression.split(op, limit = 2)
-    if (parts.size != 2) return false
-
-    val left = evaluateExpressionPart(parts[0], state)
-    val right = evaluateExpressionPart(parts[1], state)
-
-    if (left == null || right == null) return false
-
-    return when (op) {
-        "==" -> left == right
-        ">" -> if (left is Double && right is Double) left > right else false
-        "<" -> if (left is Double && right is Double) left < right else false
-        ">=" -> if (left is Double && right is Double) left >= right else false
-        "<=" -> if (left is Double && right is Double) left <= right else false
-        else -> false
-    }
-}
-
-private fun evaluateExpressionPart(part: String, state: FormState): Any? {
-    val raw = part.trim()
-    
-    if (raw.contains("*")) {
-        val subParts = raw.split("*")
-        return subParts.map { evaluateExpressionPart(it, state) as? Double ?: 0.0 }
-            .reduce { acc, d -> acc * d }
-    }
-
-    // 1. Resolve from FormState
-    state[raw]?.let { sduiVal ->
-        return when (sduiVal) {
-            is SduiValue.StringValue -> sduiVal.value
-            is SduiValue.NumberValue -> sduiVal.value
-            is SduiValue.BooleanValue -> sduiVal.value
-            else -> null
-        }
-    }
-    
-    // 2. Literals
-    if (raw.startsWith("'") && raw.endsWith("'")) return raw.removeSurrounding("'")
-    if (raw == "true") return true
-    if (raw == "false") return false
-    
-    return raw.toDoubleOrNull()
-}
+/** The node set consumed by RenderRoot's single scroll owner. */
+internal fun rootNodesForRendering(node: UiNode): List<UiNode> = UiFlattener.flattenRoot(node)
 
 /** Tells children whether they are inside a scrollable container. */
 val LocalIsInsideScrollable = compositionLocalOf { false }
-
-private const val CURRENT_SDK_VERSION = 5
 
 /**
  * Maps a node's `type` string to the Composable that renders it.
@@ -153,36 +126,69 @@ class ComponentRegistry {
         renderers[type] = renderer
     }
 
+    fun supports(type: String): Boolean = type in renderers
+
+    /** Snapshot of renderer types available to the current host. */
+    fun supportedTypes(): Set<String> = renderers.keys.toSet()
+
+    /** Capability payload for backend document selection or host validation. */
+    fun capabilities(actionTypes: Set<String>): SduiCapabilities =
+        SduiCapabilities(widgetTypes = supportedTypes(), actionTypes = actionTypes)
+
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun RenderRoot(node: UiNode, actions: ActionHandler, formState: FormState) {
+    fun RenderRoot(
+        node: UiNode,
+        actions: ActionHandler,
+        formState: FormState,
+        modifier: Modifier = Modifier
+    ) {
         // Enforce root version check
         val minSdk = node.minSdkVersion
-        if (minSdk != null && minSdk > CURRENT_SDK_VERSION) {
+        if (minSdk != null && minSdk > SDK_VERSION) {
             Text("App update required to view this content")
             return
         }
 
-        val rootStyle = node.style()
+        // UiFlattener preserves root rows, boxes, and styled columns as nodes.
+        // LazyColumn remains the only scroll owner at this level.
+        val rootNodes = rootNodesForRendering(node)
 
-        val flattenedNodes = if (node.type in listOf("column", "row", "box")) {
-            node.children.flatMap { UiFlattener.flatten(it) }
-        } else {
-            UiFlattener.flatten(node)
-        }
+        // A root-level bottom navigation is rendered outside LazyColumn so it
+        // remains pinned while all other SDUI content scrolls.
+        val bottomNavigation = rootNodes.lastOrNull { it.type == "bottomNavigation" }
+        val scrollNodes = rootNodes.filterNot { it === bottomNavigation }
 
         CompositionLocalProvider(LocalIsInsideScrollable provides true) {
-            LazyColumn(Modifier.fillMaxSize().applyStyle(rootStyle)) {
-                flattenedNodes.forEachIndexed { index, itemNode ->
-                    val key = itemNode.id ?: "item_$index"
-                    if (itemNode.sticky) {
-                        stickyHeader(key = key) {
-                            Render(itemNode, actions, formState)
+            Box(modifier.fillMaxSize()) {
+                val systemBottomInset =
+                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                val bottomPadding = if (bottomNavigation == null) {
+                    systemBottomInset
+                } else {
+                    80.dp + systemBottomInset
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = bottomPadding)
+                ) {
+                    scrollNodes.forEachIndexed { index, itemNode ->
+                        val key = itemNode.id ?: "item_$index"
+                        if (itemNode.sticky) {
+                            stickyHeader(key = key) {
+                                Render(itemNode, actions, formState)
+                            }
+                        } else {
+                            item(key = key) {
+                                Render(itemNode, actions, formState)
+                            }
                         }
-                    } else {
-                        item(key = key) {
-                            Render(itemNode, actions, formState)
-                        }
+                    }
+                }
+                bottomNavigation?.let { navigation ->
+                    Box(Modifier.align(Alignment.BottomCenter)) {
+                        Render(navigation, actions, formState)
                     }
                 }
             }
@@ -193,7 +199,7 @@ class ComponentRegistry {
     fun Render(node: UiNode, actions: ActionHandler, formState: FormState) {
         // Version enforcement
         val minSdk = node.minSdkVersion
-        if (minSdk != null && minSdk > CURRENT_SDK_VERSION) {
+        if (minSdk != null && minSdk > SDK_VERSION) {
             node.fallback?.let { Render(it, actions, formState) }
             return
         }
@@ -205,8 +211,8 @@ class ComponentRegistry {
             val context = mapOf("type" to node.type, "id" to (node.id ?: "unnamed"))
             reporter.reportEvent("missing_renderer", context)
             
-            // Graceful degradation: try fallback if it exists
             node.fallback?.let { Render(it, actions, formState) }
+                ?: Text("Unsupported component")
             return
         }
 
@@ -229,8 +235,8 @@ class ComponentRegistry {
         val visible = node.visibleWhen.all { it.evaluate(formState) }
         AnimatedVisibility(
             visible = visible,
-            enter = enterAnimation(style.animation),
-            exit = exitAnimation(style.animation)
+            enter = enterAnimation(style.animation, style.animationDurationMs, style.animationEasing),
+            exit = exitAnimation(style.animation, style.animationDurationMs, style.animationEasing)
         ) {
             content()
         }
