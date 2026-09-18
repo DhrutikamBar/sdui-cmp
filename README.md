@@ -10,11 +10,10 @@ A production-grade Server-Driven UI framework with high-performance rendering, t
 
 ## Firestore-controlled Android demo
 
-Android reads screens from Firestore collection sduiScreens. A document ID is the route name, for example home; its content field holds the SDUI document map. See docs/firebase-firestore.md.
-
-The Firebase Android configuration is in composeApp/google-services.json. Enable Cloud Firestore and add a sduiScreens/home document before running the Android app.
+Android reads published screens from the FlexFlow UI service by route, for example `home`. Publish a screen in Studio before running the Android app. See docs/published-screens.md.
 
 ## Build and test
 
 - Build all modules: ./gradlew assemble
 - Run logic tests: ./gradlew :shared:allTests and ./gradlew :composeApp:allTests
+
