@@ -1,11 +1,24 @@
 package com.dhruti.sdui.sdk
 
+import com.example.sdui.shared.SduiValue
+import com.example.sdui.shared.UiNode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 class SduiProductionContractsTest {
+    @Test
+    fun imageSourceAcceptsStudioSrcAndLegacyUrl() {
+        val studioImage = UiNode(type = "image", props = mapOf("src" to SduiValue.StringValue("https://cdn.example.com/icon.svg")))
+        val legacyImage = UiNode(type = "image", props = mapOf("url" to SduiValue.StringValue("https://cdn.example.com/icon.png")))
+        val emptyImage = UiNode(type = "image")
+
+        assertEquals("https://cdn.example.com/icon.svg", studioImage.imageSource())
+        assertEquals("https://cdn.example.com/icon.png", legacyImage.imageSource())
+        assertEquals(null, emptyImage.imageSource())
+    }
+
     @Test
     fun capabilitySnapshotUsesRegisteredWidgetsAndHostActions() {
         val registry = ComponentRegistry().apply {
@@ -36,3 +49,4 @@ class SduiProductionContractsTest {
         )
     }
 }
+
