@@ -47,7 +47,7 @@ Whole-value bindings preserve type: `{{wallet.balance}}` remains a number, while
 
 ## Reference host
 
-The Android reference host uses `FirebaseFirestoreScreenSource` to load `sduiScreens/{route}` documents from Cloud Firestore. It accepts a `content` map or JSON string and benefits from Firestore offline persistence. If a source is unavailable, the reference host uses its bundled local fallback screens.
+The Android reference host uses `PublishedScreenSource` to load released screens from the FlexFlow UI published-screen endpoint. It caches successful responses in memory for five minutes. If a source is unavailable, the reference host uses its bundled local fallback screens.
 
 The iOS reference host currently uses the bundled fallback source. Firebase configuration is deliberately an Android-demo concern, not an SDK dependency.
 
