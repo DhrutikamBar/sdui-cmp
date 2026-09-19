@@ -47,7 +47,7 @@ Whole-value bindings preserve type: `{{wallet.balance}}` remains a number, while
 
 ## Reference host
 
-The Android reference host uses `PublishedScreenSource` to load released screens from the FlexFlow UI published-screen endpoint. It caches successful responses in memory for five minutes. If a source is unavailable, the reference host uses its bundled local fallback screens.
+The Android reference host uses `FirebaseFirestoreScreenSource` to load `sduiScreens/{route}` documents from Cloud Firestore. It accepts a `content` map or JSON string and benefits from Firestore offline persistence. If a source is unavailable, the reference host uses its bundled local fallback screens.
 
 The iOS reference host currently uses the bundled fallback source. Firebase configuration is deliberately an Android-demo concern, not an SDK dependency.
 
@@ -75,6 +75,7 @@ The SDK does not require Firestore. A production host can provide any `ScreenSou
 - Use `ComponentRegistry.capabilities(actionTypes)` to provide the SDK version plus supported widget/action types to a document service.
 - Model host data with `SduiDataState` and return `SduiActionResult` from host workflows to keep loading, empty, failure, retryable, cancelled, and validation cases structured.
 - Provide `HostAllowlistResourcePolicy` through `LocalResourcePolicy` to restrict remote image and Lottie hosts. The default remains permissive for compatibility; production hosts should opt into an explicit allowlist.
+- Image nodes use `props.src` for the Studio image URL. The SDK also accepts the older `props.url` field. Remote SVG images are decoded by Coil when the host includes this SDK module.
 - The SDK publication coordinates are `com.dhruti.sdui:sdui-sdk:0.1.0-SNAPSHOT` by default. Publishing destinations and credentials are intentionally not configured.
 
 Continuous integration verifies Android unit tests/assembly and compiles the iOS simulator SDK framework. This validates the iOS SDK surface without introducing an iOS application integration.
