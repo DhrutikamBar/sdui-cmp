@@ -91,6 +91,9 @@ private fun UiNode.getContentDescription(): String? {
     return semantics?.contentDescription ?: props["contentDescription"].asString().takeIf { it.isNotEmpty() }
 }
 
+internal fun UiNode.imageSource(): String? =
+    props["src"].asString().ifBlank { props["url"].asString() }.takeIf { it.isNotBlank() }
+
 @OptIn(ExperimentalMaterial3Api::class)
 fun ComponentRegistry.registerCoreWidgets() {
     // Repeaters are normally expanded from typed host data before rendering.
@@ -157,7 +160,7 @@ fun ComponentRegistry.registerCoreWidgets() {
         val style = node.style()
         val resolver = LocalResourceResolver.current
         val resourcePolicy = LocalResourcePolicy.current
-        val url = node.props["url"].asString().takeIf { it.isNotEmpty() }
+        val url = node.imageSource()
         val emoji = node.props["icon"].asString().takeIf { it.isNotEmpty() }
         val base = Modifier.applyStyle(style).applySemantics(node)
         val clickableModifier = if (node.action != null) {
@@ -690,3 +693,4 @@ fun ComponentRegistry.registerCoreWidgets() {
         }
     }
 }
+
